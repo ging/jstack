@@ -82,6 +82,7 @@ table td {
     overflow-x: hidden;
     vertical-align: top;
     text-align: left;
+    color: white;
   }
     .docs pre {
       margin: 15px 0 15px;
