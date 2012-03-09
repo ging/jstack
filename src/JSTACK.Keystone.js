@@ -7,8 +7,8 @@
 JSTACK.Keystone = (function(JS, undefined) {
 
     // `STATES` defines different authentication states. This
-    // can be useful for third services to know when they can
-    // access to authentication tokes.
+    // can be useful for applications to know when they can
+    // access to authentication tokens.
 
     var STATES = {
         DISCONNECTED : 0,
@@ -38,6 +38,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         params.token = undefined;
         params.currentstate = STATES.DISCONNECTED;
     }
+    
     // Authentication function
     // ------------------------
     // This API offers Keystone authentication.
@@ -76,9 +77,51 @@ JSTACK.Keystone = (function(JS, undefined) {
             params.currentstate = STATES.AUTHENTICATION_ERROR;
             throw Error(message);
         }
-
+        
+        // A typical response would be:
+        //
+        //     {
+        //        "token": {
+        //            "expires": "2012-03-10T15:41:58.905480",
+        //            "id": "d1eb612e-24fa-48b3-93d4-fc6c90379078",
+        //            "tenant": {
+        //                "id": "2",
+        //                "name": "demo"
+        //            }
+        //        },
+        //        "serviceCatalog": [
+        //              {
+        //                "endpoints": [
+        //                    {
+        //                        "adminURL": "http://host.name:8774/v1.1/2",
+        //                        "region": "nova",
+        //                        "internalURL": "http://host.name:8774/v1.1/2",
+        //                        "publicURL": "http://host.name:80/v1.1/2"
+        //                    }
+        //                ],
+        //                "type": "compute",
+        //                "name": "nova"
+        //            },
+        //        ],
+        //        "user": {
+        //            "id": "1",
+        //            "roles": [
+        //                {
+        //                    "tenantId": "2",
+        //                    "id": "1",
+        //                    "name": "Admin"
+        //                },
+        //                {
+        //                    "id": "1",
+        //                    "name": "Admin"
+        //                },
+        //            ],
+        //            "name": "admin"
+        //        }
+        //       }
         JS.Comm.post(params.url + "tokens", credentials, undefined, _onOK, _onError);
     }
+    
     // Retreiving service information
     // ------------------------------
     // The user can also obtain information about each service which is configured in Keystone.
