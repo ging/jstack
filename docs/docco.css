@@ -72,6 +72,7 @@ h1, h2, h3, h4, h5, h6 {
 table td {
   border: 0;
   outline: 0;
+  color: white;
 }
   td.docs, th.docs {
     max-width: 450px;
