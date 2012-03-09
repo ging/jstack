@@ -133,7 +133,7 @@ span.lineno { background-color: #657c1b; padding: 0 5px 0 5px; }
 body .hll { background-color: #000 }
 body .c { color: #fff; font-style: italic }     /* Comment */
 body .err { border: 1px solid #FF0000 }         /* Error */
-body .k { color: #954121 }                      /* Keyword */
+body .k { color: #000000; font-weight: bold }   /* Keyword */
 body .o { color: #fff }                         /* Operator */
 body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
 body .cp { color: #BC7A00 }                     /* Comment.Preproc */
@@ -169,6 +169,7 @@ body .nl { color: #A0A000 }                     /* Name.Label */
 body .nn { color: #0000FF; font-weight: bold }  /* Name.Namespace */
 body .nt { color: #954121; font-weight: bold }  /* Name.Tag */
 body .nv { color: #19469D }                     /* Name.Variable */
+body .nx { color: #000000 }                     /* Name.Variable */
 body .ow { color: #AA22FF; font-weight: bold }  /* Operator.Word */
 body .w { color: #bbbbbb }                      /* Text.Whitespace */
 body .mf { color: #666666 }                     /* Literal.Number.Float */
