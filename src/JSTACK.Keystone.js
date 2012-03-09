@@ -1,5 +1,5 @@
-// Keystone API
-// ------------
+// Keystone API Module
+// -------------------
 
 // This file provides functions to access Keystone API's operations,
 // such as authenticate and  gettenants.
