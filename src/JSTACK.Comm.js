@@ -1,5 +1,5 @@
-// JSTACK Module for communicating with OpenStack components
-// ---------------------------------------------------------
+// JSTACK Communication Module
+// ---------------------------
 
 // This module provides functions to send GET, POST, PUT and DELETE HTTP requests
 // to OpenStack components. It is compatible with the token-based authentication
