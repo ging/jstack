@@ -1,325 +1,311 @@
-<!DOCTYPE html>  <html> <head>   <title>JSTACK.Nova.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Nova.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Nova</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">){</span>
-	
-	<span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
-		<span class="nx">url</span>		<span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">_check</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> 
-			<span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">==</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
-				<span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;nova&quot;</span><span class="p">);</span>
-				<span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">adminURL</span><span class="p">;</span>
-				<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-		
-	<span class="kd">var</span> <span class="nx">getserverlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers&#39;</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getserverdetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getserverips</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">networkID</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/ips&#39;</span><span class="p">;</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">networkID</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">networkID</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">updateserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
-			<span class="s2">&quot;server&quot;</span>	<span class="o">:</span> <span class="p">{</span>
-				<span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
-			<span class="p">},</span>
-		<span class="p">};</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span>
-				<span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">createserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">imageRef</span><span class="p">,</span> <span class="nx">flavorRef</span><span class="p">,</span>
-                           <span class="nx">key_name</span><span class="p">,</span> <span class="nx">user_data</span><span class="p">,</span> <span class="nx">security_groups</span><span class="p">,</span>
-                           <span class="nx">min_count</span><span class="p">,</span> <span class="nx">max_count</span><span class="p">,</span> <span class="nx">availability_zone</span><span class="p">,</span> 
-                           <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
-    		<span class="s2">&quot;server&quot;</span> <span class="o">:</span> <span class="p">{</span>
-        		<span class="s2">&quot;name&quot;</span>				<span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
-        		<span class="s2">&quot;imageRef&quot;</span> 			<span class="o">:</span> <span class="nx">imageRef</span><span class="p">,</span>
-        		<span class="s2">&quot;flavorRef&quot;</span>			<span class="o">:</span> <span class="nx">flavorRef</span>
-        	<span class="p">}</span>
-		<span class="p">};</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">key_name</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">key_name</span> <span class="o">=</span> <span class="nx">key_name</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">user_data</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">user_data</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">encode</span><span class="p">(</span><span class="nx">user_data</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">security_groups</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="p">[];</span> 
-			
-			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">security_groups</span><span class="p">)</span> <span class="p">{</span>
-				<span class="kd">var</span> <span class="nx">group</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">security_groups</span><span class="p">[</span><span class="nx">i</span><span class="p">]};</span>
-				<span class="nx">groups</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">group</span><span class="p">);</span>
-			<span class="p">}</span>
-			
-			<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">security_groups</span> <span class="o">=</span> <span class="nx">groups</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">min_count</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">min_count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">min_count</span> <span class="o">=</span> <span class="nx">min_count</span><span class="p">;</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">max_count</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">max_count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">max_count</span> <span class="o">=</span> <span class="nx">max_count</span><span class="p">;</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">availability_zone</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">availability_zone</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">encode</span><span class="p">(</span><span class="nx">availability_zone</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> 
-				<span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-		
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">deleteserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">_postAction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/action&#39;</span><span class="p">;</span>
-	
-		<span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">changepasswordserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">adminPass</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">adminPass</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
-			<span class="s2">&quot;changePassword&quot;</span>	<span class="o">:</span> <span class="p">{</span>
-				<span class="s2">&quot;adminPass&quot;</span> <span class="o">:</span> <span class="nx">adminPass</span><span class="p">,</span>
-			<span class="p">},</span>
-		<span class="p">};</span>
-		
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">rebootserverhard</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reboot&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;HARD&quot;</span><span class="p">}},</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">rebootserversoft</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reboot&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;SOFT&quot;</span><span class="p">}},</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">resizeserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">flavorRef</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;resize&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;flavorRef&quot;</span><span class="o">:</span><span class="nx">flavorRef</span><span class="p">}},</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">confirmresizedserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;confirmResize&quot;</span><span class="o">:</span><span class="kc">null</span><span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">createimage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;createImage&quot;</span><span class="o">:</span><span class="p">{</span>
-			<span class="s1">&#39;name&#39;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
-		<span class="p">}};</span>
-		
-		<span class="nx">data</span><span class="p">.</span><span class="nx">creageImage</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> <span class="p">{};</span>
-		
-		<span class="k">if</span> <span class="p">(</span><span class="nx">metadata</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">data</span><span class="p">.</span><span class="nx">creageImage</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> <span class="nx">metadata</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getflavorlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/flavors&#39;</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getflavordetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/flavors/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getimagelist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images&#39;</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">getimagedetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
-	
-	<span class="kd">var</span> <span class="nx">deleteimage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
-		
-		<span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-				<span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-		<span class="p">}</span>
-		
-		<span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>		<span class="p">}</span>
-		<span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> 
-				<span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-	<span class="p">}</span>
+<!DOCTYPE html>  <html> <head>   <title>JSTACK.Nova.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Nova.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Nova</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
 
-	<span class="k">return</span> <span class="p">{</span>
-		<span class="nx">getserverlist</span>			<span class="o">:</span><span class="nx">getserverlist</span><span class="p">,</span>
-		<span class="nx">getserverdetail</span>			<span class="o">:</span><span class="nx">getserverdetail</span><span class="p">,</span>
-		<span class="nx">getserverips</span>			<span class="o">:</span><span class="nx">getserverips</span><span class="p">,</span>
-		<span class="nx">updateserver</span>			<span class="o">:</span><span class="nx">updateserver</span><span class="p">,</span>
-		<span class="nx">createserver</span>			<span class="o">:</span><span class="nx">createserver</span><span class="p">,</span>
-		<span class="nx">deleteserver</span>			<span class="o">:</span><span class="nx">deleteserver</span><span class="p">,</span>
-		<span class="nx">changepasswordserver</span>	<span class="o">:</span><span class="nx">changepasswordserver</span><span class="p">,</span>
-		<span class="nx">rebootserverhard</span>		<span class="o">:</span><span class="nx">rebootserverhard</span><span class="p">,</span>
-		<span class="nx">rebootserversoft</span>		<span class="o">:</span><span class="nx">rebootserversoft</span><span class="p">,</span>
-		<span class="nx">resizeserver</span>			<span class="o">:</span><span class="nx">resizeserver</span><span class="p">,</span>
-		<span class="nx">confirmresizedserver</span>	<span class="o">:</span><span class="nx">confirmresizedserver</span><span class="p">,</span>
-		<span class="nx">createimage</span>				<span class="o">:</span><span class="nx">createimage</span><span class="p">,</span>
-		<span class="nx">getflavorlist</span>			<span class="o">:</span><span class="nx">getflavorlist</span><span class="p">,</span>
-		<span class="nx">getflavordetail</span>			<span class="o">:</span><span class="nx">getflavordetail</span><span class="p">,</span>
-		<span class="nx">getimagelist</span>			<span class="o">:</span><span class="nx">getimagelist</span><span class="p">,</span>
-		<span class="nx">getimagedetail</span>			<span class="o">:</span><span class="nx">getimagedetail</span><span class="p">,</span>
-		<span class="nx">deleteimage</span>				<span class="o">:</span><span class="nx">deleteimage</span><span class="p">,</span>
-	<span class="p">}</span>
-	
-<span class="p">})</span> <span class="p">(</span><span class="nx">JSTACK</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">url</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">_check</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">==</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;nova&quot;</span><span class="p">);</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">adminURL</span><span class="p">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getserverlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers&#39;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getserverdetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getserverips</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">networkID</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/ips&#39;</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">networkID</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">networkID</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">updateserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">name</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;server&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">};</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">createserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">imageRef</span><span class="p">,</span> <span class="nx">flavorRef</span><span class="p">,</span> <span class="nx">key_name</span><span class="p">,</span> <span class="nx">user_data</span><span class="p">,</span> <span class="nx">security_groups</span><span class="p">,</span> <span class="nx">min_count</span><span class="p">,</span> <span class="nx">max_count</span><span class="p">,</span> <span class="nx">availability_zone</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;server&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+                <span class="s2">&quot;imageRef&quot;</span> <span class="o">:</span> <span class="nx">imageRef</span><span class="p">,</span>
+                <span class="s2">&quot;flavorRef&quot;</span> <span class="o">:</span> <span class="nx">flavorRef</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">key_name</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">key_name</span> <span class="o">=</span> <span class="nx">key_name</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">user_data</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">user_data</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">encode</span><span class="p">(</span><span class="nx">user_data</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">security_groups</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">groups</span> <span class="o">=</span> <span class="p">[];</span>
+
+            <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">security_groups</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">group</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">security_groups</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+                <span class="p">};</span>
+                <span class="nx">groups</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">group</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">security_groups</span> <span class="o">=</span> <span class="nx">groups</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">min_count</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">min_count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">min_count</span> <span class="o">=</span> <span class="nx">min_count</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">max_count</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">max_count</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">max_count</span> <span class="o">=</span> <span class="nx">max_count</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">availability_zone</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">availability_zone</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">encode</span><span class="p">(</span><span class="nx">availability_zone</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">deleteserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">_postAction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/action&#39;</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">changepasswordserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">adminPass</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">adminPass</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;changePassword&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;adminPass&quot;</span> <span class="o">:</span> <span class="nx">adminPass</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">};</span>
+
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">rebootserverhard</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;reboot&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span> <span class="o">:</span> <span class="s2">&quot;HARD&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">rebootserversoft</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;reboot&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span> <span class="o">:</span> <span class="s2">&quot;SOFT&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">resizeserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">flavorRef</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;resize&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;flavorRef&quot;</span> <span class="o">:</span> <span class="nx">flavorRef</span>
+            <span class="p">}</span>
+        <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">confirmresizedserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s2">&quot;confirmResize&quot;</span> <span class="o">:</span> <span class="kc">null</span>
+        <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">createimage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;createImage&quot;</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="nx">data</span><span class="p">.</span><span class="nx">creageImage</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> <span class="p">{};</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">metadata</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">creageImage</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> <span class="nx">metadata</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getflavorlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/flavors&#39;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getflavordetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/flavors/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getimagelist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images&#39;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">getimagedetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">deleteimage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>TODO</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="p">}</span>
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">getserverlist</span> <span class="o">:</span> <span class="nx">getserverlist</span><span class="p">,</span>
+        <span class="nx">getserverdetail</span> <span class="o">:</span> <span class="nx">getserverdetail</span><span class="p">,</span>
+        <span class="nx">getserverips</span> <span class="o">:</span> <span class="nx">getserverips</span><span class="p">,</span>
+        <span class="nx">updateserver</span> <span class="o">:</span> <span class="nx">updateserver</span><span class="p">,</span>
+        <span class="nx">createserver</span> <span class="o">:</span> <span class="nx">createserver</span><span class="p">,</span>
+        <span class="nx">deleteserver</span> <span class="o">:</span> <span class="nx">deleteserver</span><span class="p">,</span>
+        <span class="nx">changepasswordserver</span> <span class="o">:</span> <span class="nx">changepasswordserver</span><span class="p">,</span>
+        <span class="nx">rebootserverhard</span> <span class="o">:</span> <span class="nx">rebootserverhard</span><span class="p">,</span>
+        <span class="nx">rebootserversoft</span> <span class="o">:</span> <span class="nx">rebootserversoft</span><span class="p">,</span>
+        <span class="nx">resizeserver</span> <span class="o">:</span> <span class="nx">resizeserver</span><span class="p">,</span>
+        <span class="nx">confirmresizedserver</span> <span class="o">:</span> <span class="nx">confirmresizedserver</span><span class="p">,</span>
+        <span class="nx">createimage</span> <span class="o">:</span> <span class="nx">createimage</span><span class="p">,</span>
+        <span class="nx">getflavorlist</span> <span class="o">:</span> <span class="nx">getflavorlist</span><span class="p">,</span>
+        <span class="nx">getflavordetail</span> <span class="o">:</span> <span class="nx">getflavordetail</span><span class="p">,</span>
+        <span class="nx">getimagelist</span> <span class="o">:</span> <span class="nx">getimagelist</span><span class="p">,</span>
+        <span class="nx">getimagedetail</span> <span class="o">:</span> <span class="nx">getimagedetail</span><span class="p">,</span>
+        <span class="nx">deleteimage</span> <span class="o">:</span> <span class="nx">deleteimage</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
