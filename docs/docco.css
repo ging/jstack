@@ -87,7 +87,7 @@ table td {
     }
     .docs p tt, .docs p code {
       background: #657c1b;
-      border: 1px solid #dedede;
+      border: 0px solid #dedede;
       font-size: 12px;
       padding: 0 0.2em;
     }
@@ -111,7 +111,7 @@ table td {
     padding: 14px 15px 16px 25px;
     width: 100%;
     vertical-align: top;
-    background: #f5f5ff;
+    background: #657c1b;
     border-left: 1px solid #e5e5ee;
   }
     pre, tt, code {
@@ -122,8 +122,8 @@ table td {
 
 
 /*---------------------- Syntax Highlighting -----------------------------*/
-td.linenos { background-color: #f0f0f0; padding-right: 10px; }
-span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }
+td.linenos { background-color: #657c1b; padding-right: 10px; }
+span.lineno { background-color: #657c1b; padding: 0 5px 0 5px; }
 body .hll { background-color: #ffffcc }
 body .c { color: #408080; font-style: italic }  /* Comment */
 body .err { border: 1px solid #FF0000 }         /* Error */
