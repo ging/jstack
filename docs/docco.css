@@ -72,7 +72,6 @@ h1, h2, h3, h4, h5, h6 {
 table td {
   border: 0;
   outline: 0;
-  color: white;
 }
   td.docs, th.docs {
     max-width: 450px;
@@ -86,12 +85,14 @@ table td {
     .docs pre {
       margin: 15px 0 15px;
       padding-left: 15px;
+      color: white;
     }
     .docs p tt, .docs p code {
       background: #657c1b;
       border: 0px solid #dedede;
       font-size: 12px;
       padding: 0 0.2em;
+      color: white;
     }
     .pilwrap {
       position: relative;
