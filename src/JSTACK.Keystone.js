@@ -213,5 +213,5 @@ JSTACK.Keystone = (function(JS, undefined) {
         authenticate : authenticate,
         gettenants : gettenants,
         getservice : getservice
-    };
+    }
 })(JSTACK);
