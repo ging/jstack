@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+        <link rel="stylesheet" type="text/css" href="/jstack/css/style.css" />
+		<script src="/jstack/src/JSTACK.js"></script>
+		<script src="/jstack/src/JSTACK.Utils.js"></script>
+		<script src="/jstack/src/JSTACK.Comm.js"></script>
+		<script src="/jstack/src/JSTACK.Keystone.js"></script>
+		<script src="/jstack/src/JSTACK.Nova.js"></script>
+		<script type="text/javascript">
+			var printAll = function(result) {console.log(JSON.stringify(result,null,4));}
+		</script>
+		
+		<title>Testing</title>
+	</head>
+	<body>
+	    
+	    <a href="https://github.com/jcague/jstack"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+        <div id="container">
+            <h1><a href="/jstack/">jstack</a> testing tool</h1>
+    
+            <div class="description">
+              Welcome to the JStack Testing tool
+            </div>
+	    
+    	    <p>Please, access this URL using Google Chrome and press F12.</p>
+    	    <p>Access to the Console and you can start playing with this API.</p>
+    	    <h2>1. Initialization</h2>
+    		<p>The first step is to initialize Keystone API with a valid URL. For example:</p>
+    		<pre> > JSTACK.Keystone.init("http://host.name:5000/");</pre>
+    		<h2>2. Authentication</h2>
+    		<p>Next step is to authenticate to Keystone with valid username and password.</p>
+    		<pre> > JSTACK.Keystone.authenticate("admin", "password", "2", printAll);</pre>
+            <h2>3. Play time!</h2>
+    		<p>Now, it's time to play with Nova. For example, type this:</p>
+            <pre> > JSTACK.Nova.getserverlist(true,printAll);</pre>
+            <p>For more information access to <a href="/jstack/docs/JSTACK.html" target="_blank">documentation</a></p>
+        </div>
+	</body>
+	
+	
+</html>
