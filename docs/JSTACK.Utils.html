@@ -1,0 +1,129 @@
+<!DOCTYPE html>  <html> <head>   <title>JSTACK.Utils.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Utils.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Utils</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span><span class="kc">undefined</span><span class="p">){</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>private property</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">_keyStr</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>public method for encoding</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">encode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="kd">var</span> <span class="nx">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">chr1</span><span class="p">,</span> <span class="nx">chr2</span><span class="p">,</span> <span class="nx">chr3</span><span class="p">,</span> <span class="nx">enc1</span><span class="p">,</span> <span class="nx">enc2</span><span class="p">,</span> <span class="nx">enc3</span><span class="p">,</span> <span class="nx">enc4</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	    <span class="nx">input</span> <span class="o">=</span> <span class="nx">_utf8_encode</span><span class="p">(</span><span class="nx">input</span><span class="p">);</span>
+	
+	    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">input</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+	
+	        <span class="nx">chr1</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">);</span>
+	        <span class="nx">chr2</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">);</span>
+	        <span class="nx">chr3</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">);</span>
+	
+	        <span class="nx">enc1</span> <span class="o">=</span> <span class="nx">chr1</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">;</span>
+	        <span class="nx">enc2</span> <span class="o">=</span> <span class="p">((</span><span class="nx">chr1</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">chr2</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+	        <span class="nx">enc3</span> <span class="o">=</span> <span class="p">((</span><span class="nx">chr2</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">chr3</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">);</span>
+	        <span class="nx">enc4</span> <span class="o">=</span> <span class="nx">chr3</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">;</span>
+	
+	        <span class="k">if</span> <span class="p">(</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">chr2</span><span class="p">))</span> <span class="p">{</span>
+	            <span class="nx">enc3</span> <span class="o">=</span> <span class="nx">enc4</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+	        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">chr3</span><span class="p">))</span> <span class="p">{</span>
+	            <span class="nx">enc4</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+	        <span class="p">}</span>
+	
+	        <span class="nx">output</span> <span class="o">=</span> <span class="nx">output</span> <span class="o">+</span>
+	        <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">enc1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">Base64</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">enc2</span><span class="p">)</span> <span class="o">+</span>
+	        <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">enc3</span><span class="p">)</span> <span class="o">+</span> <span class="nx">Base64</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">enc4</span><span class="p">);</span>
+	
+	    <span class="p">}</span>
+	
+	    <span class="k">return</span> <span class="nx">output</span><span class="p">;</span>
+	<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>public method for decoding</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">decode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="kd">var</span> <span class="nx">output</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">chr1</span><span class="p">,</span> <span class="nx">chr2</span><span class="p">,</span> <span class="nx">chr3</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">enc1</span><span class="p">,</span> <span class="nx">enc2</span><span class="p">,</span> <span class="nx">enc3</span><span class="p">,</span> <span class="nx">enc4</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	    <span class="nx">input</span> <span class="o">=</span> <span class="nx">input</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[^A-Za-z0-9\+\/\=]/g</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">);</span>
+	
+	    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">input</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+	
+	        <span class="nx">enc1</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">));</span>
+	        <span class="nx">enc2</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">));</span>
+	        <span class="nx">enc3</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">));</span>
+	        <span class="nx">enc4</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Utils</span><span class="p">.</span><span class="nx">_keyStr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">input</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="o">++</span><span class="p">));</span>
+	
+	        <span class="nx">chr1</span> <span class="o">=</span> <span class="p">(</span><span class="nx">enc1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">enc2</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+	        <span class="nx">chr2</span> <span class="o">=</span> <span class="p">((</span><span class="nx">enc2</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">enc3</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">);</span>
+	        <span class="nx">chr3</span> <span class="o">=</span> <span class="p">((</span><span class="nx">enc3</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="nx">enc4</span><span class="p">;</span>
+	
+	        <span class="nx">output</span> <span class="o">=</span> <span class="nx">output</span> <span class="o">+</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">chr1</span><span class="p">);</span>
+	
+	        <span class="k">if</span> <span class="p">(</span><span class="nx">enc3</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">)</span> <span class="p">{</span>
+	            <span class="nx">output</span> <span class="o">=</span> <span class="nx">output</span> <span class="o">+</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">chr2</span><span class="p">);</span>
+	        <span class="p">}</span>
+	        <span class="k">if</span> <span class="p">(</span><span class="nx">enc4</span> <span class="o">!=</span> <span class="mi">64</span><span class="p">)</span> <span class="p">{</span>
+	            <span class="nx">output</span> <span class="o">=</span> <span class="nx">output</span> <span class="o">+</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">chr3</span><span class="p">);</span>
+	        <span class="p">}</span>
+	
+	    <span class="p">}</span>
+	
+	    <span class="nx">output</span> <span class="o">=</span> <span class="nx">_utf8_decode</span><span class="p">(</span><span class="nx">output</span><span class="p">);</span>
+	
+	    <span class="k">return</span> <span class="nx">output</span><span class="p">;</span>
+	
+	<span class="p">}</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>private method for UTF-8 encoding</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">_utf8_encode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="nx">string</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\r\n/g</span><span class="p">,</span><span class="s2">&quot;\n&quot;</span><span class="p">);</span>
+	    <span class="kd">var</span> <span class="nx">utftext</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+	
+	    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">n</span> <span class="o">&lt;</span> <span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">n</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	
+	        <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">n</span><span class="p">);</span>
+	
+	        <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">)</span> <span class="p">{</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+	        <span class="p">}</span>
+	        <span class="k">else</span> <span class="k">if</span><span class="p">((</span><span class="nx">c</span> <span class="o">&gt;</span> <span class="mi">127</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mi">2048</span><span class="p">))</span> <span class="p">{</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">((</span><span class="nx">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="mi">192</span><span class="p">);</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">((</span><span class="nx">c</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span> <span class="o">|</span> <span class="mi">128</span><span class="p">);</span>
+	        <span class="p">}</span>
+	        <span class="k">else</span> <span class="p">{</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">((</span><span class="nx">c</span> <span class="o">&gt;&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="mi">224</span><span class="p">);</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(((</span><span class="nx">c</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span> <span class="o">|</span> <span class="mi">128</span><span class="p">);</span>
+	            <span class="nx">utftext</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">((</span><span class="nx">c</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span> <span class="o">|</span> <span class="mi">128</span><span class="p">);</span>
+	        <span class="p">}</span>
+	
+	    <span class="p">}</span>
+	
+	    <span class="k">return</span> <span class="nx">utftext</span><span class="p">;</span>
+	<span class="p">}</span>
+	</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>private method for UTF-8 decoding</p>             </td>             <td class="code">               <div class="highlight"><pre>	<span class="kd">var</span> <span class="nx">_utf8_decode</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">utftext</span><span class="p">)</span> <span class="p">{</span>
+	    <span class="kd">var</span> <span class="nx">string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	    <span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">c1</span> <span class="o">=</span> <span class="nx">c2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	    <span class="k">while</span> <span class="p">(</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">utftext</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span> <span class="p">{</span>
+	
+	        <span class="nx">c</span> <span class="o">=</span> <span class="nx">utftext</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+	
+	        <span class="k">if</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">)</span> <span class="p">{</span>
+	            <span class="nx">string</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+	            <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+	        <span class="p">}</span>
+	        <span class="k">else</span> <span class="k">if</span><span class="p">((</span><span class="nx">c</span> <span class="o">&gt;</span> <span class="mi">191</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">c</span> <span class="o">&lt;</span> <span class="mi">224</span><span class="p">))</span> <span class="p">{</span>
+	            <span class="nx">c2</span> <span class="o">=</span> <span class="nx">utftext</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	            <span class="nx">string</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(((</span><span class="nx">c</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">c2</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">));</span>
+	            <span class="nx">i</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+	        <span class="p">}</span>
+	        <span class="k">else</span> <span class="p">{</span>
+	            <span class="nx">c2</span> <span class="o">=</span> <span class="nx">utftext</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	            <span class="nx">c3</span> <span class="o">=</span> <span class="nx">utftext</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">2</span><span class="p">);</span>
+	            <span class="nx">string</span> <span class="o">+=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(((</span><span class="nx">c</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="nx">c2</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nx">c3</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">));</span>
+	            <span class="nx">i</span> <span class="o">+=</span> <span class="mi">3</span><span class="p">;</span>
+	        <span class="p">}</span>
+	
+	    <span class="p">}</span>
+	    <span class="k">return</span> <span class="nx">string</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	
+	<span class="k">return</span> <span class="p">{</span>
+		<span class="nx">encode</span>  <span class="o">:</span> <span class="nx">encode</span><span class="p">,</span>
+		<span class="nx">decode</span>	<span class="o">:</span> <span class="nx">decode</span><span class="p">,</span>
+	<span class="p">};</span>
+<span class="p">})</span> <span class="p">(</span><span class="nx">JSTACK</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
