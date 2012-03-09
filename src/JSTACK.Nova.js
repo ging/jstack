@@ -7,7 +7,7 @@ JSTACK.Nova = (function(JS, undefined) {
     // This modules stores the `url`to which it will send every
     // request.
     var params = {
-        url : undefined,
+        url : undefined
     }
 
     // Private functions
@@ -132,8 +132,8 @@ JSTACK.Nova = (function(JS, undefined) {
 
         var data = {
             "server" : {
-                "name" : name,
-            },
+                "name" : name
+            }
         };
 
         var _onOk = function(result) {
@@ -263,6 +263,7 @@ JSTACK.Nova = (function(JS, undefined) {
 
         JS.Comm.del(url, JS.Keystone.params.token, _onOk, _onError);
     }
+    
     // **Server Actions**
     //
     // Take a look at `_postAction` for detailed information about requests. 
@@ -277,8 +278,8 @@ JSTACK.Nova = (function(JS, undefined) {
 
         var data = {
             "changePassword" : {
-                "adminPass" : adminPass,
-            },
+                "adminPass" : adminPass
+            }
         };
 
         _postAction(id, data, callback);
@@ -352,7 +353,7 @@ JSTACK.Nova = (function(JS, undefined) {
     var createimage = function(id, name, metadata, callback) {
         var data = {
             "createImage" : {
-                'name' : name,
+                'name' : name
             }
         };
 
@@ -496,7 +497,7 @@ JSTACK.Nova = (function(JS, undefined) {
         getflavordetail         : getflavordetail,
         getimagelist            : getimagelist,
         getimagedetail          : getimagedetail,
-        deleteimage             : deleteimage,
+        deleteimage             : deleteimage
     }
 
 })(JSTACK);
