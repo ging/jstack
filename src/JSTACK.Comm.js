@@ -79,23 +79,32 @@ JSTACK.Comm = (function(JS, undefined) {
     var get = function(url, token, callbackOK, callbackError) {
         _send("GET", url, undefined, token, callbackOK, callbackError);
     }
+    
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and
     // callbacks. It sends a HTTP POST request.
     var post = function(url, data, token, callbackOK, callbackError) {
         _send("POST", url, data, token, callbackOK, callbackError);
     }
+    
     // * Function *put* receives the same parameters as post. It sends
     // a HTTP PUT request.
     var put = function(url, data, token, callbackOK, callbackError) {
         _send("PUT", url, data, token, callbackOK, callbackError);
     }
+    
     // * Function *del* receives the same paramaters as get. It sends a
     // HTTP DELETE request.
     var del = function(url, token, callbackOK, callbackError) {
         _send("DELETE", url, undefined, token, callbackOK, callbackError);
     }
+    
+    // Public Functions and Variables
+    // ------------------------------
+    // This is the list of available public functions and variables
     return {
+        
+        // Functions: 
         get : get,
         post : post,
         put : put,
