@@ -7,7 +7,8 @@ JSTACK.Nova = (function(JS, undefined) {
     // This modules stores the `url`to which it will send every
     // request.
     var params = {
-        url : undefined
+        url     : undefined,
+        state   : undefined
     }
 
     // Private functions
@@ -134,7 +135,7 @@ JSTACK.Nova = (function(JS, undefined) {
             "server" : {
                 "name" : name
             }
-        };
+        }
 
         var _onOk = function(result) {
             if(callback != undefined)
