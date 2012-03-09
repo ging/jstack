@@ -4,7 +4,8 @@
 </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This modules stores the <code>url</code>to which it will send every
 request.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">url</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="nx">url</span>     <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="nx">state</span>   <span class="o">:</span> <span class="kc">undefined</span>
     <span class="p">}</span>
 
 </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
@@ -126,9 +127,9 @@ there is more information about the JSON object that is returned.</p>           
 
         <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;server&quot;</span> <span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">};</span>
+                <span class="s2">&quot;name&quot;</span> <span class="o">:</span> <span class="nx">name</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
         <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
@@ -254,6 +255,7 @@ there is more information.</p>             </td>             <td class="code">  
 
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
+    
 </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p><strong>Server Actions</strong></p>
 
 <p>Take a look at <code>_postAction</code> for detailed information about requests. </p>             </td>             <td class="code">               <div class="highlight"><pre>
@@ -267,8 +269,8 @@ there is more information.</p>             </td>             <td class="code">  
 
         <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;changePassword&quot;</span> <span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;adminPass&quot;</span> <span class="o">:</span> <span class="nx">adminPass</span><span class="p">,</span>
-            <span class="p">},</span>
+                <span class="s2">&quot;adminPass&quot;</span> <span class="o">:</span> <span class="nx">adminPass</span>
+            <span class="p">}</span>
         <span class="p">};</span>
 
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
@@ -342,7 +344,7 @@ there is more information.</p>             </td>             <td class="code">  
     <span class="kd">var</span> <span class="nx">createimage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;createImage&quot;</span> <span class="o">:</span> <span class="p">{</span>
-                <span class="s1">&#39;name&#39;</span> <span class="o">:</span> <span class="nx">name</span><span class="p">,</span>
+                <span class="s1">&#39;name&#39;</span> <span class="o">:</span> <span class="nx">name</span>
             <span class="p">}</span>
         <span class="p">};</span>
 
@@ -486,7 +488,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">getflavordetail</span>         <span class="o">:</span> <span class="nx">getflavordetail</span><span class="p">,</span>
         <span class="nx">getimagelist</span>            <span class="o">:</span> <span class="nx">getimagelist</span><span class="p">,</span>
         <span class="nx">getimagedetail</span>          <span class="o">:</span> <span class="nx">getimagedetail</span><span class="p">,</span>
-        <span class="nx">deleteimage</span>             <span class="o">:</span> <span class="nx">deleteimage</span><span class="p">,</span>
+        <span class="nx">deleteimage</span>             <span class="o">:</span> <span class="nx">deleteimage</span>
     <span class="p">}</span>
 
 <span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>
