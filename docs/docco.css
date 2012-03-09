@@ -130,11 +130,11 @@ table td {
 /*---------------------- Syntax Highlighting -----------------------------*/
 td.linenos { background-color: #657c1b; padding-right: 10px; }
 span.lineno { background-color: #657c1b; padding: 0 5px 0 5px; }
-body .hll { background-color: #ffffcc }
-body .c { color: #408080; font-style: italic }  /* Comment */
+body .hll { background-color: #000 }
+body .c { color: #fff; font-style: italic }  /* Comment */
 body .err { border: 1px solid #FF0000 }         /* Error */
 body .k { color: #954121 }                      /* Keyword */
-body .o { color: #666666 }                      /* Operator */
+body .o { color: #fff }                      /* Operator */
 body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
 body .cp { color: #BC7A00 }                     /* Comment.Preproc */
 body .c1 { color: #408080; font-style: italic } /* Comment.Single */
