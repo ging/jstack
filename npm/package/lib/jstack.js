@@ -1,4 +1,4 @@
-var XMLHttpRequest = require("./xmlhttprequest").XMLHttpRequest;
+var XMLHttpRequest = require("./../vendor/xmlhttprequest").XMLHttpRequest;
 var JSTACK = JSTACK || {};
 JSTACK.VERSION = "0.1";
 JSTACK.AUTHORS = "GING";

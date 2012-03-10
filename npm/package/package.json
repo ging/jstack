@@ -12,6 +12,7 @@
   "engines": {
     "node": "~0.6.11"
   },
+  "bin" : "./bin/jstack",
   "dependencies": {},
   "devDependencies": {},
   "optionalDependencies": {}

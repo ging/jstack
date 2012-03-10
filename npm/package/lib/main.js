@@ -1,4 +1,3 @@
-
 var JSTACK = require('./jstack');
 
 var printAll = function(result) {console.log(JSON.stringify(result,null,4));}
