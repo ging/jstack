@@ -16,8 +16,8 @@ echo 'module.exports = JSTACK;' >> $TARGET
 
 cp ../LICENSE ../npm/package/
 
-cd ../npm/
+#cd ../npm/
 
-tar -czvf package.tgz package/
+#tar -czvf package.tgz package/
 
-cd $current_dir
+#cd $current_dir
