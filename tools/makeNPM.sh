@@ -4,9 +4,17 @@ TARGET=../npm/package/lib/jstack.js
 
 current_dir=`pwd`
 
-echo 'var XMLHttpRequest = require("./../vendor/xmlhttprequest").XMLHttpRequest;' > ../npm/package/lib/jstack.js
-cat ../release/jstack.js >> ../npm/package/lib/jstack.js
-echo 'module.exports = JSTACK;' >> ../npm/package/lib/jstack.js
+# License
+echo '/*' > $TARGET
+cat ../LICENSE >> $TARGET
+echo '*/' >> $TARGET
+
+# Body
+echo 'var XMLHttpRequest = require("./../vendor/xmlhttprequest").XMLHttpRequest;' >> $TARGET
+cat ../release/jstack.js >> $TARGET
+echo 'module.exports = JSTACK;' >> $TARGET
+
+cp ../LICENSE ../npm/package/
 
 cd ../npm/
 
