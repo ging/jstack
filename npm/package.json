@@ -1,0 +1,18 @@
+{
+  "author": "GING <jcervino@dit.upm.es>",
+  "name": "jstack",
+  "description": "JavaScript implementation of OpenStack API",
+  "version": "0.1.0",
+  "homepage": "http://jcague.github.com/jstack/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jcague/jstack.git"
+  },
+  "main": "main.js",
+  "engines": {
+    "node": "~0.6.11"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}

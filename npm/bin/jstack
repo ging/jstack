@@ -1,0 +1,5 @@
+#!/bin/bash
+old_dir=`pwd`
+cd `dirname $0`
+node ../main.js $@
+cd $old_dir
