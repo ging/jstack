@@ -1,0 +1,19 @@
+{
+  "author": "GING <jcervino@dit.upm.es>",
+  "name": "jstack-client",
+  "description": "JavaScript implementation of OpenStack API",
+  "version": "0.1.1",
+  "homepage": "http://jcague.github.com/jstack/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ging/jstack.git"
+  },
+  "main": "main.js",
+  "engines": {
+    "node": "~0.6.11"
+  },
+  "bin" : "./bin/jstack-client",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
