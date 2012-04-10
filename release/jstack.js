@@ -1,10 +1,10 @@
 var JSTACK = JSTACK || {};
 JSTACK.VERSION = "0.1";
 JSTACK.AUTHORS = "GING";
-JSTACK.Comm = function(h, c) {
+JSTACK.Comm = function(e, c) {
   var d = function(g, e, b, a, f, i) {
     var d = new XMLHttpRequest;
-    d.open(g, e, !0);
+    d.open(g, e + ".json", !0);
     d.setRequestHeader("Content-Type", "application/json");
     d.onreadystatechange = function() {
       if(4 == d.readyState) {
@@ -49,24 +49,24 @@ JSTACK.Comm = function(h, c) {
     d("POST", c, e, b, a, f)
   }, put:function(c, e, b, a, f) {
     d("PUT", c, e, b, a, f)
-  }, del:function(g, e, b, a) {
-    d("DELETE", g, c, e, b, a)
+  }, del:function(e, h, b, a) {
+    d("DELETE", e, c, h, b, a)
   }}
 }(JSTACK);
-JSTACK.Utils = function(h) {
+JSTACK.Utils = function(e) {
   return{encode:function(c) {
-    var d = "", g, e, b, a, f, i, j = 0, c = c.replace(/\r\n/g, "\n");
-    e = "";
+    var d = "", g, h, b, a, f, i, k = 0, c = c.replace(/\r\n/g, "\n");
+    h = "";
     for(b = 0;b < c.length;b++) {
-      a = c.charCodeAt(b), 128 > a ? e += String.fromCharCode(a) : (127 < a && 2048 > a ? e += String.fromCharCode(a >> 6 | 192) : (e += String.fromCharCode(a >> 12 | 224), e += String.fromCharCode(a >> 6 & 63 | 128)), e += String.fromCharCode(a & 63 | 128))
+      a = c.charCodeAt(b), 128 > a ? h += String.fromCharCode(a) : (127 < a && 2048 > a ? h += String.fromCharCode(a >> 6 | 192) : (h += String.fromCharCode(a >> 12 | 224), h += String.fromCharCode(a >> 6 & 63 | 128)), h += String.fromCharCode(a & 63 | 128))
     }
-    for(c = e;j < c.length;) {
-      g = c.charCodeAt(j++), e = c.charCodeAt(j++), b = c.charCodeAt(j++), a = g >> 2, g = (g & 3) << 4 | e >> 4, f = (e & 15) << 2 | b >> 6, i = b & 63, isNaN(e) ? f = i = 64 : isNaN(b) && (i = 64), d = d + h.Utils._keyStr.charAt(a) + Base64._keyStr.charAt(g) + h.Utils._keyStr.charAt(f) + Base64._keyStr.charAt(i)
+    for(c = h;k < c.length;) {
+      g = c.charCodeAt(k++), h = c.charCodeAt(k++), b = c.charCodeAt(k++), a = g >> 2, g = (g & 3) << 4 | h >> 4, f = (h & 15) << 2 | b >> 6, i = b & 63, isNaN(h) ? f = i = 64 : isNaN(b) && (i = 64), d = d + e.Utils._keyStr.charAt(a) + Base64._keyStr.charAt(g) + e.Utils._keyStr.charAt(f) + Base64._keyStr.charAt(i)
     }
     return d
   }, decode:function(c) {
-    for(var d = "", g, e, b, a, f, i = 0, c = c.replace(/[^A-Za-z0-9\+\/\=]/g, "");i < c.length;) {
-      g = h.Utils._keyStr.indexOf(c.charAt(i++)), e = h.Utils._keyStr.indexOf(c.charAt(i++)), a = h.Utils._keyStr.indexOf(c.charAt(i++)), f = h.Utils._keyStr.indexOf(c.charAt(i++)), g = g << 2 | e >> 4, e = (e & 15) << 4 | a >> 2, b = (a & 3) << 6 | f, d += String.fromCharCode(g), 64 != a && (d += String.fromCharCode(e)), 64 != f && (d += String.fromCharCode(b))
+    for(var d = "", g, h, b, a, f, i = 0, c = c.replace(/[^A-Za-z0-9\+\/\=]/g, "");i < c.length;) {
+      g = e.Utils._keyStr.indexOf(c.charAt(i++)), h = e.Utils._keyStr.indexOf(c.charAt(i++)), a = e.Utils._keyStr.indexOf(c.charAt(i++)), f = e.Utils._keyStr.indexOf(c.charAt(i++)), g = g << 2 | h >> 4, h = (h & 15) << 4 | a >> 2, b = (a & 3) << 6 | f, d += String.fromCharCode(g), 64 != a && (d += String.fromCharCode(h)), 64 != f && (d += String.fromCharCode(b))
     }
     c = d;
     d = "";
@@ -76,28 +76,28 @@ JSTACK.Utils = function(h) {
     return d
   }}
 }(JSTACK);
-JSTACK.Keystone = function(h, c) {
+JSTACK.Keystone = function(e, c) {
   var d = {DISCONNECTED:0, AUTHENTICATING:1, AUTHENTICATED:2, AUTHENTICATION_ERROR:3}, g = {url:c, currentstate:c, access:c, token:c};
   return{STATES:d, params:g, init:function(e) {
     g.url = e;
     g.access = c;
     g.token = c;
     g.currentstate = d.DISCONNECTED
-  }, authenticate:function(e, b, a, f) {
-    e = {auth:{passwordCredentials:{username:e, password:b}}};
-    "undefined" !== a && (e.auth.tenantId = a);
+  }, authenticate:function(h, b, a, f, i, k) {
+    var j = {}, j = a != c ? {auth:{token:{id:a}}} : {auth:{passwordCredentials:{username:h, password:b}}};
+    f !== c && (j.auth.tenantId = f);
     g.currentstate = d.AUTHENTICATING;
-    h.Comm.post(g.url + "tokens", e, c, function(a) {
-      g.currentstate = h.Keystone.STATES.AUTHENTICATED;
+    e.Comm.post(g.url + "tokens", j, c, function(a) {
+      g.currentstate = e.Keystone.STATES.AUTHENTICATED;
       g.access = a.access;
       g.token = g.access.token.id;
-      f != c && f(a)
+      i != c && i(a)
     }, function(a) {
       g.currentstate = d.AUTHENTICATION_ERROR;
-      throw Error(a);
+      k(a)
     })
   }, gettenants:function(d) {
-    g.currentstatus == h.Keystone.STATES.AUTHENTICATED && h.Comm.get(g.url + "tenants", g.token, function(b) {
+    g.currentstate == e.Keystone.STATES.AUTHENTICATED && e.Comm.get(g.url + "tenants", g.token, function(b) {
       d != c && d(b)
     }, function(b) {
       throw Error(b);
@@ -115,11 +115,11 @@ JSTACK.Keystone = function(h, c) {
     return c
   }}
 }(JSTACK);
-JSTACK.Nova = function(h, c) {
+JSTACK.Nova = function(e, c) {
   var d = c, g = function() {
-    return d != c ? !0 : h.Keystone != c && h.Keystone.params.currentstate == h.Keystone.STATES.AUTHENTICATED ? (d = h.Keystone.getservice("nova").endpoints[0].adminURL, !0) : !1
-  }, e = function(b, a, f) {
-    g() && h.Comm.post(d + "/servers/" + b + "/action", a, h.Keystone.params.token, function(a) {
+    return d != c ? !0 : e.Keystone != c && e.Keystone.params.currentstate == e.Keystone.STATES.AUTHENTICATED ? (d = e.Keystone.getservice("nova").endpoints[0].adminURL, !0) : !1
+  }, h = function(b, a, f) {
+    g() && e.Comm.post(d + "/servers/" + b + "/action", a, e.Keystone.params.token, function(a) {
       f != c && f(a)
     }, function(a) {
       throw Error(a);
@@ -129,88 +129,88 @@ JSTACK.Nova = function(h, c) {
     if(g()) {
       var f = d + "/servers";
       b != c & b && (f += "/detail");
-      h.Comm.get(f, h.Keystone.params.token, function(b) {
+      e.Comm.get(f, e.Keystone.params.token, function(b) {
         a != c && a(b)
       }, function(a) {
         throw Error(a);
       })
     }
   }, getserverdetail:function(b, a) {
-    g() && h.Comm.get(d + "/servers/" + b, h.Keystone.params.token, function(b) {
+    g() && e.Comm.get(d + "/servers/" + b, e.Keystone.params.token, function(b) {
       a != c && a(b)
     }, function(a) {
       throw Error(a);
     })
   }, getserverips:function(b, a, f) {
-    g() && (b = d + "/servers/" + b + "/ips", a != c && (b += "/" + a), h.Comm.get(b, h.Keystone.params.token, function(a) {
+    g() && (b = d + "/servers/" + b + "/ips", a != c && (b += "/" + a), e.Comm.get(b, e.Keystone.params.token, function(a) {
       f != c && f(a)
     }, function(a) {
       throw Error(a);
     }))
   }, updateserver:function(b, a, f) {
-    g() && a != c && h.Comm.put(d + "/servers/" + b, {server:{name:a}}, h.Keystone.params.token, function(a) {
+    g() && a != c && e.Comm.put(d + "/servers/" + b, {server:{name:a}}, e.Keystone.params.token, function(a) {
       f != c && f(a)
     }, function(a) {
       throw Error(a);
     })
-  }, createserver:function(b, a, f, e, j, k, l, m, n, o) {
+  }, createserver:function(b, a, f, i, h, j, l, m, n, o) {
     if(g()) {
       b = {server:{name:b, imageRef:a, flavorRef:f}};
-      e != c && (b.server.key_name = e);
-      j != c && (b.server.user_data = h.Utils.encode(j));
-      if(k != c) {
-        var e = [], p;
-        for(p in k) {
-          e.push({name:k[p]})
+      i != c && (b.server.key_name = i);
+      h != c && (b.server.user_data = e.Utils.encode(h));
+      if(j != c) {
+        var i = [], p;
+        for(p in j) {
+          i.push({name:j[p]})
         }
-        b.server.security_groups = e
+        b.server.security_groups = i
       }
       l == c && (l = 1);
       b.server.min_count = l;
       m == c && (m = 1);
       b.server.max_count = m;
-      n != c && (b.server.availability_zone = h.Utils.encode(n));
-      h.Comm.post(d + "/servers", b, h.Keystone.params.token, function(a) {
+      n != c && (b.server.availability_zone = e.Utils.encode(n));
+      e.Comm.post(d + "/servers", b, e.Keystone.params.token, function(a) {
         o != c && o(a)
       }, function(a) {
         throw Error(a);
       })
     }
   }, deleteserver:function(b, a) {
-    g() && h.Comm.del(d + "/servers/" + b, h.Keystone.params.token, function(b) {
+    g() && e.Comm.del(d + "/servers/" + b, e.Keystone.params.token, function(b) {
       a != c && a(b)
     }, function(a) {
       throw Error(a);
     })
   }, changepasswordserver:function(b, a, f) {
-    a != c && e(b, {changePassword:{adminPass:a}}, f)
+    a != c && h(b, {changePassword:{adminPass:a}}, f)
   }, rebootserverhard:function(b, a) {
-    e(b, {reboot:{type:"HARD"}}, a)
+    h(b, {reboot:{type:"HARD"}}, a)
   }, rebootserversoft:function(b, a) {
-    e(b, {reboot:{type:"SOFT"}}, a)
+    h(b, {reboot:{type:"SOFT"}}, a)
   }, resizeserver:function(b, a, c) {
-    e(b, {resize:{flavorRef:a}}, c)
+    h(b, {resize:{flavorRef:a}}, c)
   }, confirmresizedserver:function(b, a) {
-    e(b, {confirmResize:null}, a)
+    h(b, {confirmResize:null}, a)
   }, revertresizedserver:function(b, a) {
-    e(b, {revertResize:null}, a)
+    h(b, {revertResize:null}, a)
   }, createimage:function(b, a, f, d) {
     a = {createImage:{name:a}};
     a.creageImage.metadata = {};
     f != c && (a.creageImage.metadata = f);
-    e(b, a, d)
+    h(b, a, d)
   }, getflavorlist:function(b, a) {
     if(g()) {
       var f = d + "/flavors";
       b != c & b && (f += "/detail");
-      h.Comm.get(f, h.Keystone.params.token, function(b) {
+      e.Comm.get(f, e.Keystone.params.token, function(b) {
         a != c && a(b)
       }, function(a) {
         throw Error(a);
       })
     }
   }, getflavordetail:function(b, a) {
-    g() && h.Comm.get(d + "/flavors/" + b, h.Keystone.params.token, function(b) {
+    g() && e.Comm.get(d + "/flavors/" + b, e.Keystone.params.token, function(b) {
       a != c && a(b)
     }, function(a) {
       throw Error(a);
@@ -219,20 +219,42 @@ JSTACK.Nova = function(h, c) {
     if(g()) {
       var f = d + "/images";
       b != c & b && (f += "/detail");
-      h.Comm.get(f, h.Keystone.params.token, function(b) {
+      e.Comm.get(f, e.Keystone.params.token, function(b) {
         a != c && a(b)
       }, function(a) {
         throw Error(a);
       })
     }
   }, getimagedetail:function(b, a) {
-    g() && h.Comm.get(d + "/images/" + b, h.Keystone.params.token, function(b) {
+    g() && e.Comm.get(d + "/images/" + b, e.Keystone.params.token, function(b) {
       a != c && a(b)
     }, function(a) {
       throw Error(a);
     })
   }, deleteimage:function(b, a) {
-    g() && h.Comm.del(d + "/images/" + b, h.Keystone.params.token, function(b) {
+    g() && e.Comm.del(d + "/images/" + b, e.Keystone.params.token, function(b) {
+      a != c && a(b)
+    }, function(a) {
+      throw Error(a);
+    })
+  }, getkeypairlist:function(b) {
+    g() && e.Comm.get(d + "/os-keypairs", e.Keystone.params.token, function(a) {
+      b != c && b(a)
+    }, function(a) {
+      throw Error(a);
+    })
+  }, createkeypair:function(b, a, f) {
+    if(g()) {
+      var h = d + "/os-keypairs", b = {keypair:{name:b}};
+      a != c && (b.keypair.public_key = public_key);
+      e.Comm.post(h, b, e.Keystone.params.token, function(a) {
+        f != c && f(a)
+      }, function(a) {
+        throw Error(a);
+      })
+    }
+  }, deletekeypair:function(b, a) {
+    g() && e.Comm.del(d + "/os-keypairs/" + b, e.Keystone.params.token, function(b) {
       a != c && a(b)
     }, function(a) {
       throw Error(a);
