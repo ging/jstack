@@ -34,7 +34,7 @@ JSTACK.Nova = (function(JS, undefined) {
         url     : undefined,
         state   : undefined
     }
-
+    
     // Private functions
     // -----------------
     
@@ -498,7 +498,68 @@ JSTACK.Nova = (function(JS, undefined) {
         }
         JS.Comm.del(url, JS.Keystone.params.token, _onOK, _onError);
     }
+
+    // This operation retrieves a list of available Key-pairs.
+    var getkeypairlist = function(callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/os-keypairs';
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        
+        var _onError = function(message) {
+            throw Error(message);
+        }
+                
+        JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
+    }
     
+    // This operation retrieves a list of available Key-pairs.
+    var createkeypair = function(name, pubkey, callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/os-keypairs';
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        
+        var _onError = function(message) {
+            throw Error(message);
+        }
+        
+        var body = {'keypair': {'name': name}};
+        
+        if (pubkey != undefined) {
+            body['keypair']['public_key'] = public_key
+            
+        }    
+        
+        JS.Comm.post(url, body, JS.Keystone.params.token, _onOK, _onError);
+    }
+    
+    // This operation retrieves a list of available Key-pairs.
+    var deletekeypair = function(id, callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/os-keypairs/' + id;
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        
+        var _onError = function(message) {
+            throw Error(message);
+        }
+        
+        JS.Comm.del(url, JS.Keystone.params.token, _onOK, _onError);
+    }
+        
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -522,7 +583,10 @@ JSTACK.Nova = (function(JS, undefined) {
         getflavordetail         : getflavordetail,
         getimagelist            : getimagelist,
         getimagedetail          : getimagedetail,
-        deleteimage             : deleteimage
+        deleteimage             : deleteimage,
+        getkeypairlist          : getkeypairlist,
+        createkeypair           : createkeypair,
+        deletekeypair           : deletekeypair
     }
 
 })(JSTACK);
