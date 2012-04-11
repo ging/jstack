@@ -162,7 +162,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         }
         for(var index in params.access.serviceCatalog) {
             var service = params.access.serviceCatalog[index];
-            if(name == service.name) {
+            if(name == service.type) {
                 // This function will return an object with the next structure:
                 //
                 //     service: {
@@ -182,6 +182,15 @@ JSTACK.Keystone = (function(JS, undefined) {
             }
         }
         return undefined;
+    }
+    
+    // The user can also obtain information about all services configured in Keystone.
+    var getservicelist = function() {
+        // Only if the client is currently authenticated.
+        if(params.currentstate != STATES.AUTHENTICATED) {
+            return undefined;
+        }
+        return params.access.serviceCatalog;
     }
     
     // Tenant information function
@@ -245,6 +254,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         init : init,
         authenticate : authenticate,
         gettenants : gettenants,
-        getservice : getservice
+        getservice : getservice,
+        getservicelist : getservicelist
     }
 })(JSTACK);

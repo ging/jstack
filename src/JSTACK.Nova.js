@@ -44,7 +44,7 @@ JSTACK.Nova = (function(JS, undefined) {
         if(params.url != undefined)
             return true;
         if(JS.Keystone != undefined && JS.Keystone.params.currentstate == JS.Keystone.STATES.AUTHENTICATED) {
-            var service = JS.Keystone.getservice("nova");
+            var service = JS.Keystone.getservice("compute");
             params.url = service.endpoints[0].adminURL;
             return true;
         } else {
@@ -432,6 +432,69 @@ JSTACK.Nova = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
     }
     
+    // This operation creates a new flavor, using information given in arguments:
+    // the `name` of the new flavor, the number of MB of `ram`, the `id` of the new 
+    // flavor, the number of GB of root `disk`, the number of GB of `ephemeral` disk,
+    // the number of MB of `swap` space, and the `rxtx_factor`.
+    // Arguments `ephemeral`, `swap`, `rxtx_factor` and `callback` are optional. 
+    var createflavor = function( name, ram, vcpus, disk, flavorid, ephemeral, swap, rxtx_factor, callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/flavors';
+        var data = { "flavor": {
+                "name": name,
+                "ram": ram,
+                "vcpus": vcpus,
+                "disk": disk,
+                "id": flavorid,
+                "swap": 0,
+                "OS-FLV-EXT-DATA:ephemeral": 0,
+                "rxtx_factor": 0
+            }
+        };
+ 
+        if(ephemeral != undefined) {
+            data.flavor["OS-FLV-EXT-DATA:ephemeral"] = ephemeral;
+        }
+        
+        if(swap != undefined) {
+            data.flavor.swap = swap;
+        }
+        
+        if(rxtx_factor != undefined) {
+            data.flavor.rxtx_factor = rxtx_factor;
+        }
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        
+        var _onError = function(message) {
+            throw Error(message);
+        }
+        JS.Comm.post(url, data, JS.Keystone.params.token, _onOK, _onError);
+    }
+    
+    // This operation deletes flavor, specified by its `id`.
+    // In [Get Flavor Details](http://docs.openstack.org/api/openstack-compute/2/content/Get_Flavor_Details-d1e4317.html)
+    // there is more information.
+    var deleteflavor = function(id, callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/flavors/' + id;
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        var _onError = function(message) {
+            throw Error(message);
+        }
+        
+        JS.Comm.del(url, JS.Keystone.params.token, _onOK, _onError);
+    }
+    
     // **Image Operations**
     
     // This operation will list all images visible by the account.
@@ -581,6 +644,8 @@ JSTACK.Nova = (function(JS, undefined) {
         createimage             : createimage,
         getflavorlist           : getflavorlist,
         getflavordetail         : getflavordetail,
+        createflavor            : createflavor,
+        deleteflavor            : deleteflavor,
         getimagelist            : getimagelist,
         getimagedetail          : getimagedetail,
         deleteimage             : deleteimage,
