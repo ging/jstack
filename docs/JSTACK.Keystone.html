@@ -1,9 +1,35 @@
-<!DOCTYPE html>  <html> <head>   <title>JSTACK.Keystone.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Keystone.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h2>Keystone API Module</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>This file provides functions to access Keystone API's operations,
+<!DOCTYPE html>  <html> <head>   <title>JSTACK.Keystone.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Keystone.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">The MIT License</span>
+
+<span class="cm">Copyright (c) 2012 Universidad Politecnica de Madrid</span>
+
+<span class="cm">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="cm">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="cm">in the Software without restriction, including without limitation the rights</span>
+<span class="cm">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="cm">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="cm">furnished to do so, subject to the following conditions:</span>
+
+<span class="cm">The above copyright notice and this permission notice shall be included in</span>
+<span class="cm">all copies or substantial portions of the Software.</span>
+
+<span class="cm">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="cm">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="cm">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="cm">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="cm">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="cm">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="cm">THE SOFTWARE.</span>
+<span class="cm">*/</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Keystone API Module</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This file provides functions to access Keystone API's operations,
 such as authenticate and  gettenants.</p>             </td>             <td class="code">               <div class="highlight"><pre>
 
 <span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><code>STATES</code> defines different authentication states. This
+</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><code>STATES</code> defines different authentication states. This
 can be useful for applications to know when they can
 access to authentication tokens.</p>             </td>             <td class="code">               <div class="highlight"><pre>
 
@@ -14,27 +40,27 @@ access to authentication tokens.</p>             </td>             <td class="co
         <span class="nx">AUTHENTICATION_ERROR</span> <span class="o">:</span> <span class="mi">3</span>
     <span class="p">}</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><code>params</code> stores info about Keystone service:</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><code>params</code> stores info about Keystone service:</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <ul>
+</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <ul>
 <li><strong>url</strong> points to Keystone location. Typically it could be http://host:5000/</li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">url</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
-</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <ul>
+</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <ul>
 <li><strong>currentstate</strong> stores the state of this API based on options given by <code>STATES</code></li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">currentstate</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <ul>
+</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <ul>
 <li><strong>access</strong> stores the last information retreived during last successful authentication</li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">access</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <ul>
+</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <ul>
 <li><strong>token</strong> gives the authentication info obtained during last successful authentication</li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">token</span> <span class="o">:</span> <span class="kc">undefined</span>
     <span class="p">}</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>We need to initialize this API by passing the Keystone's URL. This URL usually follows the next
+</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>We need to initialize this API by passing the Keystone's URL. This URL usually follows the next
 pattern: http://host:5000/
 This API will initialize parameters such as <code>currentstate</code>, <code>token</code> and <code>access</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">init</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">keystoneUrl</span><span class="p">)</span> <span class="p">{</span>
@@ -44,11 +70,11 @@ This API will initialize parameters such as <code>currentstate</code>, <code>tok
         <span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">=</span> <span class="nx">STATES</span><span class="p">.</span><span class="nx">DISCONNECTED</span><span class="p">;</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Authentication function</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>Authentication function</h2>
 
 <p>This API offers Keystone authentication.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">authenticate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">tenant</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>This authentication needs a <code>username</code>, a <code>password</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>This authentication needs a <code>username</code>, a <code>password</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="kd">var</span> <span class="nx">credentials</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;auth&quot;</span> <span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;passwordCredentials&quot;</span> <span class="o">:</span> <span class="p">{</span>
@@ -58,15 +84,15 @@ This API will initialize parameters such as <code>currentstate</code>, <code>tok
             <span class="p">}</span>
         <span class="p">};</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>User also can provide a <code>tenant</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>User also can provide a <code>tenant</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="k">if</span><span class="p">(</span><span class="nx">tenant</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">credentials</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">tenantId</span> <span class="o">=</span> <span class="nx">tenant</span><span class="p">;</span>
         <span class="p">}</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>During authentication the state will be <code>AUTHENTICATION</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>During authentication the state will be <code>AUTHENTICATION</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">=</span> <span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATING</span><span class="p">;</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Once Keystone server sends a response to this API client it will call the function
+</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Once Keystone server sends a response to this API client it will call the function
 <code>callback</code> with the result, if provided. It also updates the state to <code>AUTHENTICATED</code>
 and stores result in <code>access</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
@@ -76,14 +102,14 @@ and stores result in <code>access</code>.</p>             </td>             <td 
             <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
                 <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
         <span class="p">}</span>
-</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>In case of an error the state will be <code>AUTHENTICATION_ERROR</code> and it throws the corresponding
+</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>In case of an error the state will be <code>AUTHENTICATION_ERROR</code> and it throws the corresponding
 error with its description.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">=</span> <span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATION_ERROR</span><span class="p">;</span>
             <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
         <span class="p">}</span>
         
-</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>A typical response would be:</p>
+</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>A typical response would be:</p>
 
 <pre><code>{
    "token": {
@@ -128,18 +154,18 @@ error with its description.</p>             </td>             <td class="code"> 
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="nx">credentials</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>Retreiving service information</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h2>Retreiving service information</h2>
 
 <p>The user can also obtain information about each service which is configured in Keystone.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getservice</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Only if the client is currently authenticated.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Only if the client is currently authenticated.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="k">if</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">!=</span> <span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">index</span> <span class="k">in</span> <span class="nx">params</span><span class="p">.</span><span class="nx">access</span><span class="p">.</span><span class="nx">serviceCatalog</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">access</span><span class="p">.</span><span class="nx">serviceCatalog</span><span class="p">[</span><span class="nx">index</span><span class="p">];</span>
             <span class="k">if</span><span class="p">(</span><span class="nx">name</span> <span class="o">==</span> <span class="nx">service</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>This function will return an object with the next structure:</p>
+</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>This function will return an object with the next structure:</p>
 
 <pre><code>service: {
      endpoints: [
@@ -159,13 +185,13 @@ error with its description.</p>             </td>             <td class="code"> 
         <span class="p">}</span>
         <span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
     <span class="p">}</span>
-</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <h2>Tenant information function</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h2>Tenant information function</h2>
 
 <p>User can obtain information about available tenants.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">gettenants</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Only when the user is already authenticated.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Only when the user is already authenticated.</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="k">if</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstatus</span> <span class="o">==</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>This function will return tenant information following next pattern:</p>
+</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>This function will return tenant information following next pattern:</p>
 
 <pre><code>    tenants: {
            links: [
@@ -200,21 +226,21 @@ error with its description.</p>             </td>             <td class="code"> 
                     <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>If error occurs it will send its description.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>If error occurs it will send its description.</p>             </td>             <td class="code">               <div class="highlight"><pre>
                 <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
             <span class="p">}</span>
 
             <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s2">&quot;tenants&quot;</span><span class="p">,</span> <span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
-</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
 
 <p>This is the list of available public functions and variables</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="k">return</span> <span class="p">{</span>
-</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Variables:</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Variables:</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">STATES</span> <span class="o">:</span> <span class="nx">STATES</span><span class="p">,</span>
         <span class="nx">params</span> <span class="o">:</span> <span class="nx">params</span><span class="p">,</span>
-</pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Functions:</p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Functions:</p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">init</span> <span class="o">:</span> <span class="nx">init</span><span class="p">,</span>
         <span class="nx">authenticate</span> <span class="o">:</span> <span class="nx">authenticate</span><span class="p">,</span>
         <span class="nx">gettenants</span> <span class="o">:</span> <span class="nx">gettenants</span><span class="p">,</span>

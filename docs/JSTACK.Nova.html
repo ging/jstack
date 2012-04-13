@@ -1,16 +1,42 @@
-<!DOCTYPE html>  <html> <head>   <title>JSTACK.Nova.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Nova.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h2>JStack Nova Module</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>This module provides Nova API functions. </p>             </td>             <td class="code">               <div class="highlight"><pre>
+<!DOCTYPE html>  <html> <head>   <title>JSTACK.Nova.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Nova.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">The MIT License</span>
+
+<span class="cm">Copyright (c) 2012 Universidad Politecnica de Madrid</span>
+
+<span class="cm">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="cm">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="cm">in the Software without restriction, including without limitation the rights</span>
+<span class="cm">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="cm">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="cm">furnished to do so, subject to the following conditions:</span>
+
+<span class="cm">The above copyright notice and this permission notice shall be included in</span>
+<span class="cm">all copies or substantial portions of the Software.</span>
+
+<span class="cm">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="cm">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="cm">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="cm">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="cm">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="cm">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="cm">THE SOFTWARE.</span>
+<span class="cm">*/</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>JStack Nova Module</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This module provides Nova API functions. </p>             </td>             <td class="code">               <div class="highlight"><pre>
 <span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Nova</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This modules stores the <code>url</code>to which it will send every
+</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>This modules stores the <code>url</code>to which it will send every
 request.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="nx">url</span>     <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
         <span class="nx">state</span>   <span class="o">:</span> <span class="kc">undefined</span>
     <span class="p">}</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Function <code>_check</code> internally confirms that Keystone module is 
+</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Function <code>_check</code> internally confirms that Keystone module is 
 authenticated and it has the URL of the Nova service.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">_check</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
@@ -24,7 +50,7 @@ authenticated and it has the URL of the Nova service.</p>             </td>     
         <span class="p">}</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>This function is used internally to send Actions to server identified
+</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>This function is used internally to send Actions to server identified
 with <code>id</code>. In <code>data</code> we pass the corresponding information about the 
 action.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">_postAction</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -43,11 +69,11 @@ action.</p>             </td>             <td class="code">               <div c
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Public functions</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h2>Public functions</h2>
 
 <p><strong>Server Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>This operation provides a list of servers associated with the account. In 
+</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>This operation provides a list of servers associated with the account. In 
 <a href="http://docs.openstack.org/api/openstack-compute/2/content/List_Servers-d1e2078.html">Create Server List</a>
 there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getserverlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -69,7 +95,7 @@ there is more information about the JSON object that is returned.</p>           
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>This operation returns the details of a specific server by its <code>id</code>. In 
+</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>This operation returns the details of a specific server by its <code>id</code>. In 
 <a href="http://docs.openstack.org/api/openstack-compute/2/content/Get_Server_Details-d1e2623.html">Get Server Details</a>
 there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getserverdetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -88,7 +114,7 @@ there is more information about the JSON object that is returned.</p>           
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>This operation returns the ip address of a specific server by its <code>id</code>. 
+</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>This operation returns the ip address of a specific server by its <code>id</code>. 
 In 
 <a href="http://docs.openstack.org/api/openstack-compute/2/content/List_Addresses-d1e3014.html">List Addresses</a>
 and in 
@@ -114,7 +140,7 @@ there is more information about the JSON object that is returned.</p>           
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>This operation updates the the <code>name</code> of the server given by its <code>id</code>. In 
+</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>This operation updates the the <code>name</code> of the server given by its <code>id</code>. In 
 <a href="http://docs.openstack.org/api/openstack-compute/2/content/ServerUpdate.html">Server Update</a>
 there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">updateserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -142,7 +168,7 @@ there is more information about the JSON object that is returned.</p>           
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>This operation asynchronously provisions a new server. The progress of 
+</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>This operation asynchronously provisions a new server. The progress of 
 this operation depends on several factors including location of the 
 requested image, network i/o, host load, and the selected flavor. The 
 progress of the request can be checked by performing a <code>getserverdetail</code>, 
@@ -237,7 +263,7 @@ there is more information about the JSON object that is returned.</p>           
 
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>This operation deletes a cloud server instance from the system. 
+</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>This operation deletes a cloud server instance from the system. 
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Delete_Server-d1e2883.html">Delete Server</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">deleteserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -256,11 +282,11 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p><strong>Server Actions</strong></p>
+</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p><strong>Server Actions</strong></p>
 
 <p>Take a look at <code>_postAction</code> for detailed information about requests. </p>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>This operation changes the server's administrator password.
+</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>This operation changes the server's administrator password.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Change_Password-d1e3234.html">Change Password</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">changepasswordserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">adminPass</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -276,7 +302,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>This operation allows for a hard reboot that is the equivalent of power 
+</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>This operation allows for a hard reboot that is the equivalent of power 
 cycling the server.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">rebootserverhard</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
@@ -286,7 +312,7 @@ cycling the server.</p>             </td>             <td class="code">         
         <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>This operation allows for a soft reboot, which allows for a graceful 
+</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>This operation allows for a soft reboot, which allows for a graceful 
 shutdown of all processes.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Reboot_Server-d1e3371.html">Reboot Server</a>
 there is more information about hard and soft reboots.</p>             </td>             <td class="code">               <div class="highlight"><pre>
@@ -298,7 +324,7 @@ there is more information about hard and soft reboots.</p>             </td>    
         <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>The resize function converts an existing server to a different flavor, 
+</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>The resize function converts an existing server to a different flavor, 
 in essence, scaling the server up or down. The original server is saved 
 for a period of time to allow rollback if there is a problem. All resizes 
 should be tested and explicitly confirmed with <code>confirmresizedserver</code>, at
@@ -314,7 +340,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>During a resize operation, the original server is saved for a period of 
+</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>During a resize operation, the original server is saved for a period of 
 time to allow roll back if there is a problem. Once the newly resized 
 server is tested and has been confirmed to be functioning properly, use 
 this operation to confirm the resize. After confirmation, the original 
@@ -329,7 +355,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Revert_Resized_Server-d1e4024.html">Revert Resized Server</a>
+</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Revert_Resized_Server-d1e4024.html">Revert Resized Server</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">revertresizedserver</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="p">{</span>
@@ -337,7 +363,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="p">},</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>This action creates a new image for the given server. Once complete, a 
+</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>This action creates a new image for the given server. Once complete, a 
 new image will be available that can be used to rebuild or create servers.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Create_Image-d1e4655.html">Create Image</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
@@ -357,9 +383,9 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p><strong>Flavor Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p><strong>Flavor Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>This operation will list all available flavors. 
+</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>This operation will list all available flavors. 
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/List_Flavors-d1e4188.html">List Flavors</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getflavorlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -380,7 +406,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>This operation returns details of the specified flavor.
+</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>This operation returns details of the specified flavor.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Get_Flavor_Details-d1e4317.html">Get Flavor Details</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getflavordetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -398,9 +424,9 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p><strong>Image Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p><strong>Image Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>This operation will list all images visible by the account.
+</pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>This operation will list all images visible by the account.
 In-flight images will have the status attribute set to SAVING and the 
 conditional progress element (0-100% completion) will also be returned. 
 Other possible values for the status attribute include: UNKNOWN, ACTIVE, 
@@ -427,7 +453,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>This operation returns details of the image specified by its <code>id</code>.
+</pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>This operation returns details of the image specified by its <code>id</code>.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Get_Image_Details-d1e4848.html">Get Image Details</a>
 there is more information.</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="kd">var</span> <span class="nx">getimagedetail</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
@@ -445,7 +471,7 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>This operation deletes an image from the system, specified by its <code>id</code>.
+</pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>This operation deletes an image from the system, specified by its <code>id</code>.
 Images are immediately removed. Currently, there are no state transitions 
 to track the delete operation.
 In <a href="http://docs.openstack.org/api/openstack-compute/2/content/Delete_Image-d1e4957.html">Delete Image</a>
@@ -465,12 +491,12 @@ there is more information.</p>             </td>             <td class="code">  
         <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
 
 <p>This is the list of available public functions and variables</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="k">return</span> <span class="p">{</span>
         
-</pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">getserverlist</span>           <span class="o">:</span> <span class="nx">getserverlist</span><span class="p">,</span>
         <span class="nx">getserverdetail</span>         <span class="o">:</span> <span class="nx">getserverdetail</span><span class="p">,</span>
         <span class="nx">getserverips</span>            <span class="o">:</span> <span class="nx">getserverips</span><span class="p">,</span>
