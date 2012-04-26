@@ -41,8 +41,6 @@ JSTACK.Nova = (function(JS, undefined) {
     // Function `_check` internally confirms that Keystone module is 
     // authenticated and it has the URL of the Nova service.
     var _check = function() {
-        if(params.url != undefined)
-            return true;
         if(JS.Keystone != undefined && JS.Keystone.params.currentstate == JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("compute");
             params.url = service.endpoints[0].adminURL;
@@ -55,7 +53,7 @@ JSTACK.Nova = (function(JS, undefined) {
     // This function is used internally to send Actions to server identified
     // with `id`. In `data` we pass the corresponding information about the 
     // action.
-    var _postAction = function(id, data, callback) {
+    var _postAction = function(id, data, query, callback) {
         if(!_check())
             return;
         var url = params.url + '/servers/' + id + '/action';
@@ -80,12 +78,16 @@ JSTACK.Nova = (function(JS, undefined) {
     // This operation provides a list of servers associated with the account. In 
     // [Create Server List](http://docs.openstack.org/api/openstack-compute/2/content/List_Servers-d1e2078.html)
     // there is more information about the JSON object that is returned.
-    var getserverlist = function(detailed, callback) {
+    var getserverlist = function(detailed, allTenants, callback) {
         if(!_check())
             return;
         var url = params.url + '/servers';
         if(detailed != undefined & detailed) {
             url += '/detail';
+        }
+        
+        if (allTenants) {
+            url += '?all_tenants=' + allTenants
         }
 
         var _onOK = function(result) {
@@ -580,7 +582,7 @@ JSTACK.Nova = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
     }
     
-    // This operation retrieves a list of available Key-pairs.
+    // This operation creates a new Key-pair.
     var createkeypair = function(name, pubkey, callback) {
         if(!_check())
             return;
