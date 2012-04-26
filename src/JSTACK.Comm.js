@@ -44,8 +44,10 @@ JSTACK.Comm = (function(JS, undefined) {
         // the `data` to be sent, that has to be a JSON object, the ´token´ to
         // authenticate the request, and success and error callbacks.
         var xhr = new XMLHttpRequest();
+        
         xhr.open(method, url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Accept", "application/json");
 
         xhr.onreadystatechange = function() {
 
