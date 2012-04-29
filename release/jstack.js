@@ -198,11 +198,11 @@ JSTACK.Nova = function(d, c) {
     h(b, {confirmResize:null}, a)
   }, revertresizedserver:function(b, a) {
     h(b, {revertResize:null}, a)
-  }, createimage:function(b, a, g, d) {
+  }, createimage:function(b, a, d, e) {
     a = {createImage:{name:a}};
     a.creageImage.metadata = {};
-    g != c && (a.creageImage.metadata = g);
-    h(b, a, d)
+    d != c && (a.creageImage.metadata = d);
+    h(b, a, e)
   }, getflavorlist:function(b, a) {
     if(f()) {
       var g = e + "/flavors";
@@ -281,6 +281,18 @@ JSTACK.Nova = function(d, c) {
     }, function(a) {
       throw Error(a);
     })
+  }}
+}(JSTACK);
+JSTACK.Glance = function(d, c) {
+  var e = c;
+  return{getimagelist:function(f, h) {
+    var b;
+    d.Keystone != c && d.Keystone.params.currentstate == d.Keystone.STATES.AUTHENTICATED ? (e = d.Keystone.getservice("image").endpoints[0].adminURL, b = !0) : b = !1;
+    b && (b = e + "/images", f != c & f && (b += "/detail"), d.Comm.get(b, d.Keystone.params.token, function(a) {
+      h != c && h(a)
+    }, function(a) {
+      throw Error(a);
+    }))
   }}
 }(JSTACK);
 
