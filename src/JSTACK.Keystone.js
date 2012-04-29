@@ -66,19 +66,25 @@ JSTACK.Keystone = (function(JS, undefined) {
     // Authentication function
     // ------------------------
     // This API offers Keystone authentication.
-    var authenticate = function(username, password, tenant, callback) {
-        // This authentication needs a `username`, a `password`.
-        var credentials = {
-            "auth" : {
-                "passwordCredentials" : {
-                    "username" : username,
-                    "password" : password
+    var authenticate = function(username, password, token, tenant, callback, error) {
+        var credentials = {};
+        // This authentication needs a `username`, a `password`. Or a `token`.
+        if (token != undefined) {
+            credentials = {"auth": {"token": {"id": token}}};
+        }
+        else {
+            credentials = {
+                "auth" : {
+                    "passwordCredentials" : {
+                        "username" : username,
+                        "password" : password
+                    }
                 }
-            }
-        };
+            };
+        }
 
         // User also can provide a `tenant`.
-        if(tenant !== 'undefined') {
+        if(tenant !== undefined) {
             credentials.auth.tenantId = tenant;
         }
 
@@ -99,7 +105,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         // error with its description.
         var _onError = function(message) {
             params.currentstate = STATES.AUTHENTICATION_ERROR;
-            throw Error(message);
+            error(message);
         }
         
         // A typical response would be:
@@ -156,7 +162,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         }
         for(var index in params.access.serviceCatalog) {
             var service = params.access.serviceCatalog[index];
-            if(name == service.name) {
+            if(name == service.type) {
                 // This function will return an object with the next structure:
                 //
                 //     service: {
@@ -177,12 +183,23 @@ JSTACK.Keystone = (function(JS, undefined) {
         }
         return undefined;
     }
+    
+    // The user can also obtain information about all services configured in Keystone.
+    var getservicelist = function() {
+        // Only if the client is currently authenticated.
+        if(params.currentstate != STATES.AUTHENTICATED) {
+            return undefined;
+        }
+        return params.access.serviceCatalog;
+    }
+    
     // Tenant information function
     // ---------------------------
     // User can obtain information about available tenants.
     var gettenants = function(callback) {
+        
         // Only when the user is already authenticated.
-        if(params.currentstatus == JS.Keystone.STATES.AUTHENTICATED) {
+        if(params.currentstate == JS.Keystone.STATES.AUTHENTICATED) {
             // This function will return tenant information following next pattern:
             //
             //         tenants: {
@@ -217,6 +234,7 @@ JSTACK.Keystone = (function(JS, undefined) {
                 if(callback != undefined)
                     callback(result);
             }
+            
             var _onError = function(result) {
                 // If error occurs it will send its description.
                 throw Error(result);
@@ -236,6 +254,7 @@ JSTACK.Keystone = (function(JS, undefined) {
         init : init,
         authenticate : authenticate,
         gettenants : gettenants,
-        getservice : getservice
+        getservice : getservice,
+        getservicelist : getservicelist
     }
 })(JSTACK);
