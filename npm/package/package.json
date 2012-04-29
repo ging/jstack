@@ -2,7 +2,7 @@
   "author": "GING <jcervino@dit.upm.es>",
   "name": "jstack-client",
   "description": "JavaScript implementation of OpenStack API",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "homepage": "http://ging.github.com/jstack/",
   "repository": {
     "type": "git",
