@@ -40,11 +40,10 @@ var exitApp = function() {
     console.log('          OS_URL      : keystone url');
     console.log();
     console.log('Available actions:');
+    console.log('          tenant-list');
     console.log('          server-list');
     console.log('          image-list');
     console.log('          flavor-list');
-    console.log('          server-details [-i|--id] server_id');
-
     process.exit(1);
 }
 
@@ -114,8 +113,8 @@ if (username == undefined || password == undefined || url == undefined) {
 }
 
 if (tenant == undefined) {
-        console.log('No tenant');
-        process.exit(1);
+        console.log('No tenant!');
+//        process.exit(1);
 }
 
 if (action == undefined) {
@@ -183,23 +182,21 @@ var authenticated = function(result) {
                   server.flavor_id = server.flavor.id;
               }
               var structure = {
-                  "ID": {length:4, field:"id"}, 
-                  "USER_ID": {length:11, field:"user_id"}, 
-                  "TENANT_ID": {length:11, field:"tenant_id"}, 
-                  "NAME": {length:28, field:"name"}, 
-                  "STATUS": {length:10, field:"status"}, 
-                  "PROGRESS": {length:23, field:"progress"}, 
-                  "IMAGE": {length:7, field:"image_id"}, 
+                  "ID": {length:38, field:"id"}, 
+                  "USER_ID": {length:35, field:"user_id"}, 
+                  "TENANT_ID": {length:35, field:"tenant_id"}, 
+                  "NAME": {length:10, field:"name"}, 
+                  "STATUS": {length:8, field:"status"}, 
+                  "PROGRESS": {length:10, field:"progress"}, 
+                  "IMAGE": {length:38, field:"image_id"}, 
                   "FLAVOR": {length:8, field:"flavor_id"}, 
-                  "KEY_NAME": {length:10, field:"key_name"}, 
-                  "CREATED": {length:23, field:"created"}, 
-                  "UPDATED": {length:23, field:"updated"}, 
+                  "CREATED": {length:23, field:"created"}
               }
               var table = makeTable(structure, result.servers);
               console.log(table);
           }
           if (id == undefined) {
-              JSTACK.Nova.getserverlist(true, onserverlist);
+              JSTACK.Nova.getserverlist(true, false, onserverlist);
           } else {
               JSTACK.Nova.getserverdetail(id, onserverlist);
           }
@@ -212,10 +209,10 @@ var authenticated = function(result) {
                   image.architecture = image.metadata.architecture;
                 }
                 var structure = {
-                    "ID": {length:4, field:"id"}, 
-                    "NAME": {length:28, field:"name"}, 
+                    "ID": {length:38, field:"id"}, 
+                    "NAME": {length:35, field:"name"}, 
                     "STATUS": {length:10, field:"status"}, 
-                    "PROGRESS": {length:23, field:"progress"}, 
+                    "PROGRESS": {length:10, field:"progress"}, 
                     "CREATED": {length:23, field:"created"}, 
                     "UPDATED": {length:23, field:"updated"}, 
                     "ARCHITECTURE": {length:15, field:"architecture"}, 
@@ -240,36 +237,20 @@ var authenticated = function(result) {
               }
               JSTACK.Nova.getflavorlist(true, onserverlist);
               break;
-        case 'server-detail':
-              var onserverlist = function(result) {
-                  //  var createserver = function(name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, callback) {
-                  var server = result.server;
-                  server.image_id = server.image.id;
-                  server.flavor_id = server.flavor.id;
-                  var structure = {
-                      "ID": {length:4, field:"id"}, 
-                      "USER_ID": {length:11, field:"user_id"}, 
-                      "TENANT_ID": {length:11, field:"tenant_id"}, 
-                      "NAME": {length:28, field:"name"}, 
-                      "STATUS": {length:10, field:"status"}, 
-                      "PROGRESS": {length:23, field:"progress"}, 
-                      "IMAGE": {length:7, field:"image_id"}, 
-                      "FLAVOR": {length:8, field:"flavor_id"}, 
-                      "KEY_NAME": {length:10, field:"key_name"}, 
-                      "CREATED": {length:23, field:"created"}, 
-                      "UPDATED": {length:23, field:"updated"}, 
-                  }
-                  var data = {servers:[server]}
-                  var table = makeTable(structure, data.servers);
-                  console.log(table);
-              }
-              if (id == undefined) {
-                  exitApp();
-              } else {
-                  JSTACK.Nova.getserverdetail(id, onserverlist);
-              }
-              break;
+        case 'tenant-list':
+            var ontenants = function(result) {
+                    var structure = {
+                        "ID": {length:40, field:"id"}, 
+                        "NAME": {length:50, field:"name"}, 
+                        "ENABLED": {length:50, field:"enabled"}, 
+                        "DESCRIPTION": {length:35, field:"description"}
+                    }
+                    var table = makeTable(structure, result.tenants);
+                    console.log(table);
+            }
+            JSTACK.Keystone.gettenants(ontenants);
+            break;
   }
 }
 
-JSTACK.Keystone.authenticate(username, password, tenant, authenticated);
+JSTACK.Keystone.authenticate(username, password, null, tenant, authenticated);
