@@ -7,6 +7,7 @@
 		<script src="/jstack/src/JSTACK.Comm.js"></script>
 		<script src="/jstack/src/JSTACK.Keystone.js"></script>
 		<script src="/jstack/src/JSTACK.Nova.js"></script>
+		<script src="/jstack/src/JSTACK.Glance.js"></script>
 		<script type="text/javascript">
 			var printAll = function(result) {console.log(JSON.stringify(result,null,4));}
 		</script>
@@ -25,15 +26,20 @@
 	    
     	    <p>Please, access this URL using Google Chrome and press F12.</p>
     	    <p>Access to the Console and you can start playing with this API.</p>
+    	    <h2>0. Requisites</h2>
+    		<p>We will define a function to print all results from API requests:</p>
+    		<pre> > var printAll = function(data){console.log(JSON.stringify(data))};</pre>
     	    <h2>1. Initialization</h2>
-    		<p>The first step is to initialize Keystone API with a valid URL. For example:</p>
-    		<pre> > JSTACK.Keystone.init("http://host.name:5000/");</pre>
+    		<p>Then, first step is to initialize Keystone API with a valid URL. For example:</p>
+    		<pre> > JSTACK.Keystone.init("http://host.name:5000/v2.0/");</pre>
     		<h2>2. Authentication</h2>
     		<p>Next step is to authenticate to Keystone with valid username and password.</p>
-    		<pre> > JSTACK.Keystone.authenticate("admin", "password", "2", printAll);</pre>
+    		<pre> > JSTACK.Keystone.authenticate("admin", "password", undefined, "tenant_id", printAll);</pre>
             <h2>3. Play time!</h2>
     		<p>Now, it's time to play with Nova. For example, type this:</p>
-            <pre> > JSTACK.Nova.getserverlist(true,printAll);</pre>
+            <pre> > JSTACK.Nova.getserverlist(true, false, printAll);</pre>
+ 			<p>or</p>
+            <pre> > JSTACK.Nova.getkeypairlist(printAll);</pre>
             <p>For more information access to <a href="/jstack/docs/JSTACK.html" target="_blank">documentation</a></p>
         </div>
 	</body>
