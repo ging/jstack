@@ -34,7 +34,7 @@
     		<pre> > JSTACK.Keystone.init("http://host.name:5000/v2.0/");</pre>
     		<h2>2. Authentication</h2>
     		<p>Next step is to authenticate to Keystone with valid username and password.</p>
-    		<pre> > JSTACK.Keystone.authenticate("admin", "password", undefined, "tenant_id", printAll);</pre>
+    		<pre> > JSTACK.Keystone.authenticate("admin", "password", null, "tenant_id", printAll);</pre>
             <h2>3. Play time!</h2>
     		<p>Now, it's time to play with Nova. For example, type this:</p>
             <pre> > JSTACK.Nova.getserverlist(true, false, printAll);</pre>
