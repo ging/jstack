@@ -198,11 +198,11 @@ JSTACK.Nova = function(d, c) {
     h(b, {confirmResize:null}, a)
   }, revertresizedserver:function(b, a) {
     h(b, {revertResize:null}, a)
-  }, createimage:function(b, a, d, e) {
+  }, createimage:function(b, a, g, d) {
     a = {createImage:{name:a}};
     a.creageImage.metadata = {};
-    d != c && (a.creageImage.metadata = d);
-    h(b, a, e)
+    g != c && (a.creageImage.metadata = g);
+    h(b, a, d)
   }, getflavorlist:function(b, a) {
     if(f()) {
       var g = e + "/flavors";
@@ -219,9 +219,9 @@ JSTACK.Nova = function(d, c) {
     }, function(a) {
       throw Error(a);
     })
-  }, createflavor:function(b, a, g, i, h, j, l, m, n) {
+  }, createflavor:function(b, a, g, h, k, j, l, m, n) {
     if(f()) {
-      var o = e + "/flavors", b = {flavor:{name:b, ram:a, vcpus:g, disk:i, id:h, swap:0, "OS-FLV-EXT-DATA:ephemeral":0, rxtx_factor:0}};
+      var o = e + "/flavors", b = {flavor:{name:b, ram:a, vcpus:g, disk:h, id:k, swap:0, "OS-FLV-EXT-DATA:ephemeral":0, rxtx_factor:0}};
       j != c && (b.flavor["OS-FLV-EXT-DATA:ephemeral"] = j);
       l != c && (b.flavor.swap = l);
       m != c && (b.flavor.rxtx_factor = m);
@@ -281,6 +281,20 @@ JSTACK.Nova = function(d, c) {
     }, function(a) {
       throw Error(a);
     })
+  }, getvncconsole:function(b, a, d) {
+    if(f()) {
+      if(a == c || !a) {
+        a = "novnc"
+      }
+      h(b, {"os-getVNCConsole":{type:a}}, null, d)
+    }
+  }, getconsoleoutput:function(b, a, d) {
+    if(f()) {
+      if(a == c || !a) {
+        a = 35
+      }
+      h(b, {"os-getConsoleOutput":{length:a}}, null, d)
+    }
   }}
 }(JSTACK);
 JSTACK.Glance = function(d, c) {

@@ -624,7 +624,47 @@ JSTACK.Nova = (function(JS, undefined) {
         
         JS.Comm.del(url, JS.Keystone.params.token, _onOK, _onError);
     }
+    
+    // Get a vnc console for an instance
+    // id: The server's ID to get the vnc console from.
+    // console_type: Type of vnc console to get ('novnc' or 'xvpvnc')
+    var getvncconsole = function(id, console_type, callback) {
+        if(!_check())
+            return;
+            
+        if(console_type == undefined || !console_type) {
+            console_type = "novnc";
+        }
         
+        var data = {
+            "os-getVNCConsole" : {
+                'type': console_type
+            }
+        };
+
+        _postAction(id, data, null, callback);
+    }
+    
+    //  Get text console log output from Server.
+    // id: The server's ID to get the vnc console from.
+    // length: The number of tail loglines you would like to retrieve.
+    var getconsoleoutput = function(id, length, callback) {
+        if(!_check())
+            return;
+            
+        if(length == undefined || !length) {
+            length = 35;
+        }
+        
+        var data = {
+            "os-getConsoleOutput" : {
+                'length': length
+            }
+        };
+
+        _postAction(id, data, null, callback);
+    }
+    
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -653,7 +693,9 @@ JSTACK.Nova = (function(JS, undefined) {
         deleteimage             : deleteimage,
         getkeypairlist          : getkeypairlist,
         createkeypair           : createkeypair,
-        deletekeypair           : deletekeypair
+        deletekeypair           : deletekeypair,
+        getvncconsole           : getvncconsole,
+        getconsoleoutput        : getconsoleoutput
     }
 
 })(JSTACK);
