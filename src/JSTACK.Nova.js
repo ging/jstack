@@ -389,6 +389,34 @@ JSTACK.Nova = (function(JS, undefined) {
         }, callback);
     }
     
+    // It pauses a running server. Changes status to PAUSED.
+    var pauseserver = function(id, callback) {
+        _postAction(id, {
+            "pause" : null
+        }, callback);
+    }
+    
+    // Returns a PAUSED server to ACTIVE status.
+    var unpauseserver = function(id, callback) {
+        _postAction(id, {
+            "unpause" : null
+        }, callback);
+    }
+    
+    // It pauses a running server. Changes status to SUSPENDED.
+    var suspendserver = function(id, callback) {
+        _postAction(id, {
+            "suspend" : null
+        }, callback);
+    }
+    
+    // Returns a SUSPENDED server to ACTIVE status.
+    var resumeserver = function(id, callback) {
+        _postAction(id, {
+            "resume" : null
+        }, callback);
+    }
+    
     // This action creates a new image for the given server. Once complete, a 
     // new image will be available that can be used to rebuild or create servers.
     // In [Create Image](http://docs.openstack.org/api/openstack-compute/2/content/Create_Image-d1e4655.html)
@@ -701,6 +729,10 @@ JSTACK.Nova = (function(JS, undefined) {
         revertresizedserver     : revertresizedserver,
         startserver             : startserver,
         stopserver              : stopserver,
+        pauseserver             : pauseserver,
+        unpauseserver           : unpauseserver,
+        suspendserver           : suspendserver,
+        resumeserver            : resumeserver,
         createimage             : createimage,
         getflavorlist           : getflavorlist,
         getflavordetail         : getflavordetail,
