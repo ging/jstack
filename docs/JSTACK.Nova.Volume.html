@@ -1,0 +1,278 @@
+<!DOCTYPE html>  <html> <head>   <title>JSTACK.Nova.Volume.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="JSTACK.Comm.html">                 JSTACK.Comm.js               </a>                                           <a class="source" href="JSTACK.Glance.html">                 JSTACK.Glance.js               </a>                                           <a class="source" href="JSTACK.Keystone.html">                 JSTACK.Keystone.js               </a>                                           <a class="source" href="JSTACK.Nova.Volume.html">                 JSTACK.Nova.Volume.js               </a>                                           <a class="source" href="JSTACK.Nova.html">                 JSTACK.Nova.js               </a>                                           <a class="source" href="JSTACK.Utils.html">                 JSTACK.Utils.js               </a>                                           <a class="source" href="JSTACK.html">                 JSTACK.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               JSTACK.Nova.Volume.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">The MIT License</span>
+
+<span class="cm">Copyright (c) 2012 Universidad Politecnica de Madrid</span>
+
+<span class="cm">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="cm">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="cm">in the Software without restriction, including without limitation the rights</span>
+<span class="cm">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="cm">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="cm">furnished to do so, subject to the following conditions:</span>
+
+<span class="cm">The above copyright notice and this permission notice shall be included in</span>
+<span class="cm">all copies or substantial portions of the Software.</span>
+
+<span class="cm">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="cm">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="cm">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="cm">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="cm">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="cm">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="cm">THE SOFTWARE.</span>
+<span class="cm">*/</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>JStack Nova Volume Module</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Allows you to manage volumes and snapshots that can be used with the Compute API.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Nova</span><span class="p">.</span><span class="nx">Volume</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>This modules stores the <code>url</code> to which it will send every
+request.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">url</span>     <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="nx">state</span>   <span class="o">:</span> <span class="kc">undefined</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Function <code>_check</code> internally confirms that Keystone module is 
+authenticated and it has the URL of the Volume service.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">_check</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">==</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">);</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">adminURL</span><span class="p">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Public functions</h2>
+
+<p><strong>Volume Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>View a list of simple Volume entities. In 
+<a href="http://api.openstack.org/">Requesting a List of Volumes</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getvolumelist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/volumes&#39;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Create a Volume.
+Arguments in this function are: </p>
+
+<p>a. Mandatory</p>
+
+<ul>
+<li>The <code>size</code> of volume in GB</li>
+</ul>
+
+<p>b. Optional</p>
+
+<ul>
+<li><p>The <code>name</code> of the volume</p></li>
+<li><p>The <code>description</code> of the volume</p></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">createvolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">size</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+            
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;volume&quot;</span><span class="o">:</span><span class="p">{</span> <span class="s2">&quot;size&quot;</span><span class="o">:</span> <span class="nx">size</span> <span class="p">}};</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">name</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">volume</span><span class="p">.</span><span class="nx">display_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">description</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">volume</span><span class="p">.</span><span class="nx">display_description</span> <span class="o">=</span> <span class="nx">description</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/volumes&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+        
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Delete a Volume entitiy. In 
+<a href="http://api.openstack.org/">Deleting a Volume</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">deletevolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/volumes/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Get a Volume entitiy. In 
+<a href="http://api.openstack.org/">Retrieving a Volume</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getvolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/volumes/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p><strong>Snapshot Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>View a list of simple Snapshot entities. In 
+<a href="http://api.openstack.org/">Requesting a List of Snapshots</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getsnapshotlist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/snapshots&#39;</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Create a Volume Snapshot.
+Arguments in this function are: </p>
+
+<p>a. Mandatory</p>
+
+<ul>
+<li>The <code>volume_id</code> of the volume</li>
+</ul>
+
+<p>b. Optional</p>
+
+<ul>
+<li><p>The <code>name</code> of the snapshot</p></li>
+<li><p>The <code>description</code> of the snapshot</p></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">createsnapshot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">volume_id</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">description</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+            
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;snapshot&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="s2">&quot;volume_id&quot;</span><span class="o">:</span> <span class="nx">volume_id</span><span class="p">,</span> <span class="s2">&quot;force&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">}};</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">name</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">display_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">description</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">display_description</span> <span class="o">=</span> <span class="nx">description</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/snapshots&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Delete a Snapshot entitiy. In 
+<a href="http://api.openstack.org/">Retrieving a Snapshot</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">deletesnapshot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/snapshots/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Get a Snapshot entitiy. In 
+<a href="http://api.openstack.org/">Retrieving a Snapshot</a>
+there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getsnapshot</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/snapshots/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
+
+<p>This is the list of available public functions and variables</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="k">return</span> <span class="p">{</span>
+        
+</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
+        <span class="nx">getvolumelist</span>            <span class="o">:</span> <span class="nx">getvolumelist</span><span class="p">,</span>
+        <span class="nx">createvolume</span>             <span class="o">:</span> <span class="nx">createvolume</span><span class="p">,</span>
+        <span class="nx">deletevolume</span>             <span class="o">:</span> <span class="nx">deletevolume</span><span class="p">,</span>
+        <span class="nx">getvolume</span>                <span class="o">:</span> <span class="nx">getvolume</span><span class="p">,</span>
+        <span class="nx">getsnapshotlist</span>          <span class="o">:</span> <span class="nx">getsnapshotlist</span><span class="p">,</span>
+        <span class="nx">createsnapshot</span>           <span class="o">:</span> <span class="nx">createsnapshot</span><span class="p">,</span>
+        <span class="nx">deletesnapshot</span>           <span class="o">:</span> <span class="nx">deletesnapshot</span><span class="p">,</span>
+        <span class="nx">getsnapshot</span>              <span class="o">:</span> <span class="nx">getsnapshot</span>
+    <span class="p">}</span>
+
+<span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
