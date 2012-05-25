@@ -428,10 +428,10 @@ JSTACK.Nova = (function(JS, undefined) {
             }
         };
 
-        data.creageImage.metadata = {};
+        data.createImage.metadata = {};
 
         if(metadata != undefined) {
-            data.creageImage.metadata = metadata;
+            data.createImage.metadata = metadata;
         }
 
         _postAction(id, data, callback);
