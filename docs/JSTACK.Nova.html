@@ -701,12 +701,114 @@ length: The number of tail loglines you would like to retrieve.</p>             
         <span class="nx">_postAction</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
     <span class="p">}</span>
     
-</pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
+</pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Lists the volume attachments for the specified server.
+id: The server's ID to get the volume attachments from.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getattachedvolumes</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments&#39;</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+                
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Attaches a volume to the specified server.
+id: The server's ID.
+volume_id: The volume's ID to be attached to the server.
+device: The device where we want to attach this volume.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">attachvolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">volume_id</span><span class="p">,</span> <span class="nx">device</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments&#39;</span><span class="p">;</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">volume_id</span> <span class="o">==</span> <span class="kc">undefined</span> <span class="o">||</span> <span class="nx">device</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;volumeAttachment&#39;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s1">&#39;volumeId&#39;</span><span class="o">:</span> <span class="nx">volume_id</span><span class="p">,</span>
+              <span class="s1">&#39;device&#39;</span><span class="o">:</span> <span class="nx">device</span>
+            <span class="p">}</span>
+          <span class="p">};</span>
+          
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Deletes the specified volume attachment from the specified server.
+id: The server's ID.
+volume_id: The volume's ID to be detached from the server.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">detachvolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">volume_id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">volume_id</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Lists volume details for the specified volume attachment ID.
+id: The server's ID.
+volume_id: The volume's ID.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">getattachedvolume</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">volume_id</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+            <span class="k">return</span><span class="p">;</span>
+        
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments/&#39;</span> <span class="o">+</span> <span class="nx">volume_id</span><span class="p">;</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">volume_id</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="kd">var</span> <span class="nx">_onOk</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOk</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
+
+    <span class="p">}</span>
+    
+</pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
 
 <p>This is the list of available public functions and variables</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="k">return</span> <span class="p">{</span>
         
-</pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
         <span class="nx">getserverlist</span>           <span class="o">:</span> <span class="nx">getserverlist</span><span class="p">,</span>
         <span class="nx">getserverdetail</span>         <span class="o">:</span> <span class="nx">getserverdetail</span><span class="p">,</span>
         <span class="nx">getserverips</span>            <span class="o">:</span> <span class="nx">getserverips</span><span class="p">,</span>
@@ -737,7 +839,11 @@ length: The number of tail loglines you would like to retrieve.</p>             
         <span class="nx">createkeypair</span>           <span class="o">:</span> <span class="nx">createkeypair</span><span class="p">,</span>
         <span class="nx">deletekeypair</span>           <span class="o">:</span> <span class="nx">deletekeypair</span><span class="p">,</span>
         <span class="nx">getvncconsole</span>           <span class="o">:</span> <span class="nx">getvncconsole</span><span class="p">,</span>
-        <span class="nx">getconsoleoutput</span>        <span class="o">:</span> <span class="nx">getconsoleoutput</span>
+        <span class="nx">getconsoleoutput</span>        <span class="o">:</span> <span class="nx">getconsoleoutput</span><span class="p">,</span>
+        <span class="nx">getattachedvolumes</span>      <span class="o">:</span> <span class="nx">getattachedvolumes</span><span class="p">,</span>
+        <span class="nx">attachvolume</span>            <span class="o">:</span> <span class="nx">attachvolume</span><span class="p">,</span>
+        <span class="nx">detachvolume</span>            <span class="o">:</span> <span class="nx">detachvolume</span><span class="p">,</span>
+        <span class="nx">getattachedvolume</span>       <span class="o">:</span> <span class="nx">getattachedvolume</span>
     <span class="p">}</span>
 
 <span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>

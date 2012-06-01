@@ -709,6 +709,108 @@ JSTACK.Nova = (function(JS, undefined) {
         _postAction(id, data, null, callback);
     }
     
+    //  Lists the volume attachments for the specified server.
+    // id: The server's ID to get the volume attachments from.
+    var getattachedvolumes = function(id, callback) {
+        if(!_check())
+            return;
+        var url = params.url + '/servers/' + id + '/os-volume_attachments';
+
+        var _onOK = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        
+        var _onError = function(message) {
+            throw Error(message);
+        }
+                
+        JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
+    }
+    
+    // Attaches a volume to the specified server.
+    // id: The server's ID.
+    // volume_id: The volume's ID to be attached to the server.
+    // device: The device where we want to attach this volume.
+    var attachvolume = function(id, volume_id, device, callback) {
+        if(!_check())
+            return;
+        
+        var url = params.url + '/servers/' + id + '/os-volume_attachments';
+        
+        if(volume_id == undefined || device == undefined) {
+            return;
+        }
+        
+        var data = {
+            'volumeAttachment': {
+              'volumeId': volume_id,
+              'device': device
+            }
+          };
+          
+        var _onOk = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        var _onError = function(message) {
+            throw Error(message);
+        }
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, _onOk, _onError);
+
+    }
+    
+    // Deletes the specified volume attachment from the specified server.
+    // id: The server's ID.
+    // volume_id: The volume's ID to be detached from the server.
+    var detachvolume = function(id, volume_id, callback) {
+        if(!_check())
+            return;
+        
+        var url = params.url + '/servers/' + id + '/os-volume_attachments/' + id;
+        
+        if(volume_id == undefined) {
+            return;
+        }
+        
+        var _onOk = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        var _onError = function(message) {
+            throw Error(message);
+        }
+
+        JS.Comm.del(url, JS.Keystone.params.token, _onOk, _onError);
+
+    }
+    
+    // Lists volume details for the specified volume attachment ID.
+    // id: The server's ID.
+    // volume_id: The volume's ID.
+    var getattachedvolume = function(id, volume_id, callback) {
+        if(!_check())
+            return;
+        
+        var url = params.url + '/servers/' + id + '/os-volume_attachments/' + volume_id;
+        
+        if(volume_id == undefined) {
+            return;
+        }
+        
+        var _onOk = function(result) {
+            if(callback != undefined)
+                callback(result);
+        }
+        var _onError = function(message) {
+            throw Error(message);
+        }
+
+        JS.Comm.get(url, JS.Keystone.params.token, _onOk, _onError);
+
+    }
+    
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -745,7 +847,11 @@ JSTACK.Nova = (function(JS, undefined) {
         createkeypair           : createkeypair,
         deletekeypair           : deletekeypair,
         getvncconsole           : getvncconsole,
-        getconsoleoutput        : getconsoleoutput
+        getconsoleoutput        : getconsoleoutput,
+        getattachedvolumes      : getattachedvolumes,
+        attachvolume            : attachvolume,
+        detachvolume            : detachvolume,
+        getattachedvolume       : getattachedvolume
     }
 
 })(JSTACK);
