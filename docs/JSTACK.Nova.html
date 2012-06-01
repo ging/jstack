@@ -760,7 +760,7 @@ volume_id: The volume's ID to be detached from the server.</p>             </td>
         <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
             <span class="k">return</span><span class="p">;</span>
         
-        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments/&#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers/&#39;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s1">&#39;/os-volume_attachments/&#39;</span> <span class="o">+</span> <span class="nx">volume_id</span><span class="p">;</span>
         
         <span class="k">if</span><span class="p">(</span><span class="nx">volume_id</span> <span class="o">==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span><span class="p">;</span>
