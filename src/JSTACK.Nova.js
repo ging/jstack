@@ -768,7 +768,7 @@ JSTACK.Nova = (function(JS, undefined) {
         if(!_check())
             return;
         
-        var url = params.url + '/servers/' + id + '/os-volume_attachments/' + id;
+        var url = params.url + '/servers/' + id + '/os-volume_attachments/' + volume_id;
         
         if(volume_id == undefined) {
             return;
