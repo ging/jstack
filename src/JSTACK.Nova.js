@@ -98,7 +98,7 @@ JSTACK.Nova = (function (JS, undefined) {
             return;
         }
         url = params.url + '/servers';
-        if (detailed !== undefined & detailed) {
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
 
@@ -463,7 +463,7 @@ JSTACK.Nova = (function (JS, undefined) {
             return;
         }
         url = params.url + '/flavors';
-        if (detailed !== undefined & detailed) {
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
 
@@ -580,7 +580,7 @@ JSTACK.Nova = (function (JS, undefined) {
             return;
         }
         url = params.url + '/images';
-        if (detailed !== undefined & detailed) {
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
 
@@ -898,4 +898,4 @@ JSTACK.Nova = (function (JS, undefined) {
         getattachedvolume : getattachedvolume
     };
 
-})(JSTACK);
+}(JSTACK));

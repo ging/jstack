@@ -136,4 +136,4 @@ JSTACK.Comm = (function (JS, undefined) {
         put : put,
         del : del
     };
-})(JSTACK);
+}(JSTACK));

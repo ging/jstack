@@ -65,7 +65,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             return;
         }
         url = params.url + '/volumes';
-        if (detailed !== undefined & detailed) {
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
 
@@ -296,4 +296,4 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
         getsnapshot : getsnapshot
     };
 
-})(JSTACK);
+}(JSTACK));
