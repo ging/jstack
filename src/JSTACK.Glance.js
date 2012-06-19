@@ -25,66 +25,68 @@ THE SOFTWARE.
 // JStack Glance Module
 // ------------------
 
-// This module provides Glance API functions. 
-JSTACK.Glance = (function(JS, undefined) {
+// This module provides Glance API functions.
+JSTACK.Glance = (function (JS, undefined) {
+    "use strict";
+    var params, check, getimagelist;
 
     // This modules stores the `url`to which it will send every
     // request.
-    var params = {
-        url     : undefined,
-        state   : undefined
-    }
-    
+    params = {
+        url : undefined,
+        state : undefined
+    };
+
     // Private functions
     // -----------------
-    
-    // Function `_check` internally confirms that Keystone module is 
+
+    // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Glance service.
-    var _check = function() {
-        if(JS.Keystone != undefined && JS.Keystone.params.currentstate == JS.Keystone.STATES.AUTHENTICATED) {
+    check = function () {
+        if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("image");
             params.url = service.endpoints[0].adminURL;
             return true;
-        } else {
-            return false;
         }
-    }
-    
+        return false;
+    };
     // Public functions
     // ----------------
     //
     // **Image Operations**
-    
+
     //
-    // This operation provides a list of images associated with the account. In 
+    // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    var getimagelist = function(detailed, callback) {
-        if(!_check())
+    getimagelist = function (detailed, callback) {
+        var url, onOK, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/images';
-        if(detailed != undefined & detailed) {
+        }
+        url = params.url + '/images';
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
-        
-        var _onOK = function(result) {
-            if(callback != undefined)
-                callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
 
-        JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
-    }
-    
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
     return {
-        
-        // Functions: 
-        getimagelist            : getimagelist
-    }
+
+        // Functions:
+        getimagelist : getimagelist
+    };
 
 })(JSTACK);
