@@ -26,60 +26,62 @@ THE SOFTWARE.
 // ------------------
 
 // Allows you to manage volumes and snapshots that can be used with the Compute API.
-JSTACK.Nova.Volume = (function(JS, undefined) {
-
+JSTACK.Nova.Volume = (function (JS, undefined) {
+    "use strict";
+    var params, check, getvolumelist, createvolume, deletevolume, getvolume,
+        getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot;
     // This modules stores the `url` to which it will send every
     // request.
-    var params = {
-        url     : undefined,
-        state   : undefined
-    }
-    
+    params = {
+        url : undefined,
+        state : undefined
+    };
+
     // Private functions
     // -----------------
-    
-    // Function `_check` internally confirms that Keystone module is 
+
+    // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Volume service.
-    var _check = function() {
-        if(JS.Keystone != undefined && JS.Keystone.params.currentstate == JS.Keystone.STATES.AUTHENTICATED) {
+    check = function () {
+        if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("volume");
             params.url = service.endpoints[0].adminURL;
             return true;
-        } else {
-            return false;
         }
-    }
-    
+        return false;
+    };
     // Public functions
     // ----------------
     //
     // **Volume Operations**
-    
+
     //
-    // View a list of simple Volume entities. In 
+    // View a list of simple Volume entities. In
     // [Requesting a List of Volumes](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var getvolumelist = function(detailed, callback) {
-        if(!_check())
+    getvolumelist = function (detailed, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/volumes';
-        if(detailed != undefined & detailed) {
+        }
+        url = params.url + '/volumes';
+        if (detailed !== undefined & detailed) {
             url += '/detail';
         }
-        
-        var _onOK = function(result) {
-            if(callback != undefined)
-                callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
 
-        JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
-    }
-    
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
     // Create a Volume.
-    // Arguments in this function are: 
+    // Arguments in this function are:
     //
     // a. Mandatory
     //
@@ -88,101 +90,111 @@ JSTACK.Nova.Volume = (function(JS, undefined) {
     // b. Optional
     //
     // * The `name` of the volume
-    // 
+    //
     // * The `description` of the volume
     //
-    var createvolume = function(size, name, description, callback) {
-        if(!_check())
+    createvolume = function (size, name, description, callback) {
+        var onOk, onError, data;
+        if (!check()) {
             return;
-            
-        var data = {"volume":{ "size": size }};
-        
-        if(name != undefined) {
+        }
+
+        data = {
+            "volume" : {
+                "size" : size
+            }
+        };
+
+        if (name !== undefined) {
             data.volume.display_name = name;
         }
-        
-        if(description != undefined) {
+
+        if (description !== undefined) {
             data.volume.display_description = description;
         }
-        
-        var _onOK = function(result) {
-            if(callback != undefined)
-                callback(result);
-        }
-        
-        var _onError = function(message) {
-            throw Error(message);
-        }
 
-        JS.Comm.post(params.url + '/volumes', data, JS.Keystone.params.token, _onOK, _onError);
-        
-    }
-    
-    // Delete a Volume entitiy. In 
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.post(params.url + '/volumes', data, JS.Keystone.params.token, onOk, onError);
+    };
+    // Delete a Volume entitiy. In
     // [Deleting a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var deletevolume = function(id, callback) {
-        if(!_check())
+    deletevolume = function (id, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/volumes/' + id;
+        }
+        url = params.url + '/volumes/' + id;
 
-        var _onOk = function(result) {
-            if(callback != undefined)
+        onOk = function (result) {
+            if (callback !== undefined) {
                 callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
 
-        JS.Comm.del(url, JS.Keystone.params.token, _onOk, _onError);
-    }
-    
-    // Get a Volume entitiy. In 
+        JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
+    };
+    // Get a Volume entitiy. In
     // [Retrieving a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var getvolume = function(id, callback) {
-        if(!_check())
+    getvolume = function (id, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/volumes/' + id;
+        }
+        url = params.url + '/volumes/' + id;
 
-        var _onOk = function(result) {
-            if(callback != undefined)
+        onOk = function (result) {
+            if (callback !== undefined) {
                 callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
 
-        JS.Comm.get(url, JS.Keystone.params.token, _onOk, _onError);
-    }
-    
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
     // **Snapshot Operations**
-    
+
     //
-    // View a list of simple Snapshot entities. In 
+    // View a list of simple Snapshot entities. In
     // [Requesting a List of Snapshots](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var getsnapshotlist = function(detailed, callback) {
-        if(!_check())
+    getsnapshotlist = function (detailed, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/snapshots';
-        if(detailed != undefined & detailed) {
+        }
+        url = params.url + '/snapshots';
+        if (detailed !== undefined && detailed) {
             url += '/detail';
         }
-        
-        var _onOK = function(result) {
-            if(callback != undefined)
-                callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
 
-        JS.Comm.get(url, JS.Keystone.params.token, _onOK, _onError);
-    }
-    
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
     // Create a Volume Snapshot.
-    // Arguments in this function are: 
+    // Arguments in this function are:
     //
     // a. Mandatory
     //
@@ -191,87 +203,97 @@ JSTACK.Nova.Volume = (function(JS, undefined) {
     // b. Optional
     //
     // * The `name` of the snapshot
-    // 
+    //
     // * The `description` of the snapshot
     //
-    var createsnapshot = function(volume_id, name, description, callback) {
-        if(!_check())
+    createsnapshot = function (volume_id, name, description, callback) {
+        var url, onOk, onError, data;
+        if (!check()) {
             return;
-            
-        var data = {"snapshot": { "volume_id": volume_id, "force": true}};
-        
-        if(name != undefined) {
+        }
+
+        data = {
+            "snapshot" : {
+                "volume_id" : volume_id,
+                "force" : true
+            }
+        };
+
+        if (name !== undefined) {
             data.snapshot.display_name = name;
         }
-        
-        if(description != undefined) {
+
+        if (description !== undefined) {
             data.snapshot.display_description = description;
         }
-        
-        var _onOK = function(result) {
-            if(callback != undefined)
-                callback(result);
-        }
-        
-        var _onError = function(message) {
-            throw Error(message);
-        }
 
-        JS.Comm.post(params.url + '/snapshots', data, JS.Keystone.params.token, _onOK, _onError);
-    }
-    
-    // Delete a Snapshot entitiy. In 
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.post(params.url + '/snapshots', data, JS.Keystone.params.token, onOk, onError);
+    };
+    // Delete a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var deletesnapshot = function(id, callback) {
-        if(!_check())
+    deletesnapshot = function (id, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/snapshots/' + id;
+        }
+        url = params.url + '/snapshots/' + id;
 
-        var _onOk = function(result) {
-            if(callback != undefined)
+        onOk = function (result) {
+            if (callback !== undefined) {
                 callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
 
-        JS.Comm.del(url, JS.Keystone.params.token, _onOk, _onError);
-    }
-    
-    // Get a Snapshot entitiy. In 
+        JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
+    };
+    // Get a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    var getsnapshot = function(id, callback) {
-        if(!_check())
+    getsnapshot = function (id, callback) {
+        var url, onOk, onError;
+        if (!check()) {
             return;
-        var url = params.url + '/snapshots/' + id;
+        }
+        url = params.url + '/snapshots/' + id;
 
-        var _onOk = function(result) {
-            if(callback != undefined)
+        onOk = function (result) {
+            if (callback !== undefined) {
                 callback(result);
-        }
-        var _onError = function(message) {
-            throw Error(message);
-        }
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
 
-        JS.Comm.get(url, JS.Keystone.params.token, _onOk, _onError);
-    }
-    
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
     return {
-        
-        // Functions: 
-        getvolumelist            : getvolumelist,
-        createvolume             : createvolume,
-        deletevolume             : deletevolume,
-        getvolume                : getvolume,
-        getsnapshotlist          : getsnapshotlist,
-        createsnapshot           : createsnapshot,
-        deletesnapshot           : deletesnapshot,
-        getsnapshot              : getsnapshot
-    }
+
+        // Functions:
+        getvolumelist : getvolumelist,
+        createvolume : createvolume,
+        deletevolume : deletevolume,
+        getvolume : getvolume,
+        getsnapshotlist : getsnapshotlist,
+        createsnapshot : createsnapshot,
+        deletesnapshot : deletesnapshot,
+        getsnapshot : getsnapshot
+    };
 
 })(JSTACK);
