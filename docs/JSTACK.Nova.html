@@ -94,7 +94,7 @@ there is more information about the JSON object that is returned.</p>           
             <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/servers&#39;</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
         <span class="p">}</span>
 
@@ -455,7 +455,7 @@ there is more information.</p>             </td>             <td class="code">  
             <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/flavors&#39;</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
         <span class="p">}</span>
 
@@ -572,7 +572,7 @@ there is more information.</p>             </td>             <td class="code">  
             <span class="k">return</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images&#39;</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
         <span class="p">}</span>
 
@@ -890,6 +890,6 @@ volume_id: The volume's ID.</p>             </td>             <td class="code"> 
         <span class="nx">getattachedvolume</span> <span class="o">:</span> <span class="nx">getattachedvolume</span>
     <span class="p">};</span>
 
-<span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>
+<span class="p">}(</span><span class="nx">JSTACK</span><span class="p">));</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
