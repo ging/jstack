@@ -150,4 +150,4 @@ JSTACK.Utils = (function(JS, undefined) {
         encode : encode,
         decode : decode
     };
-})(JSTACK); 
+}(JSTACK));

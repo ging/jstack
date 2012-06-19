@@ -89,4 +89,4 @@ JSTACK.Glance = (function (JS, undefined) {
         getimagelist : getimagelist
     };
 
-})(JSTACK);
+}(JSTACK));

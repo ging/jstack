@@ -275,4 +275,4 @@ JSTACK.Keystone = (function (JS, undefined) {
         getservice : getservice,
         getservicelist : getservicelist
     };
-})(JSTACK);
+}(JSTACK));
