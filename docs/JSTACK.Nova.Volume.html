@@ -51,13 +51,13 @@ authenticated and it has the URL of the Volume service.</p>             </td>   
     <span class="p">};</span>
 </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Public functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
 
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>This function sets the endpoint type for making requests to Nova Volume.
+</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>This function sets the endpoint type for making requests to Glance.
 It could take one of the following values:
-* "adminUrl"
-* "internalUrl"
-* "publicUrl"</p>             </td>             <td class="code">               <div class="highlight"><pre>
+* "adminURL"
+* "internalURL"
+* "publicURL"</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="nx">configure</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">endpointType</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;adminUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;publicUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;internalUrl&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;adminURL&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;internalURL&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;publicURL&quot;</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span> <span class="o">=</span> <span class="nx">endpointType</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">};</span>
