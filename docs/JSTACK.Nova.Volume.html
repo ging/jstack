@@ -44,7 +44,7 @@ authenticated and it has the URL of the Volume service.</p>             </td>   
     <span class="nx">check</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">===</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">);</span>
-            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Nova</span><span class="p">.</span><span class="nx">Volume</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span><span class="p">];</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span><span class="p">];</span>
             <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
@@ -58,7 +58,7 @@ It could take one of the following values:
 * "publicUrl"</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="nx">configure</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">endpointType</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;adminUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;publicUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;internalUrl&quot;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">JS</span><span class="p">.</span><span class="nx">Nova</span><span class="p">.</span><span class="nx">Volume</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span> <span class="o">=</span> <span class="nx">endpointType</span><span class="p">;</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span> <span class="o">=</span> <span class="nx">endpointType</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">};</span>
 
@@ -298,6 +298,7 @@ there is more information about the JSON object that is returned.</p>           
     <span class="k">return</span> <span class="p">{</span>
 
 </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Functions:</p>             </td>             <td class="code">               <div class="highlight"><pre>
+        <span class="nx">configure</span> <span class="o">:</span> <span class="nx">configure</span><span class="p">,</span>
         <span class="nx">getvolumelist</span> <span class="o">:</span> <span class="nx">getvolumelist</span><span class="p">,</span>
         <span class="nx">createvolume</span> <span class="o">:</span> <span class="nx">createvolume</span><span class="p">,</span>
         <span class="nx">deletevolume</span> <span class="o">:</span> <span class="nx">deletevolume</span><span class="p">,</span>
