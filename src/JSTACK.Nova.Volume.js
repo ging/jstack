@@ -28,13 +28,14 @@ THE SOFTWARE.
 // Allows you to manage volumes and snapshots that can be used with the Compute API.
 JSTACK.Nova.Volume = (function (JS, undefined) {
     "use strict";
-    var params, check, getvolumelist, createvolume, deletevolume, getvolume,
+    var params, check, configure, getvolumelist, createvolume, deletevolume, getvolume,
         getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
         url : undefined,
-        state : undefined
+        state : undefined,
+        endpointUrl : "publicUrl"
     };
 
     // Private functions
@@ -45,7 +46,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     check = function () {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("volume");
-            params.url = service.endpoints[0].adminURL;
+            params.url = service.endpoints[0][JS.Nova.Volume.params.endpointType];
             return true;
         }
         return false;
@@ -53,6 +54,19 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Public functions
     // ----------------
     //
+
+    // This function sets the endpoint type for making requests to Nova Volume.
+    // It could take one of the following values:
+    // * "adminUrl"
+    // * "internalUrl"
+    // * "publicUrl"
+    configure = function (endpointType) {
+        if (endpointType === "adminUrl" || endpointType === "publicUrl" || endpointType === "internalUrl") {
+            JS.Nova.Volume.params.endpointType = endpointType;
+        }
+    };
+
+
     // **Volume Operations**
 
     //

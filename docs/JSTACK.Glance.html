@@ -24,65 +24,80 @@
 
 </pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>JStack Glance Module</h2>             </td>             <td class="code">               <div class="highlight"><pre>
 
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This module provides Glance API functions. </p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Glance</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>This module provides Glance API functions.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="nx">JSTACK</span><span class="p">.</span><span class="nx">Glance</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">JS</span><span class="p">,</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+    <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">check</span><span class="p">,</span> <span class="nx">configure</span><span class="p">,</span> <span class="nx">getimagelist</span><span class="p">;</span>
 
 </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>This modules stores the <code>url</code>to which it will send every
 request.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">url</span>     <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
-        <span class="nx">state</span>   <span class="o">:</span> <span class="kc">undefined</span>
-    <span class="p">}</span>
-    
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
-    
-</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Function <code>_check</code> internally confirms that Keystone module is 
-authenticated and it has the URL of the Glance service.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="kd">var</span> <span class="nx">_check</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">==</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">);</span>
-            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">adminURL</span><span class="p">;</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Public functions</h2>
+    <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">url</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="nx">state</span> <span class="o">:</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="nx">endpointUrl</span> <span class="o">:</span> <span class="s2">&quot;publicUrl&quot;</span>
+    <span class="p">};</span>
 
-<p><strong>Image Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Private functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
+
+</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Function <code>check</code> internally confirms that Keystone module is
+authenticated and it has the URL of the Glance service.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="nx">check</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">currentstate</span> <span class="o">===</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">STATES</span><span class="p">.</span><span class="nx">AUTHENTICATED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">service</span> <span class="o">=</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">getservice</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">);</span>
+            <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="nx">service</span><span class="p">.</span><span class="nx">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nx">JS</span><span class="p">.</span><span class="nx">Glance</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span><span class="p">];</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">};</span>
+</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Public functions</h2>             </td>             <td class="code">               <div class="highlight"><pre>
     
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>This operation provides a list of images associated with the account. In 
+</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>This function sets the endpoint type for making requests to Glance.
+It could take one of the following values:
+* "adminUrl"
+* "internalUrl"
+* "publicUrl"</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="nx">configure</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">endpointType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;adminUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;publicUrl&quot;</span> <span class="o">||</span> <span class="nx">endpointType</span> <span class="o">===</span> <span class="s2">&quot;internalUrl&quot;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">JS</span><span class="p">.</span><span class="nx">Glance</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">endpointType</span> <span class="o">=</span> <span class="nx">endpointType</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    
+    
+</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p><strong>Image Operations</strong></p>             </td>             <td class="code">               <div class="highlight"><pre>
+
+</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>This operation provides a list of images associated with the account. In
 <a href="http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html">Requesting a List of Public VM Images</a>
 there is more information about the JSON object that is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="kd">var</span> <span class="nx">getimagelist</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_check</span><span class="p">())</span>
+    <span class="nx">getimagelist</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">detailed</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">onOK</span><span class="p">,</span> <span class="nx">onError</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">check</span><span class="p">())</span> <span class="p">{</span>
             <span class="k">return</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images&#39;</span><span class="p">;</span>
-        <span class="k">if</span><span class="p">(</span><span class="nx">detailed</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="o">&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="nx">url</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">url</span> <span class="o">+</span> <span class="s1">&#39;/images&#39;</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">detailed</span> <span class="o">!==</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="nx">detailed</span><span class="p">)</span> <span class="p">{</span>
             <span class="nx">url</span> <span class="o">+=</span> <span class="s1">&#39;/detail&#39;</span><span class="p">;</span>
         <span class="p">}</span>
-        
-        <span class="kd">var</span> <span class="nx">_onOK</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="nx">callback</span> <span class="o">!=</span> <span class="kc">undefined</span><span class="p">)</span>
-                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="kd">var</span> <span class="nx">_onError</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
-        <span class="p">}</span>
 
-        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">_onOK</span><span class="p">,</span> <span class="nx">_onError</span><span class="p">);</span>
-    <span class="p">}</span>
-    
-</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
+        <span class="nx">onOK</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="nx">onError</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="p">};</span>
+
+        <span class="nx">JS</span><span class="p">.</span><span class="nx">Comm</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">JS</span><span class="p">.</span><span class="nx">Keystone</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span> <span class="nx">onOK</span><span class="p">,</span> <span class="nx">onError</span><span class="p">);</span>
+    <span class="p">};</span>
+</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h2>Public Functions and Variables</h2>
 
 <p>This is the list of available public functions and variables</p>             </td>             <td class="code">               <div class="highlight"><pre>
     <span class="k">return</span> <span class="p">{</span>
-        
-</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Functions: </p>             </td>             <td class="code">               <div class="highlight"><pre>
-        <span class="nx">getimagelist</span>            <span class="o">:</span> <span class="nx">getimagelist</span>
-    <span class="p">}</span>
 
-<span class="p">})(</span><span class="nx">JSTACK</span><span class="p">);</span>
+</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Functions:</p>             </td>             <td class="code">               <div class="highlight"><pre>
+        <span class="nx">getimagelist</span> <span class="o">:</span> <span class="nx">getimagelist</span>
+    <span class="p">};</span>
+
+<span class="p">}(</span><span class="nx">JSTACK</span><span class="p">));</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

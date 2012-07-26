@@ -28,13 +28,14 @@ THE SOFTWARE.
 // This module provides Glance API functions.
 JSTACK.Glance = (function (JS, undefined) {
     "use strict";
-    var params, check, getimagelist;
+    var params, check, configure, getimagelist;
 
     // This modules stores the `url`to which it will send every
     // request.
     params = {
         url : undefined,
-        state : undefined
+        state : undefined,
+        endpointUrl : "publicUrl"
     };
 
     // Private functions
@@ -45,7 +46,7 @@ JSTACK.Glance = (function (JS, undefined) {
     check = function () {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("image");
-            params.url = service.endpoints[0].adminURL;
+            params.url = service.endpoints[0][JS.Glance.params.endpointType];
             return true;
         }
         return false;
@@ -53,6 +54,19 @@ JSTACK.Glance = (function (JS, undefined) {
     // Public functions
     // ----------------
     //
+    
+    // This function sets the endpoint type for making requests to Glance.
+    // It could take one of the following values:
+    // * "adminUrl"
+    // * "internalUrl"
+    // * "publicUrl"
+    configure = function (endpointType) {
+        if (endpointType === "adminUrl" || endpointType === "publicUrl" || endpointType === "internalUrl") {
+            JS.Glance.params.endpointType = endpointType;
+        }
+    };
+    
+    
     // **Image Operations**
 
     //

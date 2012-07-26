@@ -29,7 +29,7 @@ THE SOFTWARE.
 JSTACK.Nova = (function (JS, undefined) {
     "use strict";
 
-    var params, check, postAction, getserverlist, getserverdetail, getserverips,
+    var params, configure, check, postAction, getserverlist, getserverdetail, getserverips,
         updateserver, createserver, deleteserver, changepasswordserver,
         rebootserverhard, rebootserversoft, resizeserver, confirmresizedserver,
         revertresizedserver, startserver, stopserver, pauseserver,
@@ -43,7 +43,8 @@ JSTACK.Nova = (function (JS, undefined) {
     // request.
     params = {
         url : undefined,
-        state : undefined
+        state : undefined,
+        endpointType : "publicUrl"
     };
 
     // Private functions
@@ -55,7 +56,7 @@ JSTACK.Nova = (function (JS, undefined) {
         if (JS.Keystone !== undefined &&
                 JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("compute");
-            params.url = service.endpoints[0].adminURL;
+            params.url = service.endpoints[0][JS.Nova.params.endpointType];
             return true;
         }
         return false;
@@ -86,6 +87,19 @@ JSTACK.Nova = (function (JS, undefined) {
     // Public functions
     // ----------------
     //
+    
+    // This function sets the endpoint type for making requests to Nova.
+    // It could take one of the following values:
+    // * "adminUrl"
+    // * "internalUrl"
+    // * "publicUrl"
+    configure = function (endpointType) {
+        if (endpointType === "adminUrl" || endpointType === "publicUrl" || endpointType === "internalUrl") {
+            JS.Nova.params.endpointType = endpointType;    
+        }
+    };
+    
+    
     // **Server Operations**
 
     //
