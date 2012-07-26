@@ -54,19 +54,18 @@ JSTACK.Glance = (function (JS, undefined) {
     // Public functions
     // ----------------
     //
-    
+
     // This function sets the endpoint type for making requests to Glance.
     // It could take one of the following values:
-    // * "adminUrl"
-    // * "internalUrl"
-    // * "publicUrl"
+    // * "adminURL"
+    // * "internalURL"
+    // * "publicURL"
     configure = function (endpointType) {
-        if (endpointType === "adminUrl" || endpointType === "publicUrl" || endpointType === "internalUrl") {
+        if (endpointType === "adminURL" || endpointType === "internalURL" || endpointType === "publicURL") {
             params.endpointType = endpointType;
         }
     };
-    
-    
+
     // **Image Operations**
 
     //
