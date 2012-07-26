@@ -44,7 +44,7 @@ JSTACK.Nova = (function (JS, undefined) {
     params = {
         url : undefined,
         state : undefined,
-        endpointType : "publicUrl"
+        endpointType : "publicURL"
     };
 
     // Private functions

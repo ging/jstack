@@ -35,7 +35,7 @@ JSTACK.Glance = (function (JS, undefined) {
     params = {
         url : undefined,
         state : undefined,
-        endpointUrl : "publicUrl"
+        endpointUrl : "publicURL"
     };
 
     // Private functions
