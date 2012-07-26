@@ -100,6 +100,7 @@ JSTACK.Glance = (function (JS, undefined) {
     return {
 
         // Functions:
+        configure : configure,
         getimagelist : getimagelist
     };
 

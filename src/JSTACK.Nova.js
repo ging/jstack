@@ -875,6 +875,7 @@ JSTACK.Nova = (function (JS, undefined) {
     return {
 
         // Functions:
+        configure : configure,
         getserverlist : getserverlist,
         getserverdetail : getserverdetail,
         getserverips : getserverips,

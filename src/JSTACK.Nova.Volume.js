@@ -300,6 +300,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     return {
 
         // Functions:
+        configure : configure,
         getvolumelist : getvolumelist,
         createvolume : createvolume,
         deletevolume : deletevolume,
