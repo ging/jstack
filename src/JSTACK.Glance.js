@@ -60,6 +60,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // * "adminURL"
     // * "internalURL"
     // * "publicURL"
+    // You can use this function to change the default endpointURL, which is publicURL.
     configure = function (endpointType) {
         if (endpointType === "adminURL" || endpointType === "internalURL" || endpointType === "publicURL") {
             params.endpointType = endpointType;
