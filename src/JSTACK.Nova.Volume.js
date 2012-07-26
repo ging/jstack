@@ -46,7 +46,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     check = function () {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("volume");
-            params.url = service.endpoints[0][JS.Nova.Volume.params.endpointType];
+            params.url = service.endpoints[0][params.endpointType];
             return true;
         }
         return false;
@@ -62,7 +62,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // * "publicUrl"
     configure = function (endpointType) {
         if (endpointType === "adminUrl" || endpointType === "publicUrl" || endpointType === "internalUrl") {
-            JS.Nova.Volume.params.endpointType = endpointType;
+            params.endpointType = endpointType;
         }
     };
 
