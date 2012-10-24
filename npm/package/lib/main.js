@@ -254,3 +254,5 @@ var authenticated = function(result) {
 }
 
 JSTACK.Keystone.authenticate(username, password, null, tenant, authenticated);
+
+module.exports = JSTACK;
