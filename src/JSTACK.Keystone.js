@@ -60,8 +60,10 @@ JSTACK.Keystone = (function (JS, undefined) {
     // We need to initialize this API by passing the Keystone's URL. This URL usually follows the next
     // pattern: http://host:5000/
     // This API will initialize parameters such as `currentstate`, `token` and `access`.
-    init = function (keystoneUrl) {
+    init = function (keystoneUrl, adminUrl) {
+        console.log("Admin URL" + adminUrl);
         params.url = keystoneUrl;
+        params.adminUrl = adminUrl;
         params.access = undefined;
         params.token = undefined;
         params.currentstate = STATES.DISCONNECTED;
@@ -261,6 +263,93 @@ JSTACK.Keystone = (function (JS, undefined) {
         }
     };
 
+    
+    createuser = function(username, password, tenant_id, email, enabled, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+           var data = {"user": {"name": name,
+                               "password": password,
+                               "tenantId": tenant_id,
+                               "email": email,
+                               "enabled": enabled}};
+           JS.Comm.post(params.adminUrl + "users", data, params.token, onOk, onError);
+        }
+    };
+    
+    getusers = function(tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            var route = "";
+            if (tenant_id !== undefined) {
+                route = params.adminUrl + "tenants/" + tenant_id + "/users";
+            } else {
+                route = params.adminUrl + "users";
+            }
+            JS.Comm.get(route, params.token, onOk, onError);
+        }
+    };
+    
+    getuser = function(user_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            JS.Comm.get(params.adminUrl + "users" + user_id, params.token, onOk, onError);
+        }
+    };
+    
+    deleteuser = function(user_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            JS.Comm.del(params.adminUrl + "users" + user_id, params.token, onOk, onError);
+        }
+    };
+    
+    getuserroles = function(user_id, tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            var route = "";
+            if (tenant_id !== undefined) {
+                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles";
+            } else {
+                route = params.adminUrl + "users" + user_id + "/roles";
+            }
+            JS.Comm.get(route, params.token, onOk, onError);
+        }
+    };
+    
+    adduserrole = function(user_id, role_id, tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            var route = "";
+            if (tenant_id !== undefined) {
+                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles/OS-KSADM/" + role_id;
+            } else {
+                route = params.adminUrl + "users" + user_id + "/roles/OS-KSADM/" + role_id;
+            }
+            JS.Comm.put(route, params.token, onOk, onError);
+        }
+    };
+    
+    removeuserrole = function(user_id, role_id, tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            var route = "";
+            if (tenant_id !== undefined) {
+                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles/OS-KSADM/" + role_id;
+            } else {
+                route = params.adminUrl + "users" + user_id + "/roles/OS-KSADM/" + role_id;
+            }
+            JS.Comm.del(route, params.token, onOk, onError);
+        }
+    };
+    
+    createtenant = function(name, description, enabled, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+           var data = {"tenant": {"name": name,
+                             "description": description,
+                             "enabled": enabled}};
+           JS.Comm.post(params.adminUrl + "tenants", data, params.token, onOk, onError);
+        }
+    };
+    
+    deletetenant = function(tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+           JS.Comm.del(params.adminUrl + "tenants" + tenant_id, data, params.token, onOk, onError);
+        }
+    };
+    
     // Public Functions and Variables
     // ---------------------------
     // This is the list of available public functions and variables
@@ -273,6 +362,15 @@ JSTACK.Keystone = (function (JS, undefined) {
         authenticate : authenticate,
         gettenants : gettenants,
         getservice : getservice,
-        getservicelist : getservicelist
+        getservicelist : getservicelist,
+        createuser : createuser,
+        getusers : getusers,
+        getuser : getuser,
+        deleteuser : deleteuser,
+        getuserroles : getuserroles,
+        adduserrole : adduserrole,
+        removeuserrole : removeuserrole,
+        createtenant : createtenant,
+        deletetenant : deletetenant
     };
 }(JSTACK));
