@@ -303,9 +303,9 @@ JSTACK.Keystone = (function (JS, undefined) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
             if (tenant_id !== undefined) {
-                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles";
+                route = params.adminUrl + "tenants/" + tenant_id + "/users/" + user_id + "/roles";
             } else {
-                route = params.adminUrl + "users" + user_id + "/roles";
+                route = params.adminUrl + "users/" + user_id + "/roles";
             }
             JS.Comm.get(route, params.token, onOk, onError);
         }
@@ -315,9 +315,9 @@ JSTACK.Keystone = (function (JS, undefined) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
             if (tenant_id !== undefined) {
-                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles/OS-KSADM/" + role_id;
+                route = params.adminUrl + "tenants/" + tenant_id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id;
             } else {
-                route = params.adminUrl + "users" + user_id + "/roles/OS-KSADM/" + role_id;
+                route = params.adminUrl + "users/" + user_id + "/roles/OS-KSADM/" + role_id;
             }
             JS.Comm.put(route, params.token, onOk, onError);
         }
@@ -327,9 +327,9 @@ JSTACK.Keystone = (function (JS, undefined) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
             if (tenant_id !== undefined) {
-                route = params.adminUrl + "tenants/" + tenant_id + "/users" + user_id + "/roles/OS-KSADM/" + role_id;
+                route = params.adminUrl + "tenants/" + tenant_id + "/users/" + user_id + "/roles/OS-KSADM/" + role_id;
             } else {
-                route = params.adminUrl + "users" + user_id + "/roles/OS-KSADM/" + role_id;
+                route = params.adminUrl + "users/" + user_id + "/roles/OS-KSADM/" + role_id;
             }
             JS.Comm.del(route, params.token, onOk, onError);
         }
