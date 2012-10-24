@@ -289,13 +289,13 @@ JSTACK.Keystone = (function (JS, undefined) {
     
     getuser = function(user_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            JS.Comm.get(params.adminUrl + "users" + user_id, params.token, onOk, onError);
+            JS.Comm.get(params.adminUrl + "users/" + user_id, params.token, onOk, onError);
         }
     };
     
     deleteuser = function(user_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            JS.Comm.del(params.adminUrl + "users" + user_id, params.token, onOk, onError);
+            JS.Comm.del(params.adminUrl + "users/" + user_id, params.token, onOk, onError);
         }
     };
     
