@@ -37,7 +37,9 @@ JSTACK.Nova = (function (JS, undefined) {
         getflavordetail, createflavor, deleteflavor, getimagelist,
         getimagedetail, deleteimage, getkeypairlist, createkeypair,
         deletekeypair, getvncconsole, getconsoleoutput, getattachedvolumes,
-        attachvolume, detachvolume, getattachedvolume;
+        attachvolume, detachvolume, getattachedvolume,getquotalist, updatequota, 
+        getdefaultquotalist, getsecuritygrouplist, createsecuritygroup, getsecuritygroupdetail,
+        deletesecuritygroup, createsecuritygrouprule, deletesecuritygrouprule, getsecuritygroupforserver;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -870,6 +872,291 @@ JSTACK.Nova = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
 
     };
+
+    
+    // APIs for quotas//
+    
+    // List the quotas for a specific tenant
+    // tentnat_id: Id of the tenant for which we check the quota
+    
+    getquotalist = function (tenant_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-quota-sets/' + tenant_id;
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Updates quota with the new values 
+    // tentnat_id: Id of the tenant for which we update the quota  
+    // instances, cores, ram, volumes, gigabytes, floating_ips, metadata_items, injected_files,
+    // injected_file_content_bytes, injected_file_path_bytes, security_groups, security_group_rules,
+    // key_pairs: New parameters for the creating quota
+    // example to call API: JSTACK.Nova.updatequota('c0ac228044d34367a4d07b60b6526675', 50, 50, 51200, 10, 1000, 10, 128, 5, 10240, 255, 10, 20, 100, printAll); 
+    
+    updatequota = function (tenant_id, instances, cores, ram, volumes, gigabytes, floating_ips,
+                  metadata_items, injected_files, injected_file_content_bytes, injected_file_path_bytes,
+                  security_groups, security_group_rules, key_pairs, callback) {
+                  	
+    	var url, data, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-quota-sets/' + tenant_id;
+    	
+    	data = {
+    		'quota_set': {'instances': instances, 'cores': cores,
+                              'ram': ram, 'volumes': volumes,
+                              'gigabytes': gigabytes, 'floating_ips': floating_ips,
+                              'metadata_items': metadata_items, 'injected_files': injected_files,
+                              'injected_file_content_bytes': injected_file_content_bytes,
+                              'injected_file_path_bytes': injected_file_path_bytes,
+                              'security_groups': security_groups,
+                              'security_group_rules': security_group_rules,
+                              'key_pairs': key_pairs}
+    		
+    	};	
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);    	
+    };
+    
+    // List the default quota
+    // tenant_id:  Id of the tenant for which we list the default quota  
+    
+    getdefaultquotalist = function (tenant_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-quota-sets/' + tenant_id + '/defaults';
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };        
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);    	
+    }; 
+    
+    // APIs for security groups
+    
+    // List the security groups 
+     
+    getsecuritygrouplist = function (callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-groups';
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);    	
+    };
+    
+     // Creates a new security group
+     // name: name of the new security group
+     // description: description for the creating security group 
+     
+    createsecuritygroup = function (name, description, callback) {
+    	var url, data, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-groups';
+    	
+    	data = {"security_group": {
+			        "name": "name",
+			        "description": "description"
+    				}
+		};
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Returns details for the specific security group
+    // sec_group_id: Id of the consulting security group
+    
+    getsecuritygroupdetail = function (sec_group_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-groups/' + sec_group_id;
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Deletes a security group
+    // sec_group_id: Id of the security group to delete
+    
+    deletesecuritygroup = function (sec_group_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-groups/' + sec_group_id;
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Creates a security group rule
+    // ip_protocol, from_port, to_port, cidr, group_id, parent_group_id: New parameters for 
+    // the creating security group rule
+    
+    createsecuritygrouprule = function (ip_protocol, from_port, to_port, cidr, group_id, parent_group_id, callback) {
+    	var url, data, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-group-rules';
+    	
+    	data = {
+			    "security_group_rule": {
+			        "ip_protocol": ip_protocol,
+			        "from_port": from_port,
+			        "to_port": to_port,
+			        "cidr": cidr,
+			        "group_id": group_id,
+			        "parent_group_id": parent_group_id
+    				}
+		};
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Deletes security group rule
+    // sec_group_rule_id: Id of the security group rule
+    
+    deletesecuritygrouprule = function (sec_group_rule_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/os-security-groups/' + sec_group_rule_id;
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
+    	
+    };
+    
+    // Consults security group for specific server
+    // server_id: Id of the server for which to consult the security group
+    
+    getsecuritygroupforserver = function (server_id, callback) {
+    	var url, onOK, onError;
+    	if (!check()) {
+    		return;
+    	}
+    	
+    	url = params.url + '/servers/' + server_id + '/os-security-groups';
+        
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        
+		console.log(url);
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    	
+    };
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -911,7 +1198,17 @@ JSTACK.Nova = (function (JS, undefined) {
         getattachedvolumes : getattachedvolumes,
         attachvolume : attachvolume,
         detachvolume : detachvolume,
-        getattachedvolume : getattachedvolume
+        getattachedvolume : getattachedvolume,
+	getquotalist : getquotalist, 
+        updatequota : updatequota,
+        getdefaultquotalist : getdefaultquotalist,
+        getsecuritygrouplist : getsecuritygrouplist,
+        createsecuritygroup : createsecuritygroup,
+        getsecuritygroupdetail : getsecuritygroupdetail,
+        deletesecuritygroup : deletesecuritygroup,
+        createsecuritygrouprule : createsecuritygrouprule,
+        deletesecuritygrouprule : deletesecuritygrouprule,
+        getsecuritygroupforserver : getsecuritygroupforserver
     };
 
 }(JSTACK));
