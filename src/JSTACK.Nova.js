@@ -702,7 +702,7 @@ JSTACK.Nova = (function (JS, undefined) {
 
         JS.Comm.post(url, body, JS.Keystone.params.token, onOK, onError);
     };
-    // This operation retrieves a list of available Key-pairs.
+    // This operation deletes a  Key-pair.
     deletekeypair = function (id, callback) {
         var url, onOK, onError;
         if (!check()) {
@@ -720,6 +720,25 @@ JSTACK.Nova = (function (JS, undefined) {
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
+    };
+    // This operation shows a Key-pair associated with the account.
+    getkeypairdetail = function (keypair_name,callback) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+        url = params.url + '/os-keypairs/' + keypair_name;
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
     // Get a vnc console for an instance
     // id: The server's ID to get the vnc console from.
@@ -1002,8 +1021,8 @@ JSTACK.Nova = (function (JS, undefined) {
     	url = params.url + '/os-security-groups';
     	
     	data = {"security_group": {
-			        "name": "name",
-			        "description": "description"
+			        "name": name,
+			        "description": description
     				}
 		};
         
