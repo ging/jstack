@@ -32,7 +32,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getuser, deleteuser, getuserroles, adduserrole, removeuserrole, createtenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, deletetenant;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
@@ -266,7 +266,7 @@ JSTACK.Keystone = (function (JS, undefined) {
     
     createuser = function(username, password, tenant_id, email, enabled, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-           var data = {"user": {"name": name,
+           var data = {"user": {"name": username,
                                "password": password,
                                "tenantId": tenant_id,
                                "email": email,
@@ -290,6 +290,12 @@ JSTACK.Keystone = (function (JS, undefined) {
     getuser = function(user_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             JS.Comm.get(params.adminUrl + "users/" + user_id, params.token, onOk, onError);
+        }
+    };
+
+    getroles = function(onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            JS.Comm.get(params.adminUrl + "OS-KSADM/roles", params.token, onOk, onError);
         }
     };
     
@@ -319,7 +325,7 @@ JSTACK.Keystone = (function (JS, undefined) {
             } else {
                 route = params.adminUrl + "users/" + user_id + "/roles/OS-KSADM/" + role_id;
             }
-            JS.Comm.put(route, params.token, onOk, onError);
+            JS.Comm.put(route, {}, params.token, onOk, onError);
         }
     };
     
@@ -368,6 +374,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         getuser : getuser,
         deleteuser : deleteuser,
         getuserroles : getuserroles,
+        getroles : getroles,
         adduserrole : adduserrole,
         removeuserrole : removeuserrole,
         createtenant : createtenant,
