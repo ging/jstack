@@ -36,7 +36,7 @@ JSTACK.Nova = (function (JS, undefined) {
         unpauseserver, suspendserver, resumeserver, createimage, getflavorlist,
         getflavordetail, createflavor, deleteflavor, getimagelist,
         getimagedetail, deleteimage, getkeypairlist, createkeypair,
-        deletekeypair, getvncconsole, getconsoleoutput, getattachedvolumes,
+        deletekeypair, getkeypairdetail, getvncconsole, getconsoleoutput, getattachedvolumes,
         attachvolume, detachvolume, getattachedvolume,getquotalist, updatequota, 
         getdefaultquotalist, getsecuritygrouplist, createsecuritygroup, getsecuritygroupdetail,
         deletesecuritygroup, createsecuritygrouprule, deletesecuritygrouprule, getsecuritygroupforserver;
@@ -898,12 +898,14 @@ JSTACK.Nova = (function (JS, undefined) {
     // List the quotas for a specific tenant
     // tentnat_id: Id of the tenant for which we check the quota
     
-    getquotalist = function (tenant_id, callback) {
-    	var url, onOK, onError;
+    getquotalist = function (callback) {
+    	var url, urlAux, onOK, onError, tenant_id;
     	if (!check()) {
     		return;
     	}
     	
+	urlAux = params.url.split('/');       
+        tenant_id = urlAux[urlAux.length-1];
     	url = params.url + '/os-quota-sets/' + tenant_id;
         
         onOK = function (result) {
@@ -1212,6 +1214,7 @@ JSTACK.Nova = (function (JS, undefined) {
         getkeypairlist : getkeypairlist,
         createkeypair : createkeypair,
         deletekeypair : deletekeypair,
+	getkeypairdetail : getkeypairdetail,
         getvncconsole : getvncconsole,
         getconsoleoutput : getconsoleoutput,
         getattachedvolumes : getattachedvolumes,
