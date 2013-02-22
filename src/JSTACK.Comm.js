@@ -51,10 +51,16 @@ JSTACK.Comm = (function (JS, undefined) {
         xhr.open(method, url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("Accept", "application/json");
-
+        var flag = false;
         xhr.onreadystatechange = function () {
 
+            // This resolves an error with Zombie.js
+            if (flag) {
+                return;
+            }
+
             if (xhr.readyState === 4) {
+                flag = true;
                 switch (xhr.status) {
 
                 // In case of successful response it calls the `callbackOK` function.
@@ -91,6 +97,8 @@ JSTACK.Comm = (function (JS, undefined) {
         if (token !== undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
+
+
 
         if (data !== undefined) {
             body = JSON.stringify(data);

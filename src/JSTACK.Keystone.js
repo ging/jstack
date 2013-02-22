@@ -256,10 +256,10 @@ JSTACK.Keystone = (function (JS, undefined) {
 
             onError = function (result) {
                 // If error occurs it will send its description.
-                throw new Error(result);
+                console.log("ERROR accessing tenants");
             };
 
-            JS.Comm.get(params.url + "tenants", params.token, onOK, onError);
+            JS.Comm.get(params.url + "tenants ", params.token, onOK, onError);
         }
     };
 
