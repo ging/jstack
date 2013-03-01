@@ -49,7 +49,9 @@ JSTACK.Comm = (function (JS, undefined) {
         xhr = new XMLHttpRequest();
 
         xhr.open(method, url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
+        if (method !== 'get') {
+            xhr.setRequestHeader("Content-Type", "application/json");
+        }
         xhr.setRequestHeader("Accept", "application/json");
         var flag = false;
         xhr.onreadystatechange = function () {
@@ -115,7 +117,7 @@ JSTACK.Comm = (function (JS, undefined) {
     // (which is optional), and callbacks. It sends a HTTP GET request,
     // so it does not send any data.
     get = function (url, token, callbackOK, callbackError) {
-        send("GET", url, undefined, token, callbackOK, callbackError);
+        send("get", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and

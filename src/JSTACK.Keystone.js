@@ -259,7 +259,7 @@ JSTACK.Keystone = (function (JS, undefined) {
                 console.log("ERROR accessing tenants");
             };
 
-            JS.Comm.get(params.url + "tenants ", params.token, onOK, onError);
+            JS.Comm.get(params.url + "tenants", params.token, onOK, onError);
         }
     };
 
