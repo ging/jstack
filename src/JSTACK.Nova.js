@@ -1076,7 +1076,7 @@ JSTACK.Nova = (function (JS, undefined) {
     		return;
     	}
 
-    	url = params.url + '/os-security-group-rules/' + sec_group_id;
+    	url = params.url + '/os-security-groups/' + sec_group_id;
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1138,7 +1138,7 @@ JSTACK.Nova = (function (JS, undefined) {
     		return;
     	}
 
-    	url = params.url + '/os-security-groups/' + sec_group_rule_id;
+    	url = params.url + '/os-security-group-rules/' + sec_group_rule_id;
 
         onOK = function (result) {
             if (callback !== undefined) {

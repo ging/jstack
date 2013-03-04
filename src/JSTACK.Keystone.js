@@ -32,7 +32,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, deletetenant;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
@@ -213,7 +213,7 @@ JSTACK.Keystone = (function (JS, undefined) {
     // Tenant information function
     // ---------------------------
     // User can obtain information about available tenants.
-    gettenants = function (callback) {
+    gettenants = function (callback, admin) {
         var onOK, onError;
 
         // Only when the user is already authenticated.
@@ -259,11 +259,16 @@ JSTACK.Keystone = (function (JS, undefined) {
                 console.log("ERROR accessing tenants");
             };
 
-            JS.Comm.get(params.url + "tenants", params.token, onOK, onError);
+            var url = params.url;
+            if (admin) {
+                url = params.adminUrl
+            }
+
+            JS.Comm.get(url + "tenants", params.token, onOK, onError);
         }
     };
 
-    
+
     createuser = function(username, password, tenant_id, email, enabled, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
            var data = {"user": {"name": username,
@@ -274,19 +279,19 @@ JSTACK.Keystone = (function (JS, undefined) {
            JS.Comm.post(params.adminUrl + "users", data, params.token, onOk, onError);
         }
     };
-    
-    getusers = function(tenant_id, onOk, onError) {
+
+    getusers = function(onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            var route = "";
-            if (tenant_id !== undefined) {
-                route = params.adminUrl + "tenants/" + tenant_id + "/users";
-            } else {
-                route = params.adminUrl + "users";
-            }
-            JS.Comm.get(route, params.token, onOk, onError);
+            JS.Comm.get(params.adminUrl + "users", params.token, onOk, onError);
         }
     };
-    
+
+    getusersfortenant = function(tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+            JS.Comm.get(params.adminUrl + "tenants/" + tenant_id + "/users", params.token, onOk, onError);
+        }
+    };
+
     getuser = function(user_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             JS.Comm.get(params.adminUrl + "users/" + user_id, params.token, onOk, onError);
@@ -298,13 +303,13 @@ JSTACK.Keystone = (function (JS, undefined) {
             JS.Comm.get(params.adminUrl + "OS-KSADM/roles", params.token, onOk, onError);
         }
     };
-    
+
     deleteuser = function(user_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             JS.Comm.del(params.adminUrl + "users/" + user_id, params.token, onOk, onError);
         }
     };
-    
+
     getuserroles = function(user_id, tenant_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
@@ -316,7 +321,7 @@ JSTACK.Keystone = (function (JS, undefined) {
             JS.Comm.get(route, params.token, onOk, onError);
         }
     };
-    
+
     adduserrole = function(user_id, role_id, tenant_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
@@ -328,7 +333,7 @@ JSTACK.Keystone = (function (JS, undefined) {
             JS.Comm.put(route, {}, params.token, onOk, onError);
         }
     };
-    
+
     removeuserrole = function(user_id, role_id, tenant_id, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var route = "";
@@ -340,7 +345,7 @@ JSTACK.Keystone = (function (JS, undefined) {
             JS.Comm.del(route, params.token, onOk, onError);
         }
     };
-    
+
     createtenant = function(name, description, enabled, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
            var data = {"tenant": {"name": name,
@@ -349,13 +354,23 @@ JSTACK.Keystone = (function (JS, undefined) {
            JS.Comm.post(params.adminUrl + "tenants", data, params.token, onOk, onError);
         }
     };
-    
-    deletetenant = function(tenant_id, onOk, onError) {
+
+    edittenant = function(id, name, description, enabled, onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-           JS.Comm.del(params.adminUrl + "tenants" + tenant_id, data, params.token, onOk, onError);
+           var data = {"tenant": {"id": id,
+                            "name": name,
+                            "description": description,
+                            "enabled": enabled}};
+           JS.Comm.put(params.adminUrl + "tenants/" + id, data, params.token, onOk, onError);
         }
     };
-    
+
+    deletetenant = function(tenant_id, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+           JS.Comm.del(params.adminUrl + "tenants/" + tenant_id, params.token, onOk, onError);
+        }
+    };
+
     // Public Functions and Variables
     // ---------------------------
     // This is the list of available public functions and variables
@@ -371,6 +386,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         getservicelist : getservicelist,
         createuser : createuser,
         getusers : getusers,
+        getusersfortenant : getusersfortenant,
         getuser : getuser,
         deleteuser : deleteuser,
         getuserroles : getuserroles,
@@ -378,6 +394,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         adduserrole : adduserrole,
         removeuserrole : removeuserrole,
         createtenant : createtenant,
+        edittenant: edittenant,
         deletetenant : deletetenant
     };
 }(JSTACK));
