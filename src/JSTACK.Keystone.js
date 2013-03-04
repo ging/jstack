@@ -32,7 +32,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, edituser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
@@ -280,6 +280,20 @@ JSTACK.Keystone = (function (JS, undefined) {
         }
     };
 
+    edituser = function(id, username, password, tenant_id, email, enabled, onOk, onError) {
+        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+           var data = {"user": {"name": username,
+                               "tenantId": tenant_id,
+                               "email": email,
+                               "enabled": enabled}};
+
+            if (password !== undefined) {
+                data.user.password = password;
+            }
+           JS.Comm.put(params.adminUrl + "users/" + id, data, params.token, onOk, onError);
+        }
+    };
+
     getusers = function(onOk, onError) {
         if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             JS.Comm.get(params.adminUrl + "users", params.token, onOk, onError);
@@ -385,6 +399,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         getservice : getservice,
         getservicelist : getservicelist,
         createuser : createuser,
+        edituser : edituser,
         getusers : getusers,
         getusersfortenant : getusersfortenant,
         getuser : getuser,
