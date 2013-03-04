@@ -375,7 +375,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
