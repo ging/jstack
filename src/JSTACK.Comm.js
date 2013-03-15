@@ -32,7 +32,7 @@ THE SOFTWARE.
 JSTACK.Comm = (function (JS, undefined) {
     "use strict";
 
-    var send, get, post, put, del;
+    var send, get, head, post, put, del;
 
     // Private functions
     // -----------------
@@ -41,6 +41,13 @@ JSTACK.Comm = (function (JS, undefined) {
     // to components.
     send = function (method, url, data, token, callBackOK, callbackError) {
         var xhr, body, result;
+
+        callbackError = callbackError || function(resp) {
+            console.log("Error: ", resp);
+        };
+        callBackOK = callBackOK || function(resp) {
+            console.log("OK: ", resp);
+        };
 
         // This function receives a `method` that can be "GET", "POST", "PUT", or
         // "DELETE". It also receives the `url` to which it has to send the request,
@@ -77,7 +84,7 @@ JSTACK.Comm = (function (JS, undefined) {
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
                         result = JSON.parse(xhr.responseText);
                     }
-                    callBackOK(result);
+                    callBackOK(result, xhr.getAllResponseHeaders());
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
@@ -100,8 +107,6 @@ JSTACK.Comm = (function (JS, undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
 
-
-
         if (data !== undefined) {
             body = JSON.stringify(data);
             xhr.send(body);
@@ -118,6 +123,12 @@ JSTACK.Comm = (function (JS, undefined) {
     // so it does not send any data.
     get = function (url, token, callbackOK, callbackError) {
         send("get", url, undefined, token, callbackOK, callbackError);
+    };
+    // * Function *head* receives the `url`, the authentication token
+    // (which is optional), and callbacks. It sends a HTTP HEAD request,
+    // so it does not send any data.
+    head = function (url, token, callbackOK, callbackError) {
+        send("head", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and
@@ -142,6 +153,7 @@ JSTACK.Comm = (function (JS, undefined) {
 
         // Functions:
         get : get,
+        head : head,
         post : post,
         put : put,
         del : del

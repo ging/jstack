@@ -28,7 +28,7 @@ THE SOFTWARE.
 // This module provides Glance API functions.
 JSTACK.Glance = (function (JS, undefined) {
     "use strict";
-    var params, check, configure, getimagelist;
+    var params, check, configure, getimagelist, updateimage;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -94,6 +94,26 @@ JSTACK.Glance = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
+    // This operation updates details of the image specified by its `id`.
+    // In [Update Image Details](http://api.openstack.org/api-ref.html)
+    // there is more information.
+    updateimage = function (id, name, callback) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+        url = params.url + '/images/' + id;
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
+    };
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -101,7 +121,8 @@ JSTACK.Glance = (function (JS, undefined) {
 
         // Functions:
         configure : configure,
-        getimagelist : getimagelist
+        getimagelist : getimagelist,
+        updateimage: updateimage
     };
 
 }(JSTACK));

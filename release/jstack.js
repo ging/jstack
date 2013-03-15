@@ -74,7 +74,7 @@ THE SOFTWARE.
 JSTACK.Comm = (function (JS, undefined) {
     "use strict";
 
-    var send, get, post, put, del;
+    var send, get, head, post, put, del;
 
     // Private functions
     // -----------------
@@ -83,6 +83,13 @@ JSTACK.Comm = (function (JS, undefined) {
     // to components.
     send = function (method, url, data, token, callBackOK, callbackError) {
         var xhr, body, result;
+
+        callbackError = callbackError || function(resp) {
+            console.log("Error: ", resp);
+        };
+        callBackOK = callBackOK || function(resp) {
+            console.log("OK: ", resp);
+        };
 
         // This function receives a `method` that can be "GET", "POST", "PUT", or
         // "DELETE". It also receives the `url` to which it has to send the request,
@@ -119,7 +126,7 @@ JSTACK.Comm = (function (JS, undefined) {
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
                         result = JSON.parse(xhr.responseText);
                     }
-                    callBackOK(result);
+                    callBackOK(result, xhr.getAllResponseHeaders());
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
@@ -142,8 +149,6 @@ JSTACK.Comm = (function (JS, undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
 
-
-
         if (data !== undefined) {
             body = JSON.stringify(data);
             xhr.send(body);
@@ -160,6 +165,12 @@ JSTACK.Comm = (function (JS, undefined) {
     // so it does not send any data.
     get = function (url, token, callbackOK, callbackError) {
         send("get", url, undefined, token, callbackOK, callbackError);
+    };
+    // * Function *head* receives the `url`, the authentication token
+    // (which is optional), and callbacks. It sends a HTTP HEAD request,
+    // so it does not send any data.
+    head = function (url, token, callbackOK, callbackError) {
+        send("head", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and
@@ -184,6 +195,7 @@ JSTACK.Comm = (function (JS, undefined) {
 
         // Functions:
         get : get,
+        head : head,
         post : post,
         put : put,
         del : del
@@ -803,7 +815,8 @@ JSTACK.Nova = (function (JS, undefined) {
     params = {
         url : undefined,
         state : undefined,
-        endpointType : "publicURL"
+        endpointType : "publicURL",
+        service : "compute"
     };
 
     // Private functions
@@ -814,7 +827,7 @@ JSTACK.Nova = (function (JS, undefined) {
     check = function () {
         if (JS.Keystone !== undefined &&
                 JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            var service = JS.Keystone.getservice("compute");
+            var service = JS.Keystone.getservice(params.service);
             params.url = service.endpoints[0][params.endpointType];
             return true;
         }
@@ -871,6 +884,7 @@ JSTACK.Nova = (function (JS, undefined) {
         if (!check()) {
             return;
         }
+        console.log("Getting server list from ", params.url, detailed, allTenants, callback);
         url = params.url + '/servers';
         if (detailed !== undefined && detailed) {
             url += '/detail';
@@ -1656,14 +1670,14 @@ JSTACK.Nova = (function (JS, undefined) {
     // tentnat_id: Id of the tenant for which we check the quota
 
     getquotalist = function (callback) {
-    	var url, urlAux, onOK, onError, tenant_id;
-    	if (!check()) {
-    		return;
-    	}
+        var url, urlAux, onOK, onError, tenant_id;
+        if (!check()) {
+            return;
+        }
 
-	urlAux = params.url.split('/');
+    urlAux = params.url.split('/');
         tenant_id = urlAux[urlAux.length-1];
-    	url = params.url + '/os-quota-sets/' + tenant_id;
+        url = params.url + '/os-quota-sets/' + tenant_id;
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1688,15 +1702,15 @@ JSTACK.Nova = (function (JS, undefined) {
                   metadata_items, injected_files, injected_file_content_bytes, injected_file_path_bytes,
                   security_groups, security_group_rules, key_pairs, callback) {
 
-    	var url, data, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, data, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-quota-sets/' + tenant_id;
+        url = params.url + '/os-quota-sets/' + tenant_id;
 
-    	data = {
-    		'quota_set': {'instances': instances, 'cores': cores,
+        data = {
+            'quota_set': {'instances': instances, 'cores': cores,
                               'ram': ram, 'volumes': volumes,
                               'gigabytes': gigabytes, 'floating_ips': floating_ips,
                               'metadata_items': metadata_items, 'injected_files': injected_files,
@@ -1706,7 +1720,7 @@ JSTACK.Nova = (function (JS, undefined) {
                               'security_group_rules': security_group_rules,
                               'key_pairs': key_pairs}
 
-    	};
+        };
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1724,12 +1738,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // tenant_id:  Id of the tenant for which we list the default quota
 
     getdefaultquotalist = function (tenant_id, callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-quota-sets/' + tenant_id + '/defaults';
+        url = params.url + '/os-quota-sets/' + tenant_id + '/defaults';
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1748,12 +1762,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // List the security groups
 
     getsecuritygrouplist = function (callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-groups';
+        url = params.url + '/os-security-groups';
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1772,18 +1786,18 @@ JSTACK.Nova = (function (JS, undefined) {
      // description: description for the creating security group
 
     createsecuritygroup = function (name, description, callback) {
-    	var url, data, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, data, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-groups';
+        url = params.url + '/os-security-groups';
 
-    	data = {"security_group": {
-			        "name": name,
-			        "description": description
-    				}
-		};
+        data = {"security_group": {
+                    "name": name,
+                    "description": description
+                    }
+        };
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1794,7 +1808,6 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
 
     };
@@ -1803,12 +1816,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // sec_group_id: Id of the consulting security group
 
     getsecuritygroupdetail = function (sec_group_id, callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-groups/' + sec_group_id;
+        url = params.url + '/os-security-groups/' + sec_group_id;
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1819,7 +1832,6 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
 
     };
@@ -1828,12 +1840,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // sec_group_id: Id of the security group to delete
 
     deletesecuritygroup = function (sec_group_id, callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-groups/' + sec_group_id;
+        url = params.url + '/os-security-groups/' + sec_group_id;
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1844,7 +1856,6 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
 
     };
@@ -1854,23 +1865,23 @@ JSTACK.Nova = (function (JS, undefined) {
     // the creating security group rule
 
     createsecuritygrouprule = function (ip_protocol, from_port, to_port, cidr, group_id, parent_group_id, callback) {
-    	var url, data, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, data, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-group-rules';
+        url = params.url + '/os-security-group-rules';
 
-    	data = {
-			    "security_group_rule": {
-			        "ip_protocol": ip_protocol,
-			        "from_port": from_port,
-			        "to_port": to_port,
-			        "cidr": cidr,
-			        "group_id": group_id,
-			        "parent_group_id": parent_group_id
-    				}
-		};
+        data = {
+                "security_group_rule": {
+                    "ip_protocol": ip_protocol,
+                    "from_port": from_port,
+                    "to_port": to_port,
+                    "cidr": cidr,
+                    "group_id": group_id,
+                    "parent_group_id": parent_group_id
+                    }
+        };
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1881,7 +1892,6 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
 
     };
@@ -1890,12 +1900,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // sec_group_rule_id: Id of the security group rule
 
     deletesecuritygrouprule = function (sec_group_rule_id, callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/os-security-group-rules/' + sec_group_rule_id;
+        url = params.url + '/os-security-group-rules/' + sec_group_rule_id;
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1906,7 +1916,6 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
 
     };
@@ -1915,12 +1924,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // server_id: Id of the server for which to consult the security group
 
     getsecuritygroupforserver = function (server_id, callback) {
-    	var url, onOK, onError;
-    	if (!check()) {
-    		return;
-    	}
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
 
-    	url = params.url + '/servers/' + server_id + '/os-security-groups';
+        url = params.url + '/servers/' + server_id + '/os-security-groups';
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1931,10 +1940,11 @@ JSTACK.Nova = (function (JS, undefined) {
             throw new Error(message);
         };
 
-		console.log(url);
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
 
     };
+
+
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -1942,6 +1952,7 @@ JSTACK.Nova = (function (JS, undefined) {
 
         // Functions:
         configure : configure,
+        params : params,
         getserverlist : getserverlist,
         getserverdetail : getserverdetail,
         getserverips : getserverips,
@@ -1971,14 +1982,14 @@ JSTACK.Nova = (function (JS, undefined) {
         getkeypairlist : getkeypairlist,
         createkeypair : createkeypair,
         deletekeypair : deletekeypair,
-	getkeypairdetail : getkeypairdetail,
+        getkeypairdetail : getkeypairdetail,
         getvncconsole : getvncconsole,
         getconsoleoutput : getconsoleoutput,
         getattachedvolumes : getattachedvolumes,
         attachvolume : attachvolume,
         detachvolume : detachvolume,
         getattachedvolume : getattachedvolume,
-	getquotalist : getquotalist,
+        getquotalist : getquotalist,
         updatequota : updatequota,
         getdefaultquotalist : getdefaultquotalist,
         getsecuritygrouplist : getsecuritygrouplist,
@@ -2335,7 +2346,7 @@ THE SOFTWARE.
 // This module provides Glance API functions.
 JSTACK.Glance = (function (JS, undefined) {
     "use strict";
-    var params, check, configure, getimagelist;
+    var params, check, configure, getimagelist, updateimage;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -2401,6 +2412,26 @@ JSTACK.Glance = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
+    // This operation updates details of the image specified by its `id`.
+    // In [Update Image Details](http://api.openstack.org/api-ref.html)
+    // there is more information.
+    updateimage = function (id, name, callback) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+        url = params.url + '/images/' + id;
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            throw new Error(message);
+        };
+        JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
+    };
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -2408,7 +2439,8 @@ JSTACK.Glance = (function (JS, undefined) {
 
         // Functions:
         configure : configure,
-        getimagelist : getimagelist
+        getimagelist : getimagelist,
+        updateimage: updateimage
     };
 
 }(JSTACK));
