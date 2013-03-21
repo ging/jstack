@@ -836,7 +836,7 @@ JSTACK.Nova = (function (JS, undefined) {
     // This function is used internally to send Actions to server identified
     // with `id`. In `data` we pass the corresponding information about the
     // action.
-    postAction = function (id, data, query, callback, error) {
+    postAction = function (id, data, callback, error) {
         var url, onOk, onError;
 
         if (!check()) {
@@ -846,6 +846,7 @@ JSTACK.Nova = (function (JS, undefined) {
         url = params.url + '/servers/' + id + '/action';
 
         onOk = function (result) {
+            
             if (callback !== undefined) {
                 callback(result);
             }
