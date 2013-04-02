@@ -782,7 +782,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, null, callback, error);
+        postAction(id, data, callback, error);
     };
     //  Get text console log output from Server.
     // id: The server's ID to get the vnc console from.
@@ -803,7 +803,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, null, callback, error);
+        postAction(id, data, callback, error);
     };
     //  Lists the volume attachments for the specified server.
     // id: The server's ID to get the volume attachments from.
