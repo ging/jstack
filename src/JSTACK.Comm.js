@@ -54,13 +54,18 @@ JSTACK.Comm = (function (JS, undefined) {
         // the `data` to be sent, that has to be a JSON object, the ´token´ to
         // authenticate the request, and success and error callbacks.
         xhr = new XMLHttpRequest();
-
         xhr.open(method, url, true);
         if (method !== 'get') {
             xhr.setRequestHeader("Content-Type", "application/json");
         }
         xhr.setRequestHeader("Accept", "application/json");
-        var flag = false;
+        if (token !== undefined) {
+            xhr.setRequestHeader('X-Auth-Token', token);
+        }
+
+        xhr.onerror = function(error) {
+            //callbackError({message:"Error", body:error});
+        }
         xhr.onreadystatechange = function () {
 
             // This resolves an error with Zombie.js
@@ -80,6 +85,8 @@ JSTACK.Comm = (function (JS, undefined) {
                 case 203:
                 case 204:
                 case 205:
+                case 206:
+                case 207:
                     result = undefined;
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
                         result = JSON.parse(xhr.responseText);
@@ -98,20 +105,26 @@ JSTACK.Comm = (function (JS, undefined) {
                     callbackError("403 Forbidden");
                     break;
                 default:
-                    callbackError(xhr.status + " Error");
+                    callbackError({message:xhr.status + " Error", body:xhr.responseText});
                 }
             }
         };
-
-        if (token !== undefined) {
-            xhr.setRequestHeader('X-Auth-Token', token);
-        }
-
+        var flag = false;
         if (data !== undefined) {
             body = JSON.stringify(data);
-            xhr.send(body);
+            try {
+                xhr.send(body);
+            } catch (e) {
+                //callbackError(e.message);
+                return;
+            }
         } else {
-            xhr.send();
+            try {
+                xhr.send();
+            } catch (e) {
+                //callbackError(e.message);
+                return;
+            }
         }
     };
 

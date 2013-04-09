@@ -96,13 +96,18 @@ JSTACK.Comm = (function (JS, undefined) {
         // the `data` to be sent, that has to be a JSON object, the ´token´ to
         // authenticate the request, and success and error callbacks.
         xhr = new XMLHttpRequest();
-
         xhr.open(method, url, true);
         if (method !== 'get') {
             xhr.setRequestHeader("Content-Type", "application/json");
         }
         xhr.setRequestHeader("Accept", "application/json");
-        var flag = false;
+        if (token !== undefined) {
+            xhr.setRequestHeader('X-Auth-Token', token);
+        }
+
+        xhr.onerror = function(error) {
+            //callbackError({message:"Error", body:error});
+        }
         xhr.onreadystatechange = function () {
 
             // This resolves an error with Zombie.js
@@ -122,6 +127,8 @@ JSTACK.Comm = (function (JS, undefined) {
                 case 203:
                 case 204:
                 case 205:
+                case 206:
+                case 207:
                     result = undefined;
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
                         result = JSON.parse(xhr.responseText);
@@ -140,20 +147,26 @@ JSTACK.Comm = (function (JS, undefined) {
                     callbackError("403 Forbidden");
                     break;
                 default:
-                    callbackError(xhr.status + " Error");
+                    callbackError({message:xhr.status + " Error", body:xhr.responseText});
                 }
             }
         };
-
-        if (token !== undefined) {
-            xhr.setRequestHeader('X-Auth-Token', token);
-        }
-
+        var flag = false;
         if (data !== undefined) {
             body = JSON.stringify(data);
-            xhr.send(body);
+            try {
+                xhr.send(body);
+            } catch (e) {
+                //callbackError(e.message);
+                return;
+            }
         } else {
-            xhr.send();
+            try {
+                xhr.send();
+            } catch (e) {
+                //callbackError(e.message);
+                return;
+            }
         }
     };
 
@@ -568,7 +581,7 @@ JSTACK.Keystone = (function (JS, undefined) {
     // Tenant information function
     // ---------------------------
     // User can obtain information about available tenants.
-    gettenants = function (callback, admin) {
+    gettenants = function (callback, admin, error) {
         var onOK, onError;
 
         // Only when the user is already authenticated.
@@ -611,7 +624,9 @@ JSTACK.Keystone = (function (JS, undefined) {
 
             onError = function (result) {
                 // If error occurs it will send its description.
-                console.log("ERROR accessing tenants");
+                if (error !== undefined) {
+                    error(result);
+                }
             };
 
             var url = params.url;
@@ -846,14 +861,15 @@ JSTACK.Nova = (function (JS, undefined) {
         url = params.url + '/servers/' + id + '/action';
 
         onOk = function (result) {
-            
+
             if (callback !== undefined) {
                 callback(result);
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOk, onError);
@@ -886,7 +902,6 @@ JSTACK.Nova = (function (JS, undefined) {
         if (!check()) {
             return;
         }
-        console.log("Getting server list from ", params.url, detailed, allTenants, callback, error);
         url = params.url + '/servers';
         if (detailed !== undefined && detailed) {
             url += '/detail';
@@ -902,8 +917,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -924,8 +940,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -953,8 +970,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -985,8 +1003,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1084,8 +1103,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/servers', data, JS.Keystone.params.token, onOK, onError);
@@ -1107,8 +1127,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
 
         };
 
@@ -1270,8 +1291,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
 
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1292,8 +1314,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -1339,8 +1362,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
@@ -1360,8 +1384,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1392,8 +1417,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1414,8 +1440,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -1437,8 +1464,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -1456,8 +1484,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1476,8 +1505,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         body = {
             'keypair' : {
@@ -1506,8 +1536,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1526,8 +1557,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1551,7 +1583,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, null, callback, error);
+        postAction(id, data, callback, error);
     };
     //  Get text console log output from Server.
     // id: The server's ID to get the vnc console from.
@@ -1572,7 +1604,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, null, callback, error);
+        postAction(id, data, callback, error);
     };
     //  Lists the volume attachments for the specified server.
     // id: The server's ID to get the volume attachments from.
@@ -1589,8 +1621,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1624,8 +1657,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1652,8 +1686,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1680,8 +1715,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1710,8 +1746,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
 
@@ -1754,8 +1791,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1778,8 +1816,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1803,8 +1842,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1834,8 +1874,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1859,8 +1900,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1884,8 +1926,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1921,8 +1964,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1946,8 +1990,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1971,8 +2016,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -2113,7 +2159,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // View a list of simple Volume entities. In
     // [Requesting a List of Volumes](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolumelist = function (detailed, callback) {
+    getvolumelist = function (detailed, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2129,7 +2175,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -2147,7 +2195,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     //
     // * The `description` of the volume
     //
-    createvolume = function (size, name, description, callback) {
+    createvolume = function (size, name, description, callback, error) {
         var onOk, onError, data;
         if (!check()) {
             return;
@@ -2173,7 +2221,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/volumes', data, JS.Keystone.params.token, onOk, onError);
@@ -2181,7 +2231,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Delete a Volume entitiy. In
     // [Deleting a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletevolume = function (id, callback) {
+    deletevolume = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2194,7 +2244,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
@@ -2202,7 +2254,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Get a Volume entitiy. In
     // [Retrieving a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolume = function (id, callback) {
+    getvolume = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2215,7 +2267,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -2226,7 +2280,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // View a list of simple Snapshot entities. In
     // [Requesting a List of Snapshots](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshotlist = function (detailed, callback) {
+    getsnapshotlist = function (detailed, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2242,7 +2296,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -2260,7 +2316,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     //
     // * The `description` of the snapshot
     //
-    createsnapshot = function (volume_id, name, description, callback) {
+    createsnapshot = function (volume_id, name, description, callback, error) {
         var url, onOk, onError, data;
         if (!check()) {
             return;
@@ -2287,7 +2343,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/snapshots', data, JS.Keystone.params.token, onOk, onError);
@@ -2295,7 +2353,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Delete a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletesnapshot = function (id, callback) {
+    deletesnapshot = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2308,7 +2366,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
@@ -2316,7 +2376,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Get a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshot = function (id, callback) {
+    getsnapshot = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -2329,7 +2389,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -2426,7 +2488,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagelist = function (detailed, callback) {
+    getimagelist = function (detailed, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -2442,7 +2504,9 @@ JSTACK.Glance = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -2450,7 +2514,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation updates details of the image specified by its `id`.
     // In [Update Image Details](http://api.openstack.org/api-ref.html)
     // there is more information.
-    updateimage = function (id, name, callback) {
+    updateimage = function (id, name, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -2463,7 +2527,9 @@ JSTACK.Glance = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
     };

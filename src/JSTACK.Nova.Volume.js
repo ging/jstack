@@ -74,7 +74,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // View a list of simple Volume entities. In
     // [Requesting a List of Volumes](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolumelist = function (detailed, callback) {
+    getvolumelist = function (detailed, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -90,7 +90,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -108,7 +110,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     //
     // * The `description` of the volume
     //
-    createvolume = function (size, name, description, callback) {
+    createvolume = function (size, name, description, callback, error) {
         var onOk, onError, data;
         if (!check()) {
             return;
@@ -134,7 +136,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/volumes', data, JS.Keystone.params.token, onOk, onError);
@@ -142,7 +146,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Delete a Volume entitiy. In
     // [Deleting a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletevolume = function (id, callback) {
+    deletevolume = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -155,7 +159,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
@@ -163,7 +169,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Get a Volume entitiy. In
     // [Retrieving a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolume = function (id, callback) {
+    getvolume = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -176,7 +182,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -187,7 +195,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // View a list of simple Snapshot entities. In
     // [Requesting a List of Snapshots](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshotlist = function (detailed, callback) {
+    getsnapshotlist = function (detailed, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -203,7 +211,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
@@ -221,7 +231,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     //
     // * The `description` of the snapshot
     //
-    createsnapshot = function (volume_id, name, description, callback) {
+    createsnapshot = function (volume_id, name, description, callback, error) {
         var url, onOk, onError, data;
         if (!check()) {
             return;
@@ -248,7 +258,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/snapshots', data, JS.Keystone.params.token, onOk, onError);
@@ -256,7 +268,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Delete a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletesnapshot = function (id, callback) {
+    deletesnapshot = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -269,7 +281,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
@@ -277,7 +291,7 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
     // Get a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshot = function (id, callback) {
+    getsnapshot = function (id, callback, error) {
         var url, onOk, onError;
         if (!check()) {
             return;
@@ -290,7 +304,9 @@ JSTACK.Nova.Volume = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);

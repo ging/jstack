@@ -73,7 +73,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagelist = function (detailed, callback) {
+    getimagelist = function (detailed, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -89,7 +89,9 @@ JSTACK.Glance = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -97,7 +99,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation updates details of the image specified by its `id`.
     // In [Update Image Details](http://api.openstack.org/api-ref.html)
     // there is more information.
-    updateimage = function (id, name, callback) {
+    updateimage = function (id, name, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -110,7 +112,9 @@ JSTACK.Glance = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
     };

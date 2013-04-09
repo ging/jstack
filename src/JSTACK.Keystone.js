@@ -213,7 +213,7 @@ JSTACK.Keystone = (function (JS, undefined) {
     // Tenant information function
     // ---------------------------
     // User can obtain information about available tenants.
-    gettenants = function (callback, admin) {
+    gettenants = function (callback, admin, error) {
         var onOK, onError;
 
         // Only when the user is already authenticated.
@@ -256,7 +256,9 @@ JSTACK.Keystone = (function (JS, undefined) {
 
             onError = function (result) {
                 // If error occurs it will send its description.
-                console.log("ERROR accessing tenants");
+                if (error !== undefined) {
+                    error(result);
+                }
             };
 
             var url = params.url;

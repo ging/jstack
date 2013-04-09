@@ -77,14 +77,15 @@ JSTACK.Nova = (function (JS, undefined) {
         url = params.url + '/servers/' + id + '/action';
 
         onOk = function (result) {
-            
+
             if (callback !== undefined) {
                 callback(result);
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOk, onError);
@@ -117,7 +118,6 @@ JSTACK.Nova = (function (JS, undefined) {
         if (!check()) {
             return;
         }
-        console.log("Getting server list from ", params.url, detailed, allTenants, callback, error);
         url = params.url + '/servers';
         if (detailed !== undefined && detailed) {
             url += '/detail';
@@ -133,8 +133,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -155,8 +156,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -184,8 +186,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -216,8 +219,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
@@ -315,8 +319,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(params.url + '/servers', data, JS.Keystone.params.token, onOK, onError);
@@ -338,8 +343,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
 
         };
 
@@ -501,8 +507,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
 
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -523,8 +530,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -570,8 +578,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
@@ -591,8 +600,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -623,8 +633,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -645,8 +656,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -668,8 +680,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
@@ -687,8 +700,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -707,8 +721,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         body = {
             'keypair' : {
@@ -737,8 +752,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -757,8 +773,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -820,8 +837,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -855,8 +873,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -883,8 +902,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -911,8 +931,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -941,8 +962,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
 
@@ -985,8 +1007,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1009,8 +1032,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1034,8 +1058,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1065,8 +1090,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1090,8 +1116,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
@@ -1115,8 +1142,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1152,8 +1180,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
@@ -1177,8 +1206,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
@@ -1202,8 +1232,9 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
         onError = function (message) {
-            error(message);
-            throw new Error(message);
+            if (error !== undefined) {
+                error(message);
+            }
         };
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
