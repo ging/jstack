@@ -39,7 +39,9 @@ JSTACK.Nova = (function (JS, undefined) {
         deletekeypair, getkeypairdetail, getvncconsole, getconsoleoutput, getattachedvolumes,
         attachvolume, detachvolume, getattachedvolume,getquotalist, updatequota,
         getdefaultquotalist, getsecuritygrouplist, createsecuritygroup, getsecuritygroupdetail,
-        deletesecuritygroup, createsecuritygrouprule, deletesecuritygrouprule, getsecuritygroupforserver;
+        deletesecuritygroup, createsecuritygrouprule, deletesecuritygrouprule, getsecuritygroupforserver,
+        getfloatingIPpools, getfloatingIPs, getfloatingIPdetail, allocatefloatingIP, associatefloatingIP, 
+        disassociatefloatingIP, releasefloatingIP;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -941,6 +943,7 @@ JSTACK.Nova = (function (JS, undefined) {
     };
 
 
+
     // APIs for quotas//
 
     // List the quotas for a specific tenant
@@ -1039,6 +1042,7 @@ JSTACK.Nova = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
+
 
     // APIs for security groups
 
@@ -1241,6 +1245,183 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
+    // APIs for floating IPs
+
+    getfloatingIPpools = function (callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/os-floating-ip-pools';
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    getfloatingIPs = function (callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/os-floating-ips';
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    getfloatingIPdetail = function (id, callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/os-floating-ips/' +id;
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    allocatefloatingIP = function (pool, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/os-floating-ips';
+
+        if (pool !== undefined) {
+
+            data = {
+
+                "pool": pool
+            };
+        }         
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    associatefloatingIP = function (server_id, address, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/servers/' + server_id + '/action';
+
+        data =  {
+                "addFloatingIp": {
+                    "address": address
+                }
+        };
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    releasefloatingIP = function (id, callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/os-floating-ips/' +id;
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+
+    disassociatefloatingIP = function (server_id, address, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + '/servers/' + server_id + '/action';
+
+        data =  {
+                "removeFloatingIp": {
+                    "address": address
+                }
+        };
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            error(message);
+            throw new Error(message);
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+
+    };
+
 
     // Public Functions and Variables
     // ------------------------------
@@ -1295,7 +1476,14 @@ JSTACK.Nova = (function (JS, undefined) {
         deletesecuritygroup : deletesecuritygroup,
         createsecuritygrouprule : createsecuritygrouprule,
         deletesecuritygrouprule : deletesecuritygrouprule,
-        getsecuritygroupforserver : getsecuritygroupforserver
+        getsecuritygroupforserver : getsecuritygroupforserver,
+        getfloatingIPpools : getfloatingIPpools,
+        getfloatingIPs : getfloatingIPs,
+        getfloatingIPdetail : getfloatingIPdetail,
+        allocatefloatingIP : allocatefloatingIP,
+        associatefloatingIP : associatefloatingIP,
+        disassociatefloatingIP : disassociatefloatingIP,
+        releasefloatingIP : releasefloatingIP
     };
 
 }(JSTACK));
