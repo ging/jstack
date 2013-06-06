@@ -79,7 +79,6 @@ JSTACK.Nova = (function (JS, undefined) {
         url = params.url + '/servers/' + id + '/action';
 
         onOk = function (result) {
-
             if (callback !== undefined) {
                 callback(result);
             }
@@ -1089,6 +1088,7 @@ JSTACK.Nova = (function (JS, undefined) {
         };
 
         onOK = function (result) {
+            console.log(callback);
             if (callback !== undefined) {
                 callback(result);
             }
