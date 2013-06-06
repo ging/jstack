@@ -318,7 +318,7 @@ JSTACK.Utils = (function(JS, undefined) {
                 enc4 = 64;
             }
 
-            output = output + JS.Utils.keyStr.charAt(enc1) + Base64.keyStr.charAt(enc2) + JS.Utils.keyStr.charAt(enc3) + Base64.keyStr.charAt(enc4);
+            output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
 
         }
 
