@@ -39,14 +39,14 @@ JSTACK.Comm = (function (JS, undefined) {
 
     // Function `_send` is internally used to make detailed low-level requests
     // to components.
-    send = function (method, url, data, token, callBackOK, callbackError) {
+    send = function (method, url, data, token, callBackOK, callbackError, headers) {
         var xhr, body, result;
 
         callbackError = callbackError || function(resp) {
-            console.log("Error: ", resp);
+            //console.log("Error: ", resp);
         };
-        callBackOK = callBackOK || function(resp) {
-            console.log("OK: ", resp);
+        callBackOK = callBackOK || function(resp, headers) {
+            //console.log("OK: ", resp, headers);
         };
 
         // This function receives a `method` that can be "GET", "POST", "PUT", or
@@ -55,7 +55,7 @@ JSTACK.Comm = (function (JS, undefined) {
         // authenticate the request, and success and error callbacks.
         xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-        if (method !== 'get') {
+        if (data) {
             xhr.setRequestHeader("Content-Type", "application/json");
         }
         xhr.setRequestHeader("Accept", "application/json");
@@ -63,8 +63,14 @@ JSTACK.Comm = (function (JS, undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
 
+        if (headers) {
+            for (var head in headers) {
+                xhr.setRequestHeader(head, headers[head]);
+            }
+        }
+
         xhr.onerror = function(error) {
-            //callbackError({message:"Error", body:error});
+            callbackError({message:"Error", body:error});
         }
         xhr.onreadystatechange = function () {
 
@@ -76,7 +82,6 @@ JSTACK.Comm = (function (JS, undefined) {
             if (xhr.readyState === 4) {
                 flag = true;
                 switch (xhr.status) {
-
                 // In case of successful response it calls the `callbackOK` function.
                 case 100:
                 case 200:
@@ -95,15 +100,6 @@ JSTACK.Comm = (function (JS, undefined) {
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
-                case 400:
-                    callbackError("400 Bad Request");
-                    break;
-                case 401:
-                    callbackError("401 Unauthorized");
-                    break;
-                case 403:
-                    callbackError("403 Forbidden");
-                    break;
                 default:
                     callbackError({message:xhr.status + " Error", body:xhr.responseText});
                 }
@@ -134,29 +130,29 @@ JSTACK.Comm = (function (JS, undefined) {
     // * Function *get* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP GET request,
     // so it does not send any data.
-    get = function (url, token, callbackOK, callbackError) {
+    get = function (url, token, callbackOK, callbackError, headers) {
         send("get", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *head* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP HEAD request,
     // so it does not send any data.
-    head = function (url, token, callbackOK, callbackError) {
+    head = function (url, token, callbackOK, callbackError, headers) {
         send("head", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and
     // callbacks. It sends a HTTP POST request.
-    post = function (url, data, token, callbackOK, callbackError) {
+    post = function (url, data, token, callbackOK, callbackError, headers) {
         send("POST", url, data, token, callbackOK, callbackError);
     };
     // * Function *put* receives the same parameters as post. It sends
     // a HTTP PUT request.
-    put = function (url, data, token, callbackOK, callbackError) {
+    put = function (url, data, token, callbackOK, callbackError, headers) {
         send("PUT", url, data, token, callbackOK, callbackError);
     };
     // * Function *del* receives the same paramaters as get. It sends a
     // HTTP DELETE request.
-    del = function (url, token, callbackOK, callbackError) {
+    del = function (url, token, callbackOK, callbackError, headers) {
         send("DELETE", url, undefined, token, callbackOK, callbackError);
     };
     // Public Functions and Variables

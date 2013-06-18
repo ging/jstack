@@ -26,16 +26,16 @@ THE SOFTWARE.
 // ------------------
 
 // This module provides Glance API functions.
-JSTACK.Glance = (function (JS, undefined) {
+JSTACK.Glance = (function(JS, undefined) {
     "use strict";
-    var params, check, configure, getimagelist, updateimage;
+    var params, check, configure, getimagelist, getimagedetail, updateimage;
 
     // This modules stores the `url`to which it will send every
     // request.
     params = {
-        url : undefined,
-        state : undefined,
-        endpointType : "publicURL"
+        url: undefined,
+        state: undefined,
+        endpointType: "publicURL"
     };
 
     // Private functions
@@ -43,7 +43,7 @@ JSTACK.Glance = (function (JS, undefined) {
 
     // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Glance service.
-    check = function () {
+    check = function() {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("image");
             params.url = service.endpoints[0][params.endpointType];
@@ -61,7 +61,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // * "internalURL"
     // * "publicURL"
     // You can use this function to change the default endpointURL, which is publicURL.
-    configure = function (endpointType) {
+    configure = function(endpointType) {
         if (endpointType === "adminURL" || endpointType === "internalURL" || endpointType === "publicURL") {
             params.endpointType = endpointType;
         }
@@ -73,7 +73,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagelist = function (detailed, callback, error) {
+    getimagelist = function(detailed, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -83,12 +83,12 @@ JSTACK.Glance = (function (JS, undefined) {
             url += '/detail';
         }
 
-        onOK = function (result) {
+        onOK = function(result) {
             if (callback !== undefined) {
                 callback(result);
             }
         };
-        onError = function (message) {
+        onError = function(message) {
             if (error !== undefined) {
                 error(message);
             }
@@ -96,27 +96,78 @@ JSTACK.Glance = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
-    // This operation updates details of the image specified by its `id`.
-    // In [Update Image Details](http://api.openstack.org/api-ref.html)
-    // there is more information.
-    updateimage = function (id, name, callback, error) {
+
+    //
+    // This operation provides a list of images associated with the account. In
+    // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
+    // there is more information about the JSON object that is returned.
+    getimagedetail = function(id, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
         }
         url = params.url + '/images/' + id;
 
-        onOK = function (result) {
+        onOK = function(result, headers) {
             if (callback !== undefined) {
-                callback(result);
+                var model = {};
+                var heads = headers.split("\r\n");
+                heads.forEach(function(head) {
+                    if (head.indexOf('x-image-meta') === -1) {
+                        return;
+                    }
+                    var reg = head.match(/^([\w\d\-\_]*)\: (.*)$/);
+                    var value = reg[1];
+                    var key = reg[2];
+                    var data = value.split('-');
+                    var attr = data[data.length - 1];
+                    model[attr] = key;
+                });
+                callback(model, headers);
             }
         };
-        onError = function (message) {
+        onError = function(message) {
             if (error !== undefined) {
                 error(message);
             }
         };
-        JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
+
+        JS.Comm.head(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    // This operation updates details of the image specified by its `id`.
+    // In [Update Image Details](http://api.openstack.org/api-ref.html)
+    // there is more information.
+    updateimage = function(id, name, is_public, min_ram, min_disk, properties, callback, error) {
+        var url, onOK, onError;
+        var headers = {};
+        var prefix = "x-image-meta-";
+        if (!check()) {
+            return;
+        }
+        url = params.url + '/images/' + id;
+
+        if (name) {headers[prefix+'name'] = name};
+        if (is_public) {headers[prefix+'is_public'] = is_public};
+        if (min_ram) {headers[prefix+'min_ram'] = min_ram};
+        if (min_disk) {headers[prefix+'min_disk'] = min_disk};
+        for (var propKey in properties) {
+            headers[prefix+"property-"+propKey] = properties[propKey];
+        }
+
+        var data = undefined;
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError, headers);
     };
     // Public Functions and Variables
     // ------------------------------
@@ -124,8 +175,9 @@ JSTACK.Glance = (function (JS, undefined) {
     return {
 
         // Functions:
-        configure : configure,
-        getimagelist : getimagelist,
+        configure: configure,
+        getimagelist: getimagelist,
+        getimagedetail: getimagedetail,
         updateimage: updateimage
     };
 

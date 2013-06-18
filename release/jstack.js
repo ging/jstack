@@ -81,14 +81,14 @@ JSTACK.Comm = (function (JS, undefined) {
 
     // Function `_send` is internally used to make detailed low-level requests
     // to components.
-    send = function (method, url, data, token, callBackOK, callbackError) {
+    send = function (method, url, data, token, callBackOK, callbackError, headers) {
         var xhr, body, result;
 
         callbackError = callbackError || function(resp) {
-            console.log("Error: ", resp);
+            //console.log("Error: ", resp);
         };
-        callBackOK = callBackOK || function(resp) {
-            console.log("OK: ", resp);
+        callBackOK = callBackOK || function(resp, headers) {
+            //console.log("OK: ", resp, headers);
         };
 
         // This function receives a `method` that can be "GET", "POST", "PUT", or
@@ -97,7 +97,7 @@ JSTACK.Comm = (function (JS, undefined) {
         // authenticate the request, and success and error callbacks.
         xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-        if (method !== 'get') {
+        if (data) {
             xhr.setRequestHeader("Content-Type", "application/json");
         }
         xhr.setRequestHeader("Accept", "application/json");
@@ -105,8 +105,14 @@ JSTACK.Comm = (function (JS, undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
 
+        if (headers) {
+            for (var head in headers) {
+                xhr.setRequestHeader(head, headers[head]);
+            }
+        }
+
         xhr.onerror = function(error) {
-            //callbackError({message:"Error", body:error});
+            callbackError({message:"Error", body:error});
         }
         xhr.onreadystatechange = function () {
 
@@ -118,7 +124,6 @@ JSTACK.Comm = (function (JS, undefined) {
             if (xhr.readyState === 4) {
                 flag = true;
                 switch (xhr.status) {
-
                 // In case of successful response it calls the `callbackOK` function.
                 case 100:
                 case 200:
@@ -137,15 +142,6 @@ JSTACK.Comm = (function (JS, undefined) {
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
-                case 400:
-                    callbackError("400 Bad Request");
-                    break;
-                case 401:
-                    callbackError("401 Unauthorized");
-                    break;
-                case 403:
-                    callbackError("403 Forbidden");
-                    break;
                 default:
                     callbackError({message:xhr.status + " Error", body:xhr.responseText});
                 }
@@ -176,29 +172,29 @@ JSTACK.Comm = (function (JS, undefined) {
     // * Function *get* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP GET request,
     // so it does not send any data.
-    get = function (url, token, callbackOK, callbackError) {
+    get = function (url, token, callbackOK, callbackError, headers) {
         send("get", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *head* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP HEAD request,
     // so it does not send any data.
-    head = function (url, token, callbackOK, callbackError) {
+    head = function (url, token, callbackOK, callbackError, headers) {
         send("head", url, undefined, token, callbackOK, callbackError);
     };
     // * Function *post* receives the `url`, the authentication token
     // (which is optional), the data to be sent (a JSON Object), and
     // callbacks. It sends a HTTP POST request.
-    post = function (url, data, token, callbackOK, callbackError) {
+    post = function (url, data, token, callbackOK, callbackError, headers) {
         send("POST", url, data, token, callbackOK, callbackError);
     };
     // * Function *put* receives the same parameters as post. It sends
     // a HTTP PUT request.
-    put = function (url, data, token, callbackOK, callbackError) {
+    put = function (url, data, token, callbackOK, callbackError, headers) {
         send("PUT", url, data, token, callbackOK, callbackError);
     };
     // * Function *del* receives the same paramaters as get. It sends a
     // HTTP DELETE request.
-    del = function (url, token, callbackOK, callbackError) {
+    del = function (url, token, callbackOK, callbackError, headers) {
         send("DELETE", url, undefined, token, callbackOK, callbackError);
     };
     // Public Functions and Variables
@@ -322,7 +318,7 @@ JSTACK.Utils = (function(JS, undefined) {
                 enc4 = 64;
             }
 
-            output = output + JS.Utils.keyStr.charAt(enc1) + Base64.keyStr.charAt(enc2) + JS.Utils.keyStr.charAt(enc3) + Base64.keyStr.charAt(enc4);
+            output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
 
         }
 
@@ -863,7 +859,6 @@ JSTACK.Nova = (function (JS, undefined) {
         url = params.url + '/servers/' + id + '/action';
 
         onOk = function (result) {
-
             if (callback !== undefined) {
                 callback(result);
             }
@@ -1904,6 +1899,7 @@ JSTACK.Nova = (function (JS, undefined) {
         };
 
         onOK = function (result) {
+            console.log(callback);
             if (callback !== undefined) {
                 callback(result);
             }
@@ -2660,16 +2656,16 @@ THE SOFTWARE.
 // ------------------
 
 // This module provides Glance API functions.
-JSTACK.Glance = (function (JS, undefined) {
+JSTACK.Glance = (function(JS, undefined) {
     "use strict";
-    var params, check, configure, getimagelist, updateimage;
+    var params, check, configure, getimagelist, getimagedetail, updateimage;
 
     // This modules stores the `url`to which it will send every
     // request.
     params = {
-        url : undefined,
-        state : undefined,
-        endpointType : "publicURL"
+        url: undefined,
+        state: undefined,
+        endpointType: "publicURL"
     };
 
     // Private functions
@@ -2677,7 +2673,7 @@ JSTACK.Glance = (function (JS, undefined) {
 
     // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Glance service.
-    check = function () {
+    check = function() {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("image");
             params.url = service.endpoints[0][params.endpointType];
@@ -2695,7 +2691,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // * "internalURL"
     // * "publicURL"
     // You can use this function to change the default endpointURL, which is publicURL.
-    configure = function (endpointType) {
+    configure = function(endpointType) {
         if (endpointType === "adminURL" || endpointType === "internalURL" || endpointType === "publicURL") {
             params.endpointType = endpointType;
         }
@@ -2707,7 +2703,7 @@ JSTACK.Glance = (function (JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagelist = function (detailed, callback, error) {
+    getimagelist = function(detailed, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
@@ -2717,12 +2713,12 @@ JSTACK.Glance = (function (JS, undefined) {
             url += '/detail';
         }
 
-        onOK = function (result) {
+        onOK = function(result) {
             if (callback !== undefined) {
                 callback(result);
             }
         };
-        onError = function (message) {
+        onError = function(message) {
             if (error !== undefined) {
                 error(message);
             }
@@ -2730,27 +2726,78 @@ JSTACK.Glance = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
-    // This operation updates details of the image specified by its `id`.
-    // In [Update Image Details](http://api.openstack.org/api-ref.html)
-    // there is more information.
-    updateimage = function (id, name, callback, error) {
+
+    //
+    // This operation provides a list of images associated with the account. In
+    // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
+    // there is more information about the JSON object that is returned.
+    getimagedetail = function(id, callback, error) {
         var url, onOK, onError;
         if (!check()) {
             return;
         }
         url = params.url + '/images/' + id;
 
-        onOK = function (result) {
+        onOK = function(result, headers) {
             if (callback !== undefined) {
-                callback(result);
+                var model = {};
+                var heads = headers.split("\r\n");
+                heads.forEach(function(head) {
+                    if (head.indexOf('x-image-meta') === -1) {
+                        return;
+                    }
+                    var reg = head.match(/^([\w\d\-\_]*)\: (.*)$/);
+                    var value = reg[1];
+                    var key = reg[2];
+                    var data = value.split('-');
+                    var attr = data[data.length - 1];
+                    model[attr] = key;
+                });
+                callback(model, headers);
             }
         };
-        onError = function (message) {
+        onError = function(message) {
             if (error !== undefined) {
                 error(message);
             }
         };
-        JS.Comm.put(url, JS.Keystone.params.token, data, onOK, onError);
+
+        JS.Comm.head(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    // This operation updates details of the image specified by its `id`.
+    // In [Update Image Details](http://api.openstack.org/api-ref.html)
+    // there is more information.
+    updateimage = function(id, name, is_public, min_ram, min_disk, properties, callback, error) {
+        var url, onOK, onError;
+        var headers = {};
+        var prefix = "x-image-meta-";
+        if (!check()) {
+            return;
+        }
+        url = params.url + '/images/' + id;
+
+        if (name) {headers[prefix+'name'] = name};
+        if (is_public) {headers[prefix+'is_public'] = is_public};
+        if (min_ram) {headers[prefix+'min_ram'] = min_ram};
+        if (min_disk) {headers[prefix+'min_disk'] = min_disk};
+        for (var propKey in properties) {
+            headers[prefix+"property-"+propKey] = properties[propKey];
+        }
+
+        var data = undefined;
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError, headers);
     };
     // Public Functions and Variables
     // ------------------------------
@@ -2758,8 +2805,9 @@ JSTACK.Glance = (function (JS, undefined) {
     return {
 
         // Functions:
-        configure : configure,
-        getimagelist : getimagelist,
+        configure: configure,
+        getimagelist: getimagelist,
+        getimagedetail: getimagedetail,
         updateimage: updateimage
     };
 
