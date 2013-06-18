@@ -1733,14 +1733,12 @@ JSTACK.Nova = (function (JS, undefined) {
     // List the quotas for a specific tenant
     // tentnat_id: Id of the tenant for which we check the quota
 
-    getquotalist = function (callback, error) {
-        var url, urlAux, onOK, onError, tenant_id;
+    getquotalist = function (tenant_id, callback, error) {
+        var url, onOK, onError;
         if (!check()) {
             return;
         }
 
-    urlAux = params.url.split('/');
-        tenant_id = urlAux[urlAux.length-1];
         url = params.url + '/os-quota-sets/' + tenant_id;
 
         onOK = function (result) {
@@ -1762,11 +1760,25 @@ JSTACK.Nova = (function (JS, undefined) {
     // instances, cores, ram, volumes, gigabytes, floating_ips, metadata_items, injected_files,
     // injected_file_content_bytes, injected_file_path_bytes, security_groups, security_group_rules,
     // key_pairs: New parameters for the creating quota
-    // example to call API: JSTACK.Nova.updatequota('c0ac228044d34367a4d07b60b6526675', 50, 50, 51200, 10, 1000, 10, 128, 5, 10240, 255, 10, 20, 100, printAll);
-
-    updatequota = function (tenant_id, instances, cores, ram, volumes, gigabytes, floating_ips,
-                  metadata_items, injected_files, injected_file_content_bytes, injected_file_path_bytes,
-                  security_groups, security_group_rules, key_pairs, callback, error) {
+    // example to call API: JSTACK.Nova.updatequota("26b77c04cda6408c972244898f8a3925", 10, 30, 51200, 10, 1000, undefined, 128, 6, 10240, undefined, 10, 20, undefined, printAll);
+    
+    updatequota = function (
+                            tenant_id, 
+                            instances, 
+                            cores, 
+                            ram, 
+                            volumes, 
+                            gigabytes, 
+                            floating_ips,
+                            metadata_items, 
+                            injected_files, 
+                            injected_file_content_bytes, 
+                            injected_file_path_bytes,
+                            security_groups, 
+                            security_group_rules, 
+                            key_pairs, 
+                            callback, 
+                            error) {
 
         var url, data, onOK, onError;
         if (!check()) {
@@ -1775,18 +1787,37 @@ JSTACK.Nova = (function (JS, undefined) {
 
         url = params.url + '/os-quota-sets/' + tenant_id;
 
+        if  ( (instances == undefined)&&(cores == undefined)&&(ram == undefined)&&(volumes == undefined)
+            &&(gigabytes == undefined)&&(floating_ips == undefined)&&(metadata_items == undefined)
+            &&(injected_files == undefined)&&(injected_file_content_bytes == undefined)
+            &&(injected_file_path_bytes == undefined)&&(security_groups == undefined)&&
+            (security_group_rules == undefined)&&(key_pairs == undefined) ) {
+            return;
+        }
+
         data = {
-            'quota_set': {'instances': instances, 'cores': cores,
-                              'ram': ram, 'volumes': volumes,
-                              'gigabytes': gigabytes, 'floating_ips': floating_ips,
-                              'metadata_items': metadata_items, 'injected_files': injected_files,
-                              'injected_file_content_bytes': injected_file_content_bytes,
-                              'injected_file_path_bytes': injected_file_path_bytes,
-                              'security_groups': security_groups,
-                              'security_group_rules': security_group_rules,
-                              'key_pairs': key_pairs}
+            'quota_set': {  'instances': instances, 
+                            'cores': cores,
+                            'ram': ram,
+                            'volumes': volumes,
+                            'gigabytes': gigabytes, 
+                            'floating_ips': floating_ips,
+                            'metadata_items': metadata_items, 
+                            'injected_files': injected_files,
+                            'injected_file_content_bytes': injected_file_content_bytes,
+                            'injected_file_path_bytes': injected_file_path_bytes,
+                            'security_groups': security_groups,
+                            'security_group_rules': security_group_rules,
+                            'key_pairs': key_pairs,
+                            "id": tenant_id}
 
         };
+
+        for (var key in data.quota_set) {
+            if (data.quota_set[key] == undefined) {
+                delete data.quota_set[key];
+            }
+        }   
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -1799,7 +1830,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
     // List the default quota
