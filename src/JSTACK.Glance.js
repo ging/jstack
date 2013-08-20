@@ -83,6 +83,8 @@ JSTACK.Glance = (function(JS, undefined) {
             url += '/detail';
         }
 
+        url += '?limit=100';
+
         onOK = function(result) {
             if (callback !== undefined) {
                 callback(result);

@@ -1407,6 +1407,7 @@ JSTACK.Nova = (function (JS, undefined) {
         if (detailed !== undefined && detailed) {
             url += '/detail';
         }
+        url += '?limit=100';
 
         onOK = function (result) {
             if (callback !== undefined) {
@@ -2712,6 +2713,8 @@ JSTACK.Glance = (function(JS, undefined) {
         if (detailed !== undefined && detailed) {
             url += '/detail';
         }
+
+        url += '?limit=100';
 
         onOK = function(result) {
             if (callback !== undefined) {
