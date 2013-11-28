@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// JStack Nova Volume Module
+// JStack Cinder Module
 // ------------------
 
 // Allows you to manage volumes and snapshots that can be used with the Compute API.
-JSTACK.Nova.Volume = (function (JS, undefined) {
+JSTACK.Cinder = (function (JS, undefined) {
     "use strict";
     var params, check, configure, getvolumelist, createvolume, deletevolume, getvolume,
         getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot;

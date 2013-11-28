@@ -22,14 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// JStack Neutron Module
+/// JStack Neutron Module
 // ------------------
 
 JSTACK.Neutron = (function(JS, undefined) {
     "use strict";
     var params, check, configure, getnetworkslist, createnetwork, updatenetwork, getnetworkdetail, deletenetwork,
     getsubnetslist, createsubnet, updatesubnet, getsubnetdetail, deletesubnet,
-    getportslist, createport, updateport, getportdetail, deleteport;
+    getportslist, createport, updateport, getportdetail, deleteport, getrouterslist, createrouter, updaterouter,
+    getrouterdetail, deleterouter, addinterfacetorouter, removeinterfacefromrouter;
 
     // This modules stores the `url`to which it will send every
     // request. 
@@ -604,6 +605,222 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
 
+    getrouterslist = function(callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+
+        url = params.url + 'v2.0/routers';
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    createrouter = function(name, admin_state_up, network_id, tenant_id, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+        url = params.url + 'v2.0/routers';
+
+        data = {
+            "router" : {
+                "external_gateway_info" : {
+                }
+            }
+        };
+
+        if (network_id !== undefined) {
+            data.router.external_gateway_info.network_id = network_id;
+        }
+
+        if (name !== undefined) {
+            data.router.name = name;
+        }
+
+        if (admin_state_up !== undefined) {
+            data.router.admin_state_up = admin_state_up;
+        }
+
+        if (tenant_id !== undefined) {
+            data.router.tenant_id = tenant_id;
+        }
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
+    };
+
+    getrouterdetail = function(router_id, callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+        url = params.url + 'v2.0/routers/' + router_id;
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    updaterouter = function(router_id, network_id, name, admin_state_up, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+        
+        url = params.url + 'v2.0/routers/' + router_id;
+
+        data = {
+            "router" : {
+                "external_gateway_info" : {
+                }
+            }
+        };
+
+        if (network_id !== undefined) {
+            data.router.external_gateway_info.network_id = network_id;
+        }
+
+        if (name !== undefined) {
+            data.router.name = name;
+        }
+
+        if (admin_state_up !== undefined) {
+            data.router.admin_state_up = admin_state_up;
+        }
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
+    };
+
+    deleterouter = function(router_id, callback, error) {
+        var url, onOK, onError;
+        if (!check()) {
+            return;
+        }
+        url = params.url + 'v2.0/routers/' + router_id;
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    addinterfacetorouter = function(router_id, subnet_id, port_id, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+        url = params.url + 'v2.0/routers/' + router_id + '/add_router_interface';
+
+        data = {
+         
+        };
+
+        if (subnet_id !== undefined) {
+            data.subnet_id = subnet_id;
+        }
+
+        if (port_id !== undefined) {
+            data.port_id = port_id;
+        }
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
+    };
+
+    removeinterfacefromrouter = function(router_id, port_id, subnet_id, callback, error) {
+        var url, onOK, onError, data;
+        if (!check()) {
+            return;
+        }
+
+        data = {  
+             
+        };
+
+        url = params.url + 'v2.0/routers/' + router_id + '/remove_router_interface';
+
+        if (subnet_id !== undefined) {
+            data.subnet_id = subnet_id;
+        }
+
+        if (port_id !== undefined) {
+            data.port_id = port_id;
+        }
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
+    };
+
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -625,7 +842,14 @@ JSTACK.Neutron = (function(JS, undefined) {
         getportdetail : getportdetail,
         createport : createport,
         updateport : updateport,
-        deleteport : deleteport
+        deleteport : deleteport,
+        getrouterslist : getrouterslist,
+        createrouter : createrouter,
+        updaterouter : updaterouter,
+        getrouterdetail :getrouterdetail,
+        deleterouter : deleterouter,
+        addinterfacetorouter : addinterfacetorouter,
+        removeinterfacefromrouter : removeinterfacefromrouter
     };
 
 }(JSTACK));
