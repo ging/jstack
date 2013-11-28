@@ -61,8 +61,11 @@ JSTACK.Nova = (function (JS, undefined) {
         if (JS.Keystone !== undefined &&
                 JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice(params.service);
-            params.url = service.endpoints[0][params.endpointType];
-            return true;
+            if (service) {
+                params.url = service.endpoints[0][params.endpointType];
+                return true;
+            }
+            return false;            
         }
         return false;
     };
