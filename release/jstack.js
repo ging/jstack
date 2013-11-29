@@ -2716,7 +2716,7 @@ JSTACK.Glance = (function(JS, undefined) {
             return;
         }
         url = params.url + '/images';
-        if (detailed !== undefined && detailed) {
+        if (detailed !== undefined && detailed && url.match(/v1/)) {
             url += '/detail';
         }
 
