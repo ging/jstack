@@ -217,7 +217,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         var onOK, onError;
 
         // Only when the user is already authenticated.
-        if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
+        //if (params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             // This function will return tenant information following next pattern:
             //
             //         tenants: {
@@ -267,7 +267,7 @@ JSTACK.Keystone = (function (JS, undefined) {
             }
 
             JS.Comm.get(url + "tenants", params.token, onOK, onError);
-        }
+        //}
     };
 
 
