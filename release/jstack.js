@@ -1046,8 +1046,8 @@ JSTACK.Nova = (function (JS, undefined) {
     //
     // In [Create Servers](http://docs.openstack.org/api/openstack-compute/2/content/CreateServers.html)
     // there is more information about the JSON object that is returned.
-    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, callback, error) {
-        var url, onOK, onError, data, groups = [], i, group;
+    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, callback, error) {
+        var url, onOK, onError, data, groups = [], i, group, nets = [], network;
         if (!check()) {
             return;
         }
@@ -1095,6 +1095,15 @@ JSTACK.Nova = (function (JS, undefined) {
 
         if (availability_zone !== undefined) {
             data.server.availability_zone = JS.Utils.encode(availability_zone);
+        }
+
+        if (networks !== undefined) {
+            for (i in networks) {
+                if (networks[i] !== undefined) {
+                    nets.push(networks[i]);
+                }
+            }
+            data.server.networks = nets;
         }
 
         onOK = function (result) {
