@@ -266,8 +266,8 @@ JSTACK.Nova = (function (JS, undefined) {
     //
     // In [Create Servers](http://docs.openstack.org/api/openstack-compute/2/content/CreateServers.html)
     // there is more information about the JSON object that is returned.
-    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, callback, error) {
-        var url, onOK, onError, data, groups = [], i, group, nets = [], network;
+    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, callback, error) {
+        var url, onOK, onError, data, groups = [], i, group, nets = [], network, urlPost;
         if (!check()) {
             return;
         }
@@ -277,8 +277,15 @@ JSTACK.Nova = (function (JS, undefined) {
                 "name" : name,
                 "imageRef" : imageRef,
                 "flavorRef" : flavorRef
+                //"nics": nics
             }
         };
+
+        if (block_device_mapping !== undefined) {
+            urlPost = "/os-volumes_boot";      
+        } else {
+            urlPost = "/servers";
+        }
 
         if (key_name !== undefined) {
             data.server.key_name = key_name;
@@ -286,6 +293,10 @@ JSTACK.Nova = (function (JS, undefined) {
 
         if (user_data !== undefined) {
             data.server.user_data = JS.Utils.encode(user_data);
+        }
+
+        if (block_device_mapping !== undefined) {
+            data.server.block_device_mapping = block_device_mapping;
         }
 
         if (security_groups !== undefined) {
@@ -337,7 +348,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        JS.Comm.post(params.url + '/servers', data, JS.Keystone.params.token, onOK, onError);
+        JS.Comm.post(params.url + urlPost, data, JS.Keystone.params.token, onOK, onError);
 
     };
     // This operation deletes a cloud server instance from the system.
