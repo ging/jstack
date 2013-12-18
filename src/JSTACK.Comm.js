@@ -32,7 +32,7 @@ THE SOFTWARE.
 JSTACK.Comm = (function (JS, undefined) {
     "use strict";
 
-    var send, get, head, post, put, del;
+    var send, get, head, post, put, patch, del;
 
     // Private functions
     // -----------------
@@ -55,18 +55,21 @@ JSTACK.Comm = (function (JS, undefined) {
         // authenticate the request, and success and error callbacks.
         xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-        if (data) {
-            xhr.setRequestHeader("Content-Type", "application/json");
-        }
+        
         xhr.setRequestHeader("Accept", "application/json");
         if (token !== undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
-
+        var hasContent = false;
         if (headers) {
             for (var head in headers) {
+                if (head === "Content-Type") hasContent = true;
                 xhr.setRequestHeader(head, headers[head]);
+                console.log("Header set: ", head, " - ", headers[head]);
             }
+        }
+        if (data && !hasContent) {
+            xhr.setRequestHeader("Content-Type", "application/json");
         }
 
         xhr.onerror = function(error) {
@@ -148,7 +151,13 @@ JSTACK.Comm = (function (JS, undefined) {
     // * Function *put* receives the same parameters as post. It sends
     // a HTTP PUT request.
     put = function (url, data, token, callbackOK, callbackError, headers) {
-        send("PUT", url, data, token, callbackOK, callbackError);
+        send("PUT", url, data, token, callbackOK, callbackError, headers);
+    };
+    // * Function *patch* receives the same parameters as post. It sends
+    // a HTTP PATC request.
+    patch = function (url, data, token, callbackOK, callbackError, headers) {
+        headers["Content-Type"] = 'application/openstack-images-v2.1-json-patch';
+        send("PATCH", url, data, token, callbackOK, callbackError, headers);
     };
     // * Function *del* receives the same paramaters as get. It sends a
     // HTTP DELETE request.
@@ -165,6 +174,7 @@ JSTACK.Comm = (function (JS, undefined) {
         head : head,
         post : post,
         put : put,
+        patch: patch,
         del : del
     };
 }(JSTACK));

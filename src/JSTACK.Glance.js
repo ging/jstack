@@ -28,7 +28,7 @@ THE SOFTWARE.
 // This module provides Glance API functions.
 JSTACK.Glance = (function(JS, undefined) {
     "use strict";
-    var params, check, configure, getimagelist, getimagedetail, updateimage;
+    var params, check, getVersion, configure, getimagelist, getimagedetail, updateimage;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -51,6 +51,22 @@ JSTACK.Glance = (function(JS, undefined) {
         }
         return false;
     };
+
+    // Function `getVersion` returns the version of Glance API server is using.
+    getVersion = function() {
+        if (!check()) {
+            return 0;
+        }
+        var service = JS.Keystone.getservice("image");
+        params.url = service.endpoints[0][params.endpointType];
+        if (params.url.match(/v1/)) {
+            return 1;
+        } else if (params.url.match(/v2/)) {
+            return 2;
+        }
+        return 0;
+    }
+
     // Public functions
     // ----------------
     //
@@ -112,26 +128,28 @@ JSTACK.Glance = (function(JS, undefined) {
 
         onOK = function(result, headers) {
             if (callback !== undefined) {
-
-                if (url.match(/v1/)) {
-
-                    var model = {};
-                    var heads = headers.split("\r\n");
-                    heads.forEach(function(head) {
-                        if (head.indexOf('x-image-meta') === -1) {
-                            return;
-                        }
-                        var reg = head.match(/^([\w\d\-\_]*)\: (.*)$/);
-                        var value = reg[1];
-                        var key = reg[2];
-                        var data = value.split('-');
-                        var attr = data[data.length - 1];
-                        model[attr] = key;
-                    });
-                    callback(model, headers);
-
-                } else {
-                    callback(result);
+                switch(getVersion()) {
+                    case 1:
+                        var model = {};
+                        var heads = headers.split("\r\n");
+                        heads.forEach(function(head) {
+                            if (head.indexOf('x-image-meta') === -1) {
+                                return;
+                            }
+                            var reg = head.match(/^([\w\d\-\_]*)\: (.*)$/);
+                            var value = reg[1];
+                            var key = reg[2];
+                            var data = value.split('-');
+                            var attr = data[data.length - 1];
+                            model[attr] = key;
+                        });
+                        callback(model, headers);
+                        break;
+                    case 2:
+                        callback(result);
+                        break;
+                    default:
+                        break;
                 }
             }
         };
@@ -141,17 +159,22 @@ JSTACK.Glance = (function(JS, undefined) {
             }
         };
 
-        if (url.match(/v1/)) {
-            JS.Comm.head(url, JS.Keystone.params.token, onOK, onError);
-        } else {
-            JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+        switch(getVersion()) {
+            case 1:
+                JS.Comm.head(url, JS.Keystone.params.token, onOK, onError);
+                break;
+            case 2:
+                JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+                break;
+            default:
+                break;
         }
     };
 
     // This operation updates details of the image specified by its `id`.
     // In [Update Image Details](http://api.openstack.org/api-ref.html)
     // there is more information.
-    updateimage = function(id, name, is_public, min_ram, min_disk, properties, callback, error) {
+    updateimage = function(id, name, visibility, properties, callback, error) {
         var url, onOK, onError;
         var headers = {};
         var prefix = "x-image-meta-";
@@ -159,17 +182,6 @@ JSTACK.Glance = (function(JS, undefined) {
             return;
         }
         url = params.url + '/images/' + id;
-
-        if (name) {headers[prefix+'name'] = name};
-        if (is_public) {headers[prefix+'is_public'] = is_public};
-        if (min_ram) {headers[prefix+'min_ram'] = min_ram};
-        if (min_disk) {headers[prefix+'min_disk'] = min_disk};
-        for (var propKey in properties) {
-            headers[prefix+"property-"+propKey] = properties[propKey];
-        }
-
-        var data = undefined;
-
         onOK = function(result) {
             if (callback !== undefined) {
                 callback(result);
@@ -180,7 +192,34 @@ JSTACK.Glance = (function(JS, undefined) {
                 error(message);
             }
         };
-        JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError, headers);
+        switch(getVersion()) {
+            case 1:
+                if (name) {
+                    headers[prefix+'name'] = name;
+                }
+                if (visibility === "public") {
+                    headers[prefix+'is_public'] = "true";
+                } else {
+                    headers[prefix+'is_public'] = "false";
+                }
+                properties = properties || {};
+                for (var propKey in properties) {
+                    headers[prefix+"property-"+propKey] = properties[propKey];
+                }
+                JS.Comm.put(url, undefined, JS.Keystone.params.token, onOK, onError, headers);
+                break;
+            case 2:
+                var data = [];
+                if (name) {
+                    data.push({op: "replace", path: "/name", value: name});
+                }
+                if (visibility) {
+                    data.push({op: "replace", path: "/visibility", value: visibility});
+                }
+                JS.Comm.patch(url, data, JS.Keystone.params.token, onOK, onError, headers);
+            default:
+            break;
+        }
     };
     // Public Functions and Variables
     // ------------------------------
@@ -191,7 +230,8 @@ JSTACK.Glance = (function(JS, undefined) {
         configure: configure,
         getimagelist: getimagelist,
         getimagedetail: getimagedetail,
-        updateimage: updateimage
+        updateimage: updateimage,
+        getVersion: getVersion
     };
 
 }(JSTACK));
