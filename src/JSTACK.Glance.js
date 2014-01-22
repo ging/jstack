@@ -43,22 +43,22 @@ JSTACK.Glance = (function(JS, undefined) {
 
     // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Glance service.
-    check = function() {
+    check = function(region) {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("image");
-            params.url = service.endpoints[0][params.endpointType];
+            params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
             return true;
         }
         return false;
     };
 
     // Function `getVersion` returns the version of Glance API server is using.
-    getVersion = function() {
-        if (!check()) {
+    getVersion = function(region) {
+        if (!check(region)) {
             return 0;
         }
         var service = JS.Keystone.getservice("image");
-        params.url = service.endpoints[0][params.endpointType];
+        params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
         if (params.url.match(/v1/)) {
             return 1;
         } else if (params.url.match(/v2/)) {
@@ -89,9 +89,9 @@ JSTACK.Glance = (function(JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagelist = function(detailed, callback, error) {
+    getimagelist = function(detailed, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images';
@@ -119,16 +119,16 @@ JSTACK.Glance = (function(JS, undefined) {
     // This operation provides a list of images associated with the account. In
     // [Requesting a List of Public VM Images](http://docs.openstack.org/cactus/openstack-compute/admin/content/requesting-vm-list.html)
     // there is more information about the JSON object that is returned.
-    getimagedetail = function(id, callback, error) {
+    getimagedetail = function(id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images/' + id;
 
         onOK = function(result, headers) {
             if (callback !== undefined) {
-                switch(getVersion()) {
+                switch(getVersion(region)) {
                     case 1:
                         var model = {};
                         var heads = headers.split("\r\n");
@@ -159,7 +159,7 @@ JSTACK.Glance = (function(JS, undefined) {
             }
         };
 
-        switch(getVersion()) {
+        switch(getVersion(region)) {
             case 1:
                 JS.Comm.head(url, JS.Keystone.params.token, onOK, onError);
                 break;
@@ -174,11 +174,11 @@ JSTACK.Glance = (function(JS, undefined) {
     // This operation updates details of the image specified by its `id`.
     // In [Update Image Details](http://api.openstack.org/api-ref.html)
     // there is more information.
-    updateimage = function(id, name, visibility, properties, callback, error) {
+    updateimage = function(id, name, visibility, properties, callback, error, region) {
         var url, onOK, onError;
         var headers = {};
         var prefix = "x-image-meta-";
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images/' + id;
@@ -192,7 +192,7 @@ JSTACK.Glance = (function(JS, undefined) {
                 error(message);
             }
         };
-        switch(getVersion()) {
+        switch(getVersion(region)) {
             case 1:
                 if (name) {
                     headers[prefix+'name'] = name;

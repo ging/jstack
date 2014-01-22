@@ -57,12 +57,12 @@ JSTACK.Nova = (function (JS, undefined) {
 
     // Function `_check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Nova service.
-    check = function () {
+    check = function (region) {
         if (JS.Keystone !== undefined &&
                 JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice(params.service);
             if (service) {
-                params.url = service.endpoints[0][params.endpointType];
+                params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
                 return true;
             }
             return false;            
@@ -72,10 +72,10 @@ JSTACK.Nova = (function (JS, undefined) {
     // This function is used internally to send Actions to server identified
     // with `id`. In `data` we pass the corresponding information about the
     // action.
-    postAction = function (id, data, callback, error) {
+    postAction = function (id, data, callback, error, region) {
         var url, onOk, onError;
 
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -117,9 +117,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation provides a list of servers associated with the account. In
     // [Create Server List](http://docs.openstack.org/api/openstack-compute/2/content/List_Servers-d1e2078.html)
     // there is more information about the JSON object that is returned.
-    getserverlist = function (detailed, allTenants, callback, error) {
+    getserverlist = function (detailed, allTenants, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers';
@@ -147,9 +147,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation returns the details of a specific server by its `id`. In
     // [Get Server Details](http://docs.openstack.org/api/openstack-compute/2/content/Get_Server_Details-d1e2623.html)
     // there is more information about the JSON object that is returned.
-    getserverdetail = function (id, callback, error) {
+    getserverdetail = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers/' + id;
@@ -173,9 +173,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // and in
     // [List Addresses by Network](http://docs.openstack.org/api/openstack-compute/2/content/List_Addresses_by_Network-d1e3118.html)
     // there is more information about the JSON object that is returned.
-    getserverips = function (id, networkID, callback, error) {
+    getserverips = function (id, networkID, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers/' + id + '/ips';
@@ -200,9 +200,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation updates the the `name` of the server given by its `id`. In
     // [Server Update](http://docs.openstack.org/api/openstack-compute/2/content/ServerUpdate.html)
     // there is more information about the JSON object that is returned.
-    updateserver = function (id, name, callback, error) {
+    updateserver = function (id, name, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers/' + id;
@@ -266,9 +266,9 @@ JSTACK.Nova = (function (JS, undefined) {
     //
     // In [Create Servers](http://docs.openstack.org/api/openstack-compute/2/content/CreateServers.html)
     // there is more information about the JSON object that is returned.
-    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, callback, error) {
+    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, callback, error, region) {
         var url, onOK, onError, data, groups = [], i, group, nets = [], network, urlPost;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -354,9 +354,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation deletes a cloud server instance from the system.
     // In [Delete Server](http://docs.openstack.org/api/openstack-compute/2/content/Delete_Server-d1e2883.html)
     // there is more information.
-    deleteserver = function (id, callback, error) {
+    deleteserver = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers/' + id;
@@ -383,7 +383,7 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation changes the server's administrator password.
     // In [Change Password](http://docs.openstack.org/api/openstack-compute/2/content/Change_Password-d1e3234.html)
     // there is more information.
-    changepasswordserver = function (id, adminPass, callback, error) {
+    changepasswordserver = function (id, adminPass, callback, error, region) {
         var data;
         if (adminPass === undefined) {
             return;
@@ -399,7 +399,7 @@ JSTACK.Nova = (function (JS, undefined) {
     };
     // This operation allows for a hard reboot that is the equivalent of power
     // cycling the server.
-    rebootserverhard = function (id, callback, error) {
+    rebootserverhard = function (id, callback, error, region) {
         postAction(id, {
             "reboot" : {
                 "type" : "HARD"
@@ -410,7 +410,7 @@ JSTACK.Nova = (function (JS, undefined) {
     // shutdown of all processes.
     // In [Reboot Server](http://docs.openstack.org/api/openstack-compute/2/content/Reboot_Server-d1e3371.html)
     // there is more information about hard and soft reboots.
-    rebootserversoft = function (id, callback, error) {
+    rebootserversoft = function (id, callback, error, region) {
         postAction(id, {
             "reboot" : {
                 "type" : "SOFT"
@@ -425,7 +425,7 @@ JSTACK.Nova = (function (JS, undefined) {
     // confirmed after 24 hours if they are not explicitly confirmed or reverted.
     // In [Resize Server](http://docs.openstack.org/api/openstack-compute/2/content/Resize_Server-d1e3707.html)
     // there is more information.
-    resizeserver = function (id, flavorRef, callback, error) {
+    resizeserver = function (id, flavorRef, callback, error, region) {
         postAction(id, {
             "resize" : {
                 "flavorRef" : flavorRef
@@ -441,52 +441,52 @@ JSTACK.Nova = (function (JS, undefined) {
     // confirmed or reverted.
     // In [Confirm Resized Server](http://docs.openstack.org/api/openstack-compute/2/content/Confirm_Resized_Server-d1e3868.html)
     // there is more information.
-    confirmresizedserver = function (id, callback, error) {
+    confirmresizedserver = function (id, callback, error, region) {
         postAction(id, {
             "confirmResize" : null
         }, callback, error);
     };
     // In [Revert Resized Server](http://docs.openstack.org/api/openstack-compute/2/content/Revert_Resized_Server-d1e4024.html)
     // there is more information.
-    revertresizedserver = function (id, callback, error) {
+    revertresizedserver = function (id, callback, error, region) {
         postAction(id, {
             "revertResize" : null
         }, callback, error);
     };
     // It halts a running server. Changes status to STOPPED.
     // In [Start Server](http://api.openstack.org/) there is more information.
-    startserver = function (id, callback, error) {
+    startserver = function (id, callback, error, region) {
         postAction(id, {
             "os-start" : null
         }, callback, error);
     };
     // Returns a STOPPED server to ACTIVE status.
     // In [Stop Server](http://api.openstack.org/) there is more information.
-    stopserver = function (id, callback, error) {
+    stopserver = function (id, callback, error, region) {
         postAction(id, {
             "os-stop" : null
         }, callback, error);
     };
     // It pauses a running server. Changes status to PAUSED.
-    pauseserver = function (id, callback, error) {
+    pauseserver = function (id, callback, error, region) {
         postAction(id, {
             "pause" : null
         }, callback, error);
     };
     // Returns a PAUSED server to ACTIVE status.
-    unpauseserver = function (id, callback, error) {
+    unpauseserver = function (id, callback, error, region) {
         postAction(id, {
             "unpause" : null
         }, callback, error);
     };
     // It pauses a running server. Changes status to SUSPENDED.
-    suspendserver = function (id, callback, error) {
+    suspendserver = function (id, callback, error, region) {
         postAction(id, {
             "suspend" : null
         }, callback, error);
     };
     // Returns a SUSPENDED server to ACTIVE status.
-    resumeserver = function (id, callback, error) {
+    resumeserver = function (id, callback, error, region) {
         postAction(id, {
             "resume" : null
         }, callback, error);
@@ -495,7 +495,7 @@ JSTACK.Nova = (function (JS, undefined) {
     // new image will be available that can be used to rebuild or create servers.
     // In [Create Image](http://docs.openstack.org/api/openstack-compute/2/content/Create_Image-d1e4655.html)
     // there is more information.
-    createimage = function (id, name, metadata, callback, error) {
+    createimage = function (id, name, metadata, callback, error, region) {
         var data = {
             "createImage" : {
                 'name' : name
@@ -515,9 +515,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation will list all available flavors.
     // In [List Flavors](http://docs.openstack.org/api/openstack-compute/2/content/List_Flavors-d1e4188.html)
     // there is more information.
-    getflavorlist = function (detailed, callback, error) {
+    getflavorlist = function (detailed, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/flavors';
@@ -541,9 +541,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation returns details of the specified flavor.
     // In [Get Flavor Details](http://docs.openstack.org/api/openstack-compute/2/content/Get_Flavor_Details-d1e4317.html)
     // there is more information.
-    getflavordetail = function (id, callback, error) {
+    getflavordetail = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/flavors/' + id;
@@ -565,9 +565,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // flavor, the number of GB of root `disk`, the number of GB of `ephemeral` disk,
     // the number of MB of `swap` space, and the `rxtx_factor`.
     // Arguments `ephemeral`, `swap`, `rxtx_factor` and `callback` are optional.
-    createflavor = function (name, ram, vcpus, disk, flavorid, ephemeral, swap, rxtx_factor, callback, error) {
+    createflavor = function (name, ram, vcpus, disk, flavorid, ephemeral, swap, rxtx_factor, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/flavors';
@@ -611,9 +611,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation deletes flavor, specified by its `id`.
     // In [Get Flavor Details](http://docs.openstack.org/api/openstack-compute/2/content/Get_Flavor_Details-d1e4317.html)
     // there is more information.
-    deleteflavor = function (id, callback, error) {
+    deleteflavor = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/flavors/' + id;
@@ -641,9 +641,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // for install.
     // In [List Images](http://docs.openstack.org/api/openstack-compute/2/content/List_Images-d1e4435.html)
     // there is more information.
-    getimagelist = function (detailed, callback, error) {
+    getimagelist = function (detailed, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images';
@@ -668,9 +668,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // This operation returns details of the image specified by its `id`.
     // In [Get Image Details](http://docs.openstack.org/api/openstack-compute/2/content/Get_Image_Details-d1e4848.html)
     // there is more information.
-    getimagedetail = function (id, callback, error) {
+    getimagedetail = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images/' + id;
@@ -692,9 +692,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // to track the delete operation.
     // In [Delete Image](http://docs.openstack.org/api/openstack-compute/2/content/Delete_Image-d1e4957.html)
     // there is more information.
-    deleteimage = function (id, callback, error) {
+    deleteimage = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/images/' + id;
@@ -712,9 +712,9 @@ JSTACK.Nova = (function (JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
     // This operation retrieves a list of available Key-pairs.
-    getkeypairlist = function (callback, error) {
+    getkeypairlist = function (callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/os-keypairs';
@@ -733,9 +733,9 @@ JSTACK.Nova = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
     // This operation creates a new Key-pair.
-    createkeypair = function (name, pubkey, callback, error) {
+    createkeypair = function (name, pubkey, callback, error, region) {
         var url, onOK, onError, body;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/os-keypairs';
@@ -764,9 +764,9 @@ JSTACK.Nova = (function (JS, undefined) {
         JS.Comm.post(url, body, JS.Keystone.params.token, onOK, onError);
     };
     // This operation deletes a  Key-pair.
-    deletekeypair = function (id, callback, error) {
+    deletekeypair = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/os-keypairs/' + id;
@@ -785,9 +785,9 @@ JSTACK.Nova = (function (JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
     // This operation shows a Key-pair associated with the account.
-    getkeypairdetail = function (keypair_name,callback, error) {
+    getkeypairdetail = function (keypair_name,callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/os-keypairs/' + keypair_name;
@@ -808,9 +808,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Get a vnc console for an instance
     // id: The server's ID to get the vnc console from.
     // console_type: Type of vnc console to get ('novnc' or 'xvpvnc')
-    getvncconsole = function (id, console_type, callback, error) {
+    getvncconsole = function (id, console_type, callback, error, region) {
         var data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -829,9 +829,9 @@ JSTACK.Nova = (function (JS, undefined) {
     //  Get text console log output from Server.
     // id: The server's ID to get the vnc console from.
     // length: The number of tail loglines you would like to retrieve.
-    getconsoleoutput = function (id, length, callback, error) {
+    getconsoleoutput = function (id, length, callback, error, region) {
         var data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -849,9 +849,9 @@ JSTACK.Nova = (function (JS, undefined) {
     };
     //  Lists the volume attachments for the specified server.
     // id: The server's ID to get the volume attachments from.
-    getattachedvolumes = function (id, callback, error) {
+    getattachedvolumes = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/servers/' + id + '/os-volume_attachments';
@@ -873,9 +873,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // id: The server's ID.
     // volume_id: The volume's ID to be attached to the server.
     // device: The device where we want to attach this volume.
-    attachvolume = function (id, volume_id, device, callback, error) {
+    attachvolume = function (id, volume_id, device, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -909,9 +909,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Deletes the specified volume attachment from the specified server.
     // id: The server's ID.
     // volume_id: The volume's ID to be detached from the server.
-    detachvolume = function (id, volume_id, callback, error) {
+    detachvolume = function (id, volume_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -938,9 +938,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Lists volume details for the specified volume attachment ID.
     // id: The server's ID.
     // volume_id: The volume's ID.
-    getattachedvolume = function (id, volume_id, callback, error) {
+    getattachedvolume = function (id, volume_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -972,9 +972,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // List the quotas for a specific tenant
     // tentnat_id: Id of the tenant for which we check the quota
 
-    getquotalist = function (tenant_id, callback, error) {
+    getquotalist = function (tenant_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1017,10 +1017,10 @@ JSTACK.Nova = (function (JS, undefined) {
                             security_group_rules, 
                             key_pairs, 
                             callback, 
-                            error) {
+                            error, region) {
 
         var url, data, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1075,9 +1075,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // List the default quota
     // tenant_id:  Id of the tenant for which we list the default quota
 
-    getdefaultquotalist = function (tenant_id, callback, error) {
+    getdefaultquotalist = function (tenant_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1102,9 +1102,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     // List the security groups
 
-    getsecuritygrouplist = function (callback, error) {
+    getsecuritygrouplist = function (callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1128,9 +1128,9 @@ JSTACK.Nova = (function (JS, undefined) {
      // name: name of the new security group
      // description: description for the creating security group
 
-    createsecuritygroup = function (name, description, callback, error) {
+    createsecuritygroup = function (name, description, callback, error, region) {
         var url, data, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1161,9 +1161,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Returns details for the specific security group
     // sec_group_id: Id of the consulting security group
 
-    getsecuritygroupdetail = function (sec_group_id, callback, error) {
+    getsecuritygroupdetail = function (sec_group_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1187,9 +1187,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Deletes a security group
     // sec_group_id: Id of the security group to delete
 
-    deletesecuritygroup = function (sec_group_id, callback, error) {
+    deletesecuritygroup = function (sec_group_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1214,9 +1214,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // ip_protocol, from_port, to_port, cidr, group_id, parent_group_id: New parameters for
     // the creating security group rule
 
-    createsecuritygrouprule = function (ip_protocol, from_port, to_port, cidr, group_id, parent_group_id, callback, error) {
+    createsecuritygrouprule = function (ip_protocol, from_port, to_port, cidr, group_id, parent_group_id, callback, error, region) {
         var url, data, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1251,9 +1251,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Deletes security group rule
     // sec_group_rule_id: Id of the security group rule
 
-    deletesecuritygrouprule = function (sec_group_rule_id, callback, error) {
+    deletesecuritygrouprule = function (sec_group_rule_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1277,9 +1277,9 @@ JSTACK.Nova = (function (JS, undefined) {
     // Consults security group for specific server
     // server_id: Id of the server for which to consult the security group
 
-    getsecuritygroupforserver = function (server_id, callback, error) {
+    getsecuritygroupforserver = function (server_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1302,9 +1302,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     // APIs for floating IPs
 
-    getfloatingIPpools = function (callback, error) {
+    getfloatingIPpools = function (callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1324,9 +1324,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    getfloatingIPs = function (callback, error) {
+    getfloatingIPs = function (callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1346,9 +1346,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    getfloatingIPdetail = function (id, callback, error) {
+    getfloatingIPdetail = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1368,9 +1368,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    allocatefloatingIP = function (pool, callback, error) {
+    allocatefloatingIP = function (pool, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1398,9 +1398,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    associatefloatingIP = function (server_id, address, callback, error) {
+    associatefloatingIP = function (server_id, address, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1426,9 +1426,9 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    releasefloatingIP = function (id, callback, error) {
+    releasefloatingIP = function (id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -1449,9 +1449,9 @@ JSTACK.Nova = (function (JS, undefined) {
     };
 
 
-    disassociatefloatingIP = function (server_id, address, callback, error) {
+    disassociatefloatingIP = function (server_id, address, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 

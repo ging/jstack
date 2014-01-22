@@ -43,11 +43,11 @@ JSTACK.Cinder = (function (JS, undefined) {
 
     // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Volume service.
-    check = function () {
+    check = function (region) {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("volume");
             if (service) {
-                params.url = service.endpoints[0][params.endpointType];
+                params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
                 return true;
             }
             return false;
@@ -77,9 +77,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // View a list of simple Volume entities. In
     // [Requesting a List of Volumes](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolumelist = function (detailed, callback, error) {
+    getvolumelist = function (detailed, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/volumes';
@@ -113,9 +113,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     //
     // * The `description` of the volume
     //
-    createvolume = function (size, name, description, callback, error) {
+    createvolume = function (size, name, description, callback, error, region) {
         var onOk, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -149,9 +149,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // Delete a Volume entitiy. In
     // [Deleting a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletevolume = function (id, callback, error) {
+    deletevolume = function (id, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/volumes/' + id;
@@ -172,9 +172,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // Get a Volume entitiy. In
     // [Retrieving a Volume](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getvolume = function (id, callback, error) {
+    getvolume = function (id, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/volumes/' + id;
@@ -198,9 +198,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // View a list of simple Snapshot entities. In
     // [Requesting a List of Snapshots](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshotlist = function (detailed, callback, error) {
+    getsnapshotlist = function (detailed, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/snapshots';
@@ -234,9 +234,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     //
     // * The `description` of the snapshot
     //
-    createsnapshot = function (volume_id, name, description, callback, error) {
+    createsnapshot = function (volume_id, name, description, callback, error, region) {
         var url, onOk, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -271,9 +271,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // Delete a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    deletesnapshot = function (id, callback, error) {
+    deletesnapshot = function (id, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/snapshots/' + id;
@@ -294,9 +294,9 @@ JSTACK.Cinder = (function (JS, undefined) {
     // Get a Snapshot entitiy. In
     // [Retrieving a Snapshot](http://api.openstack.org/)
     // there is more information about the JSON object that is returned.
-    getsnapshot = function (id, callback, error) {
+    getsnapshot = function (id, callback, error, region) {
         var url, onOk, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + '/snapshots/' + id;

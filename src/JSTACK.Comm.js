@@ -32,7 +32,7 @@ THE SOFTWARE.
 JSTACK.Comm = (function (JS, undefined) {
     "use strict";
 
-    var send, get, head, post, put, patch, del;
+    var send, get, head, post, put, patch, del, getEndpoint;
 
     // Private functions
     // -----------------
@@ -164,6 +164,19 @@ JSTACK.Comm = (function (JS, undefined) {
     del = function (url, token, callbackOK, callbackError, headers) {
         send("DELETE", url, undefined, token, callbackOK, callbackError);
     };
+
+    getEndpoint = function (serv, region, type) {
+        var endpoint;
+        for (var e in serv.endpoints) {
+            if (serv.endpoints[e].region === region) {
+                endpoint = serv.endpoints[e][type];
+                break;
+            }
+        }
+        if (!endpoint) endpoint = serv.endpoints[0][type];
+        return endpoint;
+    };
+
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -175,6 +188,7 @@ JSTACK.Comm = (function (JS, undefined) {
         post : post,
         put : put,
         patch: patch,
-        del : del
+        del : del,
+        getEndpoint: getEndpoint
     };
 }(JSTACK));

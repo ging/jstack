@@ -45,12 +45,11 @@ JSTACK.Neutron = (function(JS, undefined) {
 
     // Function `check` internally confirms that Keystone module is
     // authenticated and it has the URL of the Glance service.
-    check = function() {
+    check = function(region) {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
             var service = JS.Keystone.getservice("network");
             if (service) {
-                params.url = service.endpoints[0][params.endpointType];
-                return true;
+                params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
             }
             return false;
         }
@@ -72,9 +71,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         }
     };
 
-    getnetworkslist = function(callback, error) {
+    getnetworkslist = function(callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -94,9 +93,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createnetwork = function(name, admin_state_up, shared, tenant_id, callback, error) {
+    createnetwork = function(name, admin_state_up, shared, tenant_id, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/networks';
@@ -136,9 +135,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    getnetworkdetail = function(network_id, callback, error) {
+    getnetworkdetail = function(network_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/networks/' + network_id;
@@ -157,9 +156,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    updatenetwork = function(network_id, name, admin_state_up, callback, error) {
+    updatenetwork = function(network_id, name, admin_state_up, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -192,9 +191,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    deletenetwork = function(network_id, callback, error) {
+    deletenetwork = function(network_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/networks/' + network_id;
@@ -213,9 +212,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    getsubnetslist = function(callback, error) {
+    getsubnetslist = function(callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -235,9 +234,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routes, callback, error) {
+    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routes, callback, error, region) {
         var url, onOK, onError, data, i, start, end, allocation_pool, all_pools = [], dns_nameserver, dns_nservers = [], host_route, h_routes = [];
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -300,9 +299,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    getsubnetdetail = function(subnet_id, callback, error) {
+    getsubnetdetail = function(subnet_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -322,9 +321,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    updatesubnet = function(subnet_id, name, gateway_ip, enable_dhcp, dns_nameservers, host_routes, callback, error) {
+    updatesubnet = function(subnet_id, name, gateway_ip, enable_dhcp, dns_nameservers, host_routes, callback, error, region) {
         var url, onOK, onError, data, i, start, end, dns_nameserver, dns_nservers = [], host_route, h_routes = [];
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -381,9 +380,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    deletesubnet = function(subnet_id, callback, error) {
+    deletesubnet = function(subnet_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -403,9 +402,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    getportslist = function(callback, error) {
+    getportslist = function(callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -425,9 +424,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createport = function(network_id, name, fixed_ips, security_groups, admin_state_up, status, tenant_id, mac_address, callback, error) {
+    createport = function(network_id, name, fixed_ips, security_groups, admin_state_up, status, tenant_id, mac_address, callback, error, region) {
         var url, onOK, onError, data, groups = [], i, group, fixed_ip, fix_ips = [];
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -495,9 +494,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    getportdetail = function(port_id, callback, error) {
+    getportdetail = function(port_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -517,9 +516,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    updateport = function(port_id, name, fixed_ips, security_groups, admin_state_up, status, tenant_id, mac_address, callback, error) {
+    updateport = function(port_id, name, fixed_ips, security_groups, admin_state_up, status, tenant_id, mac_address, callback, error, region) {
         var url, onOK, onError, data, groups = [], i, group, fixed_ip, fix_ips = [];
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -586,9 +585,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    deleteport = function(port_id, callback, error) {
+    deleteport = function(port_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -608,9 +607,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    getrouterslist = function(callback, error) {
+    getrouterslist = function(callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
@@ -630,9 +629,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createrouter = function(name, admin_state_up, network_id, tenant_id, callback, error) {
+    createrouter = function(name, admin_state_up, network_id, tenant_id, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/routers';
@@ -674,9 +673,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    getrouterdetail = function(router_id, callback, error) {
+    getrouterdetail = function(router_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/routers/' + router_id;
@@ -695,9 +694,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    updaterouter = function(router_id, network_id, name, admin_state_up, callback, error) {
+    updaterouter = function(router_id, network_id, name, admin_state_up, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         
@@ -736,9 +735,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    deleterouter = function(router_id, callback, error) {
+    deleterouter = function(router_id, callback, error, region) {
         var url, onOK, onError;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/routers/' + router_id;
@@ -757,9 +756,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    addinterfacetorouter = function(router_id, subnet_id, port_id, callback, error) {
+    addinterfacetorouter = function(router_id, subnet_id, port_id, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
         url = params.url + 'v2.0/routers/' + router_id + '/add_router_interface';
@@ -790,9 +789,9 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.put(url, data, JS.Keystone.params.token, onOK, onError);
     };
 
-    removeinterfacefromrouter = function(router_id, port_id, subnet_id, callback, error) {
+    removeinterfacefromrouter = function(router_id, port_id, subnet_id, callback, error, region) {
         var url, onOK, onError, data;
-        if (!check()) {
+        if (!check(region)) {
             return;
         }
 
