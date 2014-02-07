@@ -742,7 +742,7 @@ JSTACK.Nova = (function (JS, undefined) {
 
         onOK = function (result) {
             if (callback !== undefined) {
-                callback(result);
+                callback(result.keypair);
             }
         };
         onError = function (message) {
