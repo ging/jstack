@@ -266,7 +266,7 @@ JSTACK.Nova = (function (JS, undefined) {
     //
     // In [Create Servers](http://docs.openstack.org/api/openstack-compute/2/content/CreateServers.html)
     // there is more information about the JSON object that is returned.
-    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, callback, error, region) {
+    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, metadata, callback, error, region) {
         var url, onOK, onError, data, groups = [], i, group, nets = [], network, urlPost;
         if (!check(region)) {
             return;
@@ -280,6 +280,10 @@ JSTACK.Nova = (function (JS, undefined) {
                 //"nics": nics
             }
         };
+
+        if (metadata) {
+            data.server.metadata = metadata;
+        }
 
         if (block_device_mapping !== undefined) {
             urlPost = "/os-volumes_boot";      
