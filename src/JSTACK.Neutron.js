@@ -50,6 +50,7 @@ JSTACK.Neutron = (function(JS, undefined) {
             var service = JS.Keystone.getservice("network");
             if (service) {
                 params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
+                return true;
             }
             return false;
         }
