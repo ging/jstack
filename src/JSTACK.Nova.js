@@ -266,79 +266,82 @@ JSTACK.Nova = (function (JS, undefined) {
     //
     // In [Create Servers](http://docs.openstack.org/api/openstack-compute/2/content/CreateServers.html)
     // there is more information about the JSON object that is returned.
-    createserver = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, metadata, callback, error, region) {
-        var url, onOK, onError, data, groups = [], i, group, nets = [], network, urlPost;
+    createserver = function (source_type, name, image_id, flavor, keypair, customization_script, sec_groups, count, availability_zone, network, block_device_mapping, metadata, callback, error, region) {
+        var url, onOK, onError, data, groups = [], i, group, nets = [], urlPost;
         if (!check(region)) {
             return;
         }
 
         data = {
             "server" : {
+                "source_type" : source_type,
                 "name" : name,
-                "imageRef" : imageRef,
-                "flavorRef" : flavorRef
-                //"nics": nics
+                "imageRef" : image_id,
+                "flavorRef" : flavor
+                //"flavor" : flavor
+                //"instance_snapshot_id": instance_snapshot_id,
+                //'volume_snapshot_id:' : volume_snapshot_id
             }
         };
 
-        if (metadata) {
-            data.server.metadata = metadata;
-        }
-
-        if (block_device_mapping !== undefined) {
+        console.log("block device = ", block_device_mapping.volume_id);
+        if (block_device_mapping.volume_id !== undefined) {
             urlPost = "/os-volumes_boot";      
         } else {
             urlPost = "/servers";
         }
 
-        if (key_name !== undefined) {
-            data.server.key_name = key_name;
+        if (keypair !== undefined) {
+            data.server.keypair = keypair;
         }
 
-        if (user_data !== undefined) {
-            data.server.user_data = JS.Utils.encode(user_data);
+        if (customization_script !== undefined) {
+            data.server.customization_script = JS.Utils.encode(customization_script);
         }
 
+        // Version according to the POST call in OpenStack Grizzly
         if (block_device_mapping !== undefined) {
-            data.server.block_device_mapping = block_device_mapping;
+            data.server.volume_id = block_device_mapping.volume_id;
+            data.server.device_name = block_device_mapping.device_name;
+            data.server.delete_on_terminate = block_device_mapping.delete_on_terminate;
         }
 
-        if (security_groups !== undefined) {
-            for (i in security_groups) {
-                if (security_groups[i] !== undefined) {
+        // Version according to novaclient
+        // https://github.com/openstack/python-novaclient/blob/master/novaclient/tests/v1_1/test_servers.py#L75
+        // if (block_device_mapping !== undefined) {
+        //     data.server.block_device_mapping = block_device_mapping;
+        // }
+
+        if (sec_groups !== undefined) {
+            for (i in sec_groups) {
+                if (sec_groups[i] !== undefined) {
                     group = {
-                        "name" : security_groups[i]
+                        "name" : sec_groups[i]
                     };
                     groups.push(group);
                 }
             }
 
-            data.server.security_groups = groups;
+            data.server.groups = groups;
         }
 
-        if (min_count === undefined) {
-            min_count = 1;
+        if (count === undefined) {
+            count = 1;
         }
 
-        data.server.min_count = min_count;
-
-        if (max_count === undefined) {
-            max_count = 1;
-        }
-
-        data.server.max_count = max_count;
+        data.server.count = count;
 
         if (availability_zone !== undefined) {
             data.server.availability_zone = JS.Utils.encode(availability_zone);
         }
 
-        if (networks !== undefined) {
-            for (i in networks) {
-                if (networks[i] !== undefined) {
-                    nets.push(networks[i]);
+        if (network !== undefined) {
+            for (i in network) {
+                if (network[i] !== undefined) {
+                    nets.push(network[i]);
                 }
             }
-            data.server.networks = nets;
+            data.server.network = nets;
         }
 
         onOK = function (result) {
