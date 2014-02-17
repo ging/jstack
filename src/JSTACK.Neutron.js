@@ -235,12 +235,11 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routes, callback, error, region) {
+    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routers, callback, error, region) {
         var url, onOK, onError, data, i, start, end, allocation_pool, all_pools = [], dns_nameserver, dns_nservers = [], host_route, h_routes = [];
         if (!check(region)) {
             return;
-        }
-        
+        }        
         url = params.url + 'v2.0/subnets';
 
         data = {
@@ -287,15 +286,26 @@ JSTACK.Neutron = (function(JS, undefined) {
             data.subnet.dns_nameservers = dns_nservers;
         }
 
-        if (host_routes !== undefined) {
+        if (host_routers !== undefined) {
             for (i in host_routes) {
-                if (host_routes[i] !== undefined) {
+                if (host_routers[i] !== undefined) {
                     host_route = host_routes[i];
                     h_routes.push(host_route);
                 }
             }
             data.subnet.host_routes = h_routes;
         }
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOK, onError);
     };
