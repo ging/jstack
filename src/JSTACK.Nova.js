@@ -271,9 +271,7 @@ JSTACK.Nova = (function (JS, undefined) {
         if (!check(region)) {
             return;
         }
-
-        console.log(name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, networks, block_device_mapping, metadata, callback, error, region);
-
+        
         data = {
             "server" : {
                 "name" : name,
