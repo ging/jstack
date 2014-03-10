@@ -41,7 +41,7 @@ JSTACK.Nova = (function (JS, undefined) {
         getdefaultquotalist, getsecuritygrouplist, createsecuritygroup, getsecuritygroupdetail,
         deletesecuritygroup, createsecuritygrouprule, deletesecuritygrouprule, getsecuritygroupforserver,
         getfloatingIPpools, getfloatingIPs, getfloatingIPdetail, allocatefloatingIP, associatefloatingIP, 
-        disassociatefloatingIP, releasefloatingIP;
+        disassociatefloatingIP, releasefloatingIP, createserverfromvolume;
 
     // This modules stores the `url`to which it will send every
     // request.
@@ -339,6 +339,95 @@ JSTACK.Nova = (function (JS, undefined) {
                 }
             }
             data.server.network = nets;
+        }
+
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.post(params.url + urlPost, data, JS.Keystone.params.token, onOK, onError);
+
+    };
+
+    createserverfromvolume = function (name, imageRef, flavorRef, key_name, user_data, security_groups, min_count, max_count, availability_zone, network, block_device_mapping, metadata, callback, error, region) {
+        var url, onOK, onError, data, groups = [], i, group, nets = [], urlPost;
+        if (!check(region)) {
+            return;
+        }
+        console.log("createserver with volume: networks", network);
+        
+        data = {
+            "server" : {
+                "name" : name,
+                "imageRef" : imageRef,
+                "flavorRef" : flavorRef
+            }
+        };
+
+        if (metadata) {
+            data.server.metadata = metadata;
+        }
+
+        if (block_device_mapping !== undefined) {
+            urlPost = "/os-volumes_boot";      
+        }
+
+        if (key_name !== undefined) {
+            data.server.key_name = key_name;
+        }
+
+        if (user_data !== undefined) {
+            data.server.user_data = JS.Utils.encode(user_data);
+        }
+
+        if (block_device_mapping !== undefined) {
+            data.server.block_device_mapping = block_device_mapping;
+        }
+
+        if (security_groups !== undefined) {
+            for (i in security_groups) {
+                if (security_groups[i] !== undefined) {
+                    group = {
+                        "name" : security_groups[i]
+                    };
+                    groups.push(group);
+                }
+            }
+
+            data.server.security_groups = groups;
+        }
+
+        if (min_count === undefined) {
+            min_count = 1;
+        }
+
+        data.server.min_count = min_count;
+
+        if (max_count === undefined) {
+            max_count = 1;
+        }
+
+        data.server.max_count = max_count;
+
+        if (availability_zone !== undefined) {
+            data.server.availability_zone = JS.Utils.encode(availability_zone);
+        }
+
+        if (network !== undefined) {
+            for (i in network) {
+                if (network[i] !== undefined) {
+                    nets.push(network[i]);
+                }
+            }
+            data.server.networks = nets;
+            //data.server.network = nets;
         }
 
         onOK = function (result) {
@@ -1542,7 +1631,8 @@ JSTACK.Nova = (function (JS, undefined) {
         allocatefloatingIP : allocatefloatingIP,
         associatefloatingIP : associatefloatingIP,
         disassociatefloatingIP : disassociatefloatingIP,
-        releasefloatingIP : releasefloatingIP
+        releasefloatingIP : releasefloatingIP,
+        createserverfromvolume : createserverfromvolume
     };
 
 }(JSTACK));
