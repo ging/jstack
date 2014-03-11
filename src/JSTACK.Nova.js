@@ -333,12 +333,7 @@ JSTACK.Nova = (function (JS, undefined) {
         }
 
         if (networks !== undefined) {
-            for (i in networks) {
-                if (networks[i] !== undefined) {
-                    nets.push(networks[i]);
-                }
-            }
-            data.server.network = nets;
+            data.server.networks = networks;
         }
 
         onOK = function (result) {
