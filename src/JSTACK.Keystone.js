@@ -32,7 +32,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getservicelist, getservice, createuser, edituser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getendpoint, getservicelist, getservice, createuser, edituser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
@@ -199,6 +199,21 @@ JSTACK.Keystone = (function (JS, undefined) {
             }
         }
         return undefined;
+    };
+
+    // Retreiving endpoint information
+    // ------------------------------
+    // The user can also obtain information about each service which is configured in Keystone.
+    getendpoint = function (region, type) {
+        var serv = getservice(type) || {};
+        var endpoint;
+        for (var e in serv.endpoints) {
+            if (serv.endpoints[e].region === region) {
+                endpoint = serv.endpoints[e];
+                break;
+            }
+        }
+        return endpoint;
     };
 
     // The user can also obtain information about all services configured in Keystone.
@@ -398,6 +413,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         init : init,
         authenticate : authenticate,
         gettenants : gettenants,
+        getendpoint: getendpoint,
         getservice : getservice,
         getservicelist : getservicelist,
         createuser : createuser,

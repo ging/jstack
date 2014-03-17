@@ -173,7 +173,7 @@ JSTACK.Comm = (function (JS, undefined) {
                 break;
             }
         }
-        if (!endpoint) endpoint = serv.endpoints[0][type];
+        //if (!endpoint) endpoint = serv.endpoints[0][type];
         return endpoint;
     };
 

@@ -82,7 +82,7 @@ JSTACK.Neutron = (function(JS, undefined) {
 
         onOK = function(result) {
             if (callback !== undefined) {
-                callback(result);
+                callback(result.networks);
             }
         };
         onError = function(message) {
@@ -145,7 +145,7 @@ JSTACK.Neutron = (function(JS, undefined) {
 
         onOK = function(result) {
             if (callback !== undefined) {
-                callback(result);
+                callback(result.network);
             }
         };
         onError = function(message) {
@@ -235,8 +235,8 @@ JSTACK.Neutron = (function(JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routers, callback, error, region) {
-        var url, onOK, onError, data, i, start, end, allocation_pool, all_pools = [], dns_nameserver, dns_nservers = [], host_route, h_routes = [];
+    createsubnet = function(network_id, cidr, name, allocation_pools, tenant_id, gateway_ip, ip_version, enable_dhcp, dns_nameservers, host_routes, callback, error, region) {
+        var url, onOK, onError, data;
         if (!check(region)) {
             return;
         }        
@@ -246,7 +246,7 @@ JSTACK.Neutron = (function(JS, undefined) {
             "subnet" : {
                 "network_id" : network_id,
                 "cidr" : cidr,
-                "ip_version" : 4
+                "ip_version" : ip_version
             }
         }
 
@@ -259,13 +259,7 @@ JSTACK.Neutron = (function(JS, undefined) {
         }
 
         if (allocation_pools !== undefined) {
-            for (i in allocation_pools) {
-                if (allocation_pools[i] !== undefined) {
-                    allocation_pool = allocation_pools[i];
-                    all_pools.push(allocation_pool);
-                }
-            }
-            data.subnet.allocation_pools = all_pools;
+            data.subnet.allocation_pools = allocation_pools;
         }
 
         if (gateway_ip !== undefined) {
@@ -277,23 +271,11 @@ JSTACK.Neutron = (function(JS, undefined) {
         }
 
         if (dns_nameservers !== undefined) {
-            for (i in dns_nameservers) {
-                if (dns_nameservers[i] !== undefined) {
-                    dns_nameserver = dns_nameservers[i];
-                    dns_nservers.push(dns_nameserver);
-                }
-            }
-            data.subnet.dns_nameservers = dns_nservers;
+            data.subnet.dns_nameservers = dns_nameservers;
         }
 
-        if (host_routers !== undefined) {
-            for (i in host_routes) {
-                if (host_routers[i] !== undefined) {
-                    host_route = host_routes[i];
-                    h_routes.push(host_route);
-                }
-            }
-            data.subnet.host_routes = h_routes;
+        if (host_routes !== undefined) {
+            data.subnet.host_routes = host_routes;
         }
 
         onOK = function(result) {

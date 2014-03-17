@@ -333,12 +333,7 @@ JSTACK.Nova = (function (JS, undefined) {
         }
 
         if (networks !== undefined) {
-            for (i in networks) {
-                if (networks[i] !== undefined) {
-                    nets.push(networks[i]);
-                }
-            }
-            data.server.network = nets;
+            data.server.networks = networks;
         }
 
         onOK = function (result) {
@@ -488,7 +483,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, callback, error);
+        postAction(id, data, callback , error, region);
     };
     // This operation allows for a hard reboot that is the equivalent of power
     // cycling the server.
@@ -497,7 +492,7 @@ JSTACK.Nova = (function (JS, undefined) {
             "reboot" : {
                 "type" : "HARD"
             }
-        }, callback, error);
+        }, callback , error, region);
     };
     // This operation allows for a soft reboot, which allows for a graceful
     // shutdown of all processes.
@@ -508,7 +503,7 @@ JSTACK.Nova = (function (JS, undefined) {
             "reboot" : {
                 "type" : "SOFT"
             }
-        }, callback, error);
+        }, callback , error, region);
     };
     // The resize function converts an existing server to a different flavor,
     // in essence, scaling the server up or down. The original server is saved
@@ -523,7 +518,7 @@ JSTACK.Nova = (function (JS, undefined) {
             "resize" : {
                 "flavorRef" : flavorRef
             }
-        }, callback, error);
+        }, callback , error, region);
     };
     // During a resize operation, the original server is saved for a period of
     // time to allow roll back if there is a problem. Once the newly resized
@@ -537,52 +532,52 @@ JSTACK.Nova = (function (JS, undefined) {
     confirmresizedserver = function (id, callback, error, region) {
         postAction(id, {
             "confirmResize" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // In [Revert Resized Server](http://docs.openstack.org/api/openstack-compute/2/content/Revert_Resized_Server-d1e4024.html)
     // there is more information.
     revertresizedserver = function (id, callback, error, region) {
         postAction(id, {
             "revertResize" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // It halts a running server. Changes status to STOPPED.
     // In [Start Server](http://api.openstack.org/) there is more information.
     startserver = function (id, callback, error, region) {
         postAction(id, {
             "os-start" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // Returns a STOPPED server to ACTIVE status.
     // In [Stop Server](http://api.openstack.org/) there is more information.
     stopserver = function (id, callback, error, region) {
         postAction(id, {
             "os-stop" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // It pauses a running server. Changes status to PAUSED.
     pauseserver = function (id, callback, error, region) {
         postAction(id, {
             "pause" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // Returns a PAUSED server to ACTIVE status.
     unpauseserver = function (id, callback, error, region) {
         postAction(id, {
             "unpause" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // It pauses a running server. Changes status to SUSPENDED.
     suspendserver = function (id, callback, error, region) {
         postAction(id, {
             "suspend" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // Returns a SUSPENDED server to ACTIVE status.
     resumeserver = function (id, callback, error, region) {
         postAction(id, {
             "resume" : null
-        }, callback, error);
+        }, callback , error, region);
     };
     // This action creates a new image for the given server. Once complete, a
     // new image will be available that can be used to rebuild or create servers.
@@ -601,7 +596,7 @@ JSTACK.Nova = (function (JS, undefined) {
             data.createImage.metadata = metadata;
         }
 
-        postAction(id, data, callback, error);
+        postAction(id, data, callback , error, region);
     };
     // **Flavor Operations**
 
@@ -917,7 +912,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, callback, error);
+        postAction(id, data, callback , error, region);
     };
     //  Get text console log output from Server.
     // id: The server's ID to get the vnc console from.
@@ -938,7 +933,7 @@ JSTACK.Nova = (function (JS, undefined) {
             }
         };
 
-        postAction(id, data, callback, error);
+        postAction(id, data, callback , error, region);
     };
     //  Lists the volume attachments for the specified server.
     // id: The server's ID to get the volume attachments from.
