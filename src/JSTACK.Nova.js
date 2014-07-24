@@ -1397,7 +1397,7 @@ JSTACK.Nova = (function (JS, undefined) {
 
     };
 
-    associatefloatingIP = function (server_id, address, callback, error, region) {
+    associatefloatingIP = function (server_id, address, fixed_address, callback, error, region) {
         var url, onOK, onError, data;
         if (!check(region)) {
             return;
@@ -1410,6 +1410,10 @@ JSTACK.Nova = (function (JS, undefined) {
                     "address": address
                 }
         };
+
+        if (fixed_address !== undefined) {
+            data.addFloatingIp["fixed_address"] = fixed_address;
+        }
 
         onOK = function (result) {
             if (callback !== undefined) {
