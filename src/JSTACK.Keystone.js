@@ -66,7 +66,9 @@ JSTACK.Keystone = (function (JS, undefined) {
         params.adminUrl = adminUrl;
         params.access = undefined;
         params.token = undefined;
+        params.access_token = undefined;
         params.currentstate = STATES.DISCONNECTED;
+        params.version = keystoneUrl.indexOf('v3') === -1 ? 2 : 3;
     };
     // Authentication function
     // ------------------------
@@ -74,28 +76,62 @@ JSTACK.Keystone = (function (JS, undefined) {
     authenticate = function (username, password, token, tenant, callback, error) {
         var credentials = {}, onOK, onError;
         // This authentication needs a `username`, a `password`. Or a `token`.
-        if (token !== undefined) {
-            credentials = {
-                "auth" : {
-                    "token" : {
-                        "id" : token
-                    }
-                }
-            };
-        } else {
-            credentials = {
-                "auth" : {
-                    "passwordCredentials" : {
-                        "username" : username,
-                        "password" : password
-                    }
-                }
-            };
-        }
+        if (params.version === 3) {
 
-        // User also can provide a `tenant`.
-        if (tenant !== undefined) {
-            credentials.auth.tenantId = tenant;
+            if (token !== undefined) {
+                credentials = {
+                    "auth": {
+                        "identity": {
+                            "methods": [
+                                "oauth2"
+                            ],
+                            "oauth2": {
+                                "access_token_id": token
+                            }
+                        }
+                    }
+                }
+            } else {
+                credentials = {
+                    "auth" : {
+                        "passwordCredentials" : {
+                            "username" : username,
+                            "password" : password
+                        }
+                    }
+                };
+            }
+
+            // User also can provide a `tenant`.
+            if (tenant !== undefined) {
+                credentials.auth.scope = {project: {id: tenant}};
+            }
+
+        } else {
+
+            if (token !== undefined) {
+                credentials = {
+                    "auth" : {
+                        "token" : {
+                            "id" : token
+                        }
+                    }
+                };
+            } else {
+                credentials = {
+                    "auth" : {
+                        "passwordCredentials" : {
+                            "username" : username,
+                            "password" : password
+                        }
+                    }
+                };
+            }
+
+            // User also can provide a `tenant`.
+            if (tenant !== undefined) {
+                credentials.auth.tenantId = tenant;
+            }
         }
 
         // During authentication the state will be `AUTHENTICATION`.
@@ -161,7 +197,30 @@ JSTACK.Keystone = (function (JS, undefined) {
         //            "name": "admin"
         //        }
         //       }
-        JS.Comm.post(params.url + "tokens", credentials, undefined, onOK, onError);
+        if (params.version === 3) {
+            JS.Comm.post(params.url + "auth/tokens", credentials, undefined, function (result, headers, token) {
+
+                var resp = {
+                    access:{
+                        token: {
+                            id: token, 
+                            expires: result.token.expires_at, 
+                            tenant: {
+                                id: result.token.project.id,
+                                name: result.token.project.name
+                            }
+                        }, 
+                        serviceCatalog: result.token.catalog,
+                        user: result.token.user
+                    }
+                };
+
+                onOK(resp);
+
+            }, onError);
+        } else {
+            JS.Comm.post(params.url + "tokens", credentials, undefined, onOK, onError);
+        }
     };
 
     // Retreiving service information
@@ -281,7 +340,14 @@ JSTACK.Keystone = (function (JS, undefined) {
                 url = params.adminUrl
             }
 
-            JS.Comm.get(url + "tenants", params.token, onOK, onError);
+            if (params.version === 3) {
+                JS.Comm.get(url + "authorized_organizations/" + params.access_token, undefined, function (result) {
+                    onOK({tenants: result.organizations});
+                }, onError);
+            } else {
+                JS.Comm.get(url + "tenants", params.token, onOK, onError);
+            }
+
         //}
     };
 

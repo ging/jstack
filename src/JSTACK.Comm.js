@@ -99,7 +99,7 @@ JSTACK.Comm = (function (JS, undefined) {
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
                         result = JSON.parse(xhr.responseText);
                     }
-                    callBackOK(result, xhr.getAllResponseHeaders());
+                    callBackOK(result, xhr.getAllResponseHeaders(), xhr.getResponseHeader('x-subject-token'));
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
@@ -167,12 +167,23 @@ JSTACK.Comm = (function (JS, undefined) {
 
     getEndpoint = function (serv, region, type) {
         var endpoint;
-        for (var e in serv.endpoints) {
-            if (serv.endpoints[e].region === region) {
-                endpoint = serv.endpoints[e][type];
-                break;
+        if (JSTACK.Keystone.params.version === 3) {
+            type = type.split('URL')[0];
+            for (var e in serv.endpoints) {
+                if (serv.endpoints[e].region === region && serv.endpoints[e].interface === type) {
+                    endpoint = serv.endpoints[e].url;
+                    break;
+                }
+            }
+        } else {
+            for (var e in serv.endpoints) {
+                if (serv.endpoints[e].region === region) {
+                    endpoint = serv.endpoints[e][type];
+                    break;
+                }
             }
         }
+
         //if (!endpoint) endpoint = serv.endpoints[0][type];
         return endpoint;
     };
