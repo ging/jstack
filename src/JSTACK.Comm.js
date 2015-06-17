@@ -32,14 +32,14 @@ THE SOFTWARE.
 JSTACK.Comm = (function (JS, undefined) {
     "use strict";
 
-    var send, get, head, post, put, patch, del, getEndpoint;
+    var send, get, head, post, put, patch, del, getEndpoint, checkToken;
 
     // Private functions
     // -----------------
 
     // Function `_send` is internally used to make detailed low-level requests
     // to components.
-    send = function (method, url, data, token, callBackOK, callbackError, headers) {
+    send = function (method, url, data, token, callBackOK, callbackError, headers, skip_token) {
         var xhr, body, result;
 
         callbackError = callbackError || function(resp) {
@@ -103,6 +103,14 @@ JSTACK.Comm = (function (JS, undefined) {
                     break;
 
                 // In case of error it sends an error message to `callbackError`.
+                case 401:
+                    if (skip_token) {
+                        callbackError({message:xhr.status + " Error", body:xhr.responseText});
+                    } else {
+                        checkToken(function () {
+                            callbackError({message:xhr.status + " Error", body:xhr.responseText});
+                        });
+                    }
                 default:
                     callbackError({message:xhr.status + " Error", body:xhr.responseText});
                 }
@@ -133,8 +141,8 @@ JSTACK.Comm = (function (JS, undefined) {
     // * Function *get* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP GET request,
     // so it does not send any data.
-    get = function (url, token, callbackOK, callbackError, headers) {
-        send("get", url, undefined, token, callbackOK, callbackError);
+    get = function (url, token, callbackOK, callbackError, headers, skip_token) {
+        send("get", url, undefined, token, callbackOK, callbackError, headers, skip_token);
     };
     // * Function *head* receives the `url`, the authentication token
     // (which is optional), and callbacks. It sends a HTTP HEAD request,
@@ -163,6 +171,17 @@ JSTACK.Comm = (function (JS, undefined) {
     // HTTP DELETE request.
     del = function (url, token, callbackOK, callbackError, headers) {
         send("DELETE", url, undefined, token, callbackOK, callbackError);
+    };
+
+    checkToken = function (callback) {
+        console.log('Unauthorize response. Checking token with Keystone ...');
+        JSTACK.Keystone.validatetoken(function(r) {
+            console.log('Valid token. Perhaps there is a issue in the service authentication');
+            callback();
+        }, function (e){
+            console.log('Invalid Token. Logging out... ', e);
+            Fiware.signOut('cloud');
+        });
     };
 
     getEndpoint = function (serv, region, type) {

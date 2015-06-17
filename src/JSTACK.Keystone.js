@@ -32,7 +32,7 @@ JSTACK.Keystone = (function (JS, undefined) {
 
     "use strict";
 
-    var params, STATES, init, authenticate, gettenants, getendpoint, getservicelist, getservice, createuser, edituser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant;
+    var params, STATES, init, authenticate, gettenants, getendpoint, getservicelist, getservice, createuser, edituser, getusers, getusersfortenant, getuser, deleteuser, getroles, getuserroles, adduserrole, removeuserrole, createtenant, edittenant, deletetenant, validatetoken;
 
     // `STATES` defines different authentication states. This
     // can be useful for applications to know when they can
@@ -220,6 +220,31 @@ JSTACK.Keystone = (function (JS, undefined) {
             }, onError);
         } else {
             JS.Comm.post(params.url + "tokens", credentials, undefined, onOK, onError);
+        }
+    };
+
+    validatetoken = function (callback, error) {
+        var onOK, onError;
+    
+        onOK = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+
+        onError = function (result) {
+            // If error occurs it will send its description.
+            if (error !== undefined) {
+                error(result);
+            }
+        };
+
+        var url = params.url;
+
+        if (params.version === 3) {
+            JS.Comm.get(url + "auth/tokens", params.token, onOK, onError, {}, true);
+        } else {
+            JS.Comm.get(url + "tokens/" + params.token, params.token, onOK, onError, {}, true);
         }
     };
 
@@ -478,6 +503,7 @@ JSTACK.Keystone = (function (JS, undefined) {
         // Functions:
         init : init,
         authenticate : authenticate,
+        validatetoken : validatetoken,
         gettenants : gettenants,
         getendpoint: getendpoint,
         getservice : getservice,
