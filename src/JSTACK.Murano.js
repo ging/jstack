@@ -31,7 +31,8 @@ JSTACK.Murano = (function (JS, undefined) {
     var params, check, configure, guid, getBlueprintTemplateList, createBlueprintTemplate, 
         getBlueprintTemplate, deleteBlueprintTemplate, createBlueprintTemplateTier,
         updateBlueprintTemplateTier, deleteBlueprintTemplateTier, 
-        getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance;
+        getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance,
+        getServiceCatalogue;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -274,7 +275,7 @@ JSTACK.Murano = (function (JS, undefined) {
                         }, 
                         "autogenerateSubnet": true
                     };
-                    
+
                     data.instance.networks.customNetworks.push(net);
                 }
             }
@@ -544,6 +545,30 @@ JSTACK.Murano = (function (JS, undefined) {
     // };
 
 
+    // SDC
+
+    getServiceCatalogue = function(callback, error, region) {
+        var url, onOK, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/catalog/packages';
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                console.log('result', result);
+                callback(result.templates);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
+
     return {
         getBlueprintTemplateList: getBlueprintTemplateList,
         createBlueprintTemplate: createBlueprintTemplate,
@@ -555,7 +580,8 @@ JSTACK.Murano = (function (JS, undefined) {
         getBlueprintInstanceList: getBlueprintInstanceList,
         getBlueprintInstance: getBlueprintInstance,
         launchBlueprintInstance: launchBlueprintInstance,
-        stopBlueprintInstance: stopBlueprintInstance
+        stopBlueprintInstance: stopBlueprintInstance,
+        getServiceCatalogue: getServiceCatalogue
     };
 
     // return {
