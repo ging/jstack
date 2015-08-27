@@ -28,9 +28,10 @@ THE SOFTWARE.
 JSTACK.Murano = (function (JS, undefined) {
 
     "use strict";
-    var params, check, configure, getBlueprintTemplateList, createBlueprintTemplate, 
+    var params, check, configure, guid, getBlueprintTemplateList, createBlueprintTemplate, 
         getBlueprintTemplate, deleteBlueprintTemplate, createBlueprintTemplateTier,
-        updateBlueprintTemplateTier, deleteBlueprintTemplateTier;
+        updateBlueprintTemplateTier, deleteBlueprintTemplateTier, 
+        getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -70,6 +71,16 @@ JSTACK.Murano = (function (JS, undefined) {
             params.endpointType = endpointType;
         }
     };
+
+    guid = function () {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+    }
 
 
     //-----------------------------------------------
@@ -199,7 +210,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
     };
 
-    createBlueprintTemplateTier = function (id, tier, callback, callbackError, region) {
+    createBlueprintTemplateTier = function (id, tier, callback, error, region) {
 
         var url, onOk, onError, data;
         if (!check(region)) {
@@ -227,7 +238,45 @@ JSTACK.Murano = (function (JS, undefined) {
                     "name": "orion"
                 },
                 "type": "io.murano.conflang.test.PuppetExample",    
-                "id": "190c8705-5784-4782-83d7-0ab55a1449aa"
+                "id": guid()
+            }
+        }
+
+        if (tier.networkDto) {
+            data.instance.networks = {
+                "useFlatNetwork": false, 
+                "primaryNetwork": null, 
+                "useEnvironmentNetwork": false, 
+                "customNetworks": []
+            };
+
+            for (var n in tier.networkDto) {
+                if (tier.networkDto[n].networkId) {
+                    // Network exists in Openstack
+                    var net = {
+                        "internalNetworkName": tier.networkDto[n].networkName, 
+                        "?": {
+                            "type": "io.murano.resources.ExistingNeutronNetwork", 
+                            "id": tier.networkDto[n].networkId
+                        }
+                    };
+
+                    data.instance.networks.customNetworks.push(net);
+
+                } else {
+                    // New network created using an alias
+                    var net = {
+                        "autoUplink": true, 
+                        "name": tier.networkDto[n].networkName, 
+                        "?": {
+                            "type": "io.murano.resources.NeutronNetworkBase", 
+                            "id": "84f648b755cd44ffad4bd641c7574241" // ??????????????????? que id va aqui?
+                        }, 
+                        "autogenerateSubnet": true
+                    };
+                    
+                    data.instance.networks.customNetworks.push(net);
+                }
             }
         }
 
@@ -292,7 +341,7 @@ JSTACK.Murano = (function (JS, undefined) {
     //    JS.Comm.put(url, data, JS.Keystone.params.token, onOk, onError);
     // };
 
-    var deleteBlueprintTemplateTier = function (bp_id, service_id, callback, callbackError, region) {
+    var deleteBlueprintTemplateTier = function (bp_id, service_id, callback, error, region) {
 
         var url, onOk, onError;
         if (!check(region)) {
@@ -342,49 +391,113 @@ JSTACK.Murano = (function (JS, undefined) {
     // Blueprint Instances
     //-----------------------------------------------
 
-    // var getBlueprintInstanceList = function (callback, callbackError) {
+    getBlueprintInstanceList = function (callback, error, region) {
 
-    //     check();
+        var url, onOK, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/environments';
 
-    //     sendRequest('GET', 'envInst/org/' + orgName + '/vdc/' + vdc_id + '/environmentInstance', undefined, function (resp) {
-    //         var bpList = x2js.xml_str2json(resp);
-    //         callback(bpList.environmentInstancePDtoes.environmentInstancePDto_asArray);
-    //     }, callbackError);
-    // };
+        onOK = function(result) {
+            if (callback !== undefined) {
+                for (var e in result.environments) {
+                    result.environments[e].blueprintName = result.environments[e].name;
+                }
+                callback(result.environments);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
 
-    // var getBlueprintInstance = function (bp_id, callback, callbackError) {
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
 
-    //     check();
+    getBlueprintInstance = function (id, callback, error, region) {
 
-    //     sendRequest('GET', 'envInst/org/' + orgName + '/vdc/' + vdc_id + '/environmentInstance/' + bp_id, undefined, function (resp) {
-    //         var bp = x2js.xml_str2json(resp);
-    //         callback(bp.environmentInstancePDto);
-    //     }, callbackError);
-    // };
+        var url, onOK, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/environments/' + id;
 
-    // var launchBlueprintInstance = function (bp, callback, callbackError) {
+        onOK = function(result) {
+            if (callback !== undefined) {
+                result.tierDto_asArray = result.services;
+                for (var s in result.services) {
+                    result.services[s].keypair = result.services[s].instance.keypair;
+                    result.services[s].flavour = result.services[s].instance.flavor;
+                    result.services[s].image = result.services[s].instance.image;
+                    
+                    // TODO: Cuál es el id de un service????
+                    result.services[s].id = result.services[s]['?'].id;
+                }
+                callback(result);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
 
-    //     check();
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
 
-    //     var b = {environmentInstanceDto: bp};
+    launchBlueprintInstance = function (id, name, callback, error, region) {
 
-    //     var xmlInst = xmlHead + x2js.json2xml_str(b);
-        
-    //     sendRequest('POST', 'envInst/org/' + orgName + '/vdc/' + vdc_id + '/environmentInstance', xmlInst, function (resp) {
+        var url, onOk, onError, data;
+        if (!check(region)) {
+            return;
+        }
 
-    //         console.log('resppp', resp);
-    //         callback();
-    //     }, callbackError);
-    // };
+        url = params.url + '/templates/' + id + '/create-environment';
 
-    // var stopBlueprintInstance = function (bp_id, callback, callbackError) {
+        data = {
+            "name": name
+        };
 
-    //     check();
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
 
-    //     sendRequest('DELETE', 'envInst/org/' + orgName + '/vdc/' + vdc_id + '/environmentInstance/' + bp_id, undefined, function (resp) {
-    //         callback(resp);
-    //     }, callbackError);
-    // };
+        JS.Comm.post(url, data, JS.Keystone.params.token, function (result) {
+            var url2 = params.url + '/environments/' + result.environment_id + '/sessions/' + result.session_id + '/deploy';
+            JS.Comm.post(url2, undefined, JS.Keystone.params.token, onOk, onError);
+        }, onError);
+    };
+
+    stopBlueprintInstance = function (id, callback, error, region) {
+
+        var url, onOk, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/environments/' + id;
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
+    };
 
     // var addVMToTier = function (bp_id, tierDto, callback, callbackError) {
 
@@ -438,7 +551,11 @@ JSTACK.Murano = (function (JS, undefined) {
         deleteBlueprintTemplate: deleteBlueprintTemplate,
         createBlueprintTemplateTier: createBlueprintTemplateTier,
         //updateBlueprintTemplateTier: updateBlueprintTemplateTier, 
-        deleteBlueprintTemplateTier: deleteBlueprintTemplateTier
+        deleteBlueprintTemplateTier: deleteBlueprintTemplateTier,
+        getBlueprintInstanceList: getBlueprintInstanceList,
+        getBlueprintInstance: getBlueprintInstance,
+        launchBlueprintInstance: launchBlueprintInstance,
+        stopBlueprintInstance: stopBlueprintInstance
     };
 
     // return {
