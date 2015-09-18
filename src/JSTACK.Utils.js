@@ -25,7 +25,7 @@
 JSTACK.Utils = (function(JS, undefined) {
 
     "use strict";
-    var END_OF_INPUT, base64Chars, reverseBase64Chars, base64Str, base64Count, i, setBase64Str, readBase64, encodeBase64, readReverseBase64, ntos, decodeBase64;
+    var END_OF_INPUT, base64Chars, reverseBase64Chars, base64Str, base64Count, i, setBase64Str, readBase64, encodeBase64, readReverseBase64, ntos, decodeBase64, guid;
 
     END_OF_INPUT = -1;
 
@@ -152,8 +152,19 @@ JSTACK.Utils = (function(JS, undefined) {
         return result;
     };
 
+    guid = function () {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+    }
+
     return {
         encode : encodeBase64,
-        decode : decodeBase64
+        decode : decodeBase64,
+        guid : guid
     };
 }(JSTACK));

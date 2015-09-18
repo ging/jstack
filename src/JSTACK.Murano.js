@@ -28,9 +28,9 @@ THE SOFTWARE.
 JSTACK.Murano = (function (JS, undefined) {
 
     "use strict";
-    var params, check, configure, guid, getBlueprintTemplateList, createBlueprintTemplate, 
-        getBlueprintTemplate, deleteBlueprintTemplate, createBlueprintTemplateTier,
-        updateBlueprintTemplateTier, deleteBlueprintTemplateTier, 
+    var params, check, configure, getTemplateList, createTemplate, 
+        getTemplate, deleteTemplate, createService,
+        updateBlueprintTemplateTier, deleteTemplateTier, 
         getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance,
         getServiceCatalogue;
     // This modules stores the `url` to which it will send every
@@ -73,16 +73,6 @@ JSTACK.Murano = (function (JS, undefined) {
         }
     };
 
-    guid = function () {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-    }
-
 
     //-----------------------------------------------
     // Blueprint Catalogue
@@ -108,10 +98,10 @@ JSTACK.Murano = (function (JS, undefined) {
     // };
 
     //-----------------------------------------------
-    // Blueprint Templates
+    // Templates
     //-----------------------------------------------
 
-    getBlueprintTemplateList = function(callback, error, region) {
+    getTemplateList = function(callback, error, region) {
         var url, onOK, onError;
         if (!check(region)) {
             return;
@@ -132,7 +122,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    getBlueprintTemplate = function (id, callback, error, region) {
+    getTemplate = function (id, callback, error, region) {
 
         var url, onOK, onError;
         if (!check(region)) {
@@ -142,15 +132,6 @@ JSTACK.Murano = (function (JS, undefined) {
 
         onOK = function(result) {
             if (callback !== undefined) {
-                result.tierDtos_asArray = result.services;
-                for (var s in result.services) {
-                    result.services[s].keypair = result.services[s].instance.keypair;
-                    result.services[s].flavour = result.services[s].instance.flavor;
-                    result.services[s].image = result.services[s].instance.image;
-                    
-                    // TODO: Cuál es el id de un service????
-                    result.services[s].id = result.services[s]['?'].id;
-                }
                 callback(result);
             }
         };
@@ -163,7 +144,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createBlueprintTemplate = function (bp, callback, error, region) {
+    createTemplate = function (name, callback, error, region) {
         var url, onOk, onError, data;
         if (!check(region)) {
             return;
@@ -172,7 +153,16 @@ JSTACK.Murano = (function (JS, undefined) {
         url = params.url + '/templates';
 
         data = {
-            "name": bp.name
+            "name": name,
+            "defaultNetworks": {
+                "environment": {
+                    "internalNetworkName": "node-int-net-01",
+                    "?": {
+                        "type": "io.murano.resources.ExistingNeutronNetwork",
+                        "id": JSTACK.Utils.guid()
+                    }
+                }
+            }
         };
 
         onOk = function (result) {
@@ -190,7 +180,7 @@ JSTACK.Murano = (function (JS, undefined) {
 
     };
 
-    deleteBlueprintTemplate = function (id, callback, error, region) {
+    deleteTemplate = function (id, callback, error, region) {
         var url, onOk, onError;
         if (!check(region)) {
             return;
@@ -211,73 +201,27 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
     };
 
-    createBlueprintTemplateTier = function (id, tier, callback, error, region) {
+    createService = function (template_id, service, instance, callback, error, region) {
 
         var url, onOk, onError, data;
         if (!check(region)) {
             return;
         }
 
-        url = params.url + '/templates/' + id + '/services';
+        url = params.url + '/templates/' + template_id + '/services';
 
-        console.log('tier', tier);
-
+        // instance can be an id (if it already exists) or an object if it is new
         data = {
-            "instance": {
-                "flavor": tier.flavour, 
-                "keypair": tier.keypair, 
-                "image": tier.image, 
-                "?": {
-                    "type": "io.murano.resources.ConfLangInstance",         
-                    "id":  "5843836d2a4145f0895d7e66ee8ccf43"
-                }, 
-                "name": tier.name
-            }, 
-            "name": tier.name,
+            "instance": instance, 
+
+            // TODO qué info tengo del service
+            "name": service.name,
             "?": {  
                 "_26411a1861294160833743e45d0eaad9": {
-                    "name": "orion"
+                    "name": service.name,
                 },
-                "type": "io.murano.conflang.test.PuppetExample",    
-                "id": guid()
-            }
-        }
-
-        if (tier.networkDto) {
-            data.instance.networks = {
-                "useFlatNetwork": false, 
-                "primaryNetwork": null, 
-                "useEnvironmentNetwork": false, 
-                "customNetworks": []
-            };
-
-            for (var n in tier.networkDto) {
-                if (tier.networkDto[n].networkId) {
-                    // Network exists in Openstack
-                    var net = {
-                        "internalNetworkName": tier.networkDto[n].networkName, 
-                        "?": {
-                            "type": "io.murano.resources.ExistingNeutronNetwork", 
-                            "id": tier.networkDto[n].networkId
-                        }
-                    };
-
-                    data.instance.networks.customNetworks.push(net);
-
-                } else {
-                    // New network created using an alias
-                    var net = {
-                        "autoUplink": true, 
-                        "name": tier.networkDto[n].networkName, 
-                        "?": {
-                            "type": "io.murano.resources.NeutronNetworkBase", 
-                            "id": "84f648b755cd44ffad4bd641c7574241" // ??????????????????? que id va aqui?
-                        }, 
-                        "autogenerateSubnet": true
-                    };
-
-                    data.instance.networks.customNetworks.push(net);
-                }
+                "type": service.fully_qualified_name,
+                "id": service.id
             }
         }
 
@@ -342,7 +286,7 @@ JSTACK.Murano = (function (JS, undefined) {
     //    JS.Comm.put(url, data, JS.Keystone.params.token, onOk, onError);
     // };
 
-    var deleteBlueprintTemplateTier = function (bp_id, service_id, callback, error, region) {
+    var deleteTemplateTier = function (bp_id, service_id, callback, error, region) {
 
         var url, onOk, onError;
         if (!check(region)) {
@@ -364,7 +308,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
     };
 
-    // var getBlueprintTemplateTierProductList = function (bp_id, tier_id, callback, callbackError) {
+    // var getTemplateTierProductList = function (bp_id, tier_id, callback, callbackError) {
 
     //     check();
 
@@ -557,7 +501,7 @@ JSTACK.Murano = (function (JS, undefined) {
         onOK = function(result) {
             if (callback !== undefined) {
                 console.log('result', result);
-                callback(result.templates);
+                callback(result.packages);
             }
         };
         onError = function(message) {
@@ -570,13 +514,13 @@ JSTACK.Murano = (function (JS, undefined) {
     };
 
     return {
-        getBlueprintTemplateList: getBlueprintTemplateList,
-        createBlueprintTemplate: createBlueprintTemplate,
-        getBlueprintTemplate: getBlueprintTemplate,
-        deleteBlueprintTemplate: deleteBlueprintTemplate,
-        createBlueprintTemplateTier: createBlueprintTemplateTier,
+        getTemplateList: getTemplateList,
+        createTemplate: createTemplate,
+        getTemplate: getTemplate,
+        deleteTemplate: deleteTemplate,
+        createService: createService,
         //updateBlueprintTemplateTier: updateBlueprintTemplateTier, 
-        deleteBlueprintTemplateTier: deleteBlueprintTemplateTier,
+        deleteTemplateTier: deleteTemplateTier,
         getBlueprintInstanceList: getBlueprintInstanceList,
         getBlueprintInstance: getBlueprintInstance,
         launchBlueprintInstance: launchBlueprintInstance,
@@ -589,16 +533,16 @@ JSTACK.Murano = (function (JS, undefined) {
     //     getBlueprintCatalog: getBlueprintCatalog,
     //     // getBlueprintCatalogTierList: getBlueprintCatalogTierList,
     //     // getBlueprintCatalogTier: getBlueprintCatalogTier,
-    //     getBlueprintTemplateList: getBlueprintTemplateList,
-    //     getBlueprintTemplate: getBlueprintTemplate,
-    //     getBlueprintTemplateTierList: getBlueprintTemplateTierList,
-    //     getBlueprintTemplateTier: getBlueprintTemplateTier,
-    //     deleteBlueprintTemplateTier: deleteBlueprintTemplateTier,
-    //     createBlueprintTemplate: createBlueprintTemplate,
-    //     deleteBlueprintTemplate: deleteBlueprintTemplate,
+    //     getTemplateList: getTemplateList,
+    //     getTemplate: getTemplate,
+    //     getTemplateTierList: getTemplateTierList,
+    //     getTemplateTier: getTemplateTier,
+    //     deleteTemplateTier: deleteTemplateTier,
+    //     createTemplate: createTemplate,
+    //     deleteTemplate: deleteTemplate,
 
 
-    //     createBlueprintTemplateTier: createBlueprintTemplateTier,
+    //     createService: createService,
     //     updateBlueprintTemplateTier: updateBlueprintTemplateTier,
 
 
@@ -610,7 +554,7 @@ JSTACK.Murano = (function (JS, undefined) {
     //     addVMToTier: addVMToTier,
     //     removeVMFromTier: removeVMFromTier,
 
-    //     getBlueprintTemplateTierProductList: getBlueprintTemplateTierProductList,
+    //     getTemplateTierProductList: getTemplateTierProductList,
     //     addBlueprintTemplateTierProduct: addBlueprintTemplateTierProduct,
 
 
