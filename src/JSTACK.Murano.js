@@ -214,7 +214,6 @@ JSTACK.Murano = (function (JS, undefined) {
         data = {
             "instance": instance, 
 
-            // TODO qué info tengo del service
             "name": service.name,
             "?": {  
                 "_26411a1861294160833743e45d0eaad9": {
@@ -500,7 +499,6 @@ JSTACK.Murano = (function (JS, undefined) {
 
         onOK = function(result) {
             if (callback !== undefined) {
-                console.log('result', result);
                 callback(result.packages);
             }
         };
@@ -527,42 +525,5 @@ JSTACK.Murano = (function (JS, undefined) {
         stopBlueprintInstance: stopBlueprintInstance,
         getServiceCatalogue: getServiceCatalogue
     };
-
-    // return {
-    //     getBlueprintCatalogList: getBlueprintCatalogList,
-    //     getBlueprintCatalog: getBlueprintCatalog,
-    //     // getBlueprintCatalogTierList: getBlueprintCatalogTierList,
-    //     // getBlueprintCatalogTier: getBlueprintCatalogTier,
-    //     getTemplateList: getTemplateList,
-    //     getTemplate: getTemplate,
-    //     getTemplateTierList: getTemplateTierList,
-    //     getTemplateTier: getTemplateTier,
-    //     deleteTemplateTier: deleteTemplateTier,
-    //     createTemplate: createTemplate,
-    //     deleteTemplate: deleteTemplate,
-
-
-    //     createService: createService,
-    //     updateBlueprintTemplateTier: updateBlueprintTemplateTier,
-
-
-
-    //     getBlueprintInstanceList: getBlueprintInstanceList,
-    //     getBlueprintInstance: getBlueprintInstance,
-    //     launchBlueprintInstance: launchBlueprintInstance,
-    //     stopBlueprintInstance: stopBlueprintInstance,
-    //     addVMToTier: addVMToTier,
-    //     removeVMFromTier: removeVMFromTier,
-
-    //     getTemplateTierProductList: getTemplateTierProductList,
-    //     addBlueprintTemplateTierProduct: addBlueprintTemplateTierProduct,
-
-
-
-
-
-    //     getTask: getTask,
-    //     getTasks: getTasks
-    // };
 
 }(JSTACK));
