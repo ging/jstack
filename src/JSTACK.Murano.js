@@ -32,7 +32,7 @@ JSTACK.Murano = (function (JS, undefined) {
         getTemplate, deleteTemplate, createService,
         updateBlueprintTemplateTier, deleteTemplateTier, 
         getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance,
-        getServiceCatalogue;
+        getPackages, getPackage;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -490,7 +490,7 @@ JSTACK.Murano = (function (JS, undefined) {
 
     // SDC
 
-    getServiceCatalogue = function(callback, error, region) {
+    getPackages = function(callback, error, region) {
         var url, onOK, onError;
         if (!check(region)) {
             return;
@@ -500,6 +500,27 @@ JSTACK.Murano = (function (JS, undefined) {
         onOK = function(result) {
             if (callback !== undefined) {
                 callback(result.packages);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
+
+    getPackage = function(id, callback, error, region) {
+        var url, onOK, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/catalog/packages/' + id + '/download';
+
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result);
             }
         };
         onError = function(message) {
@@ -523,7 +544,8 @@ JSTACK.Murano = (function (JS, undefined) {
         getBlueprintInstance: getBlueprintInstance,
         launchBlueprintInstance: launchBlueprintInstance,
         stopBlueprintInstance: stopBlueprintInstance,
-        getServiceCatalogue: getServiceCatalogue
+        getPackages: getPackages,
+        getPackage: getPackage
     };
 
 }(JSTACK));
