@@ -48,7 +48,7 @@ JSTACK.Murano = (function (JS, undefined) {
     // authenticated and it has the URL of the Volume service.
     check = function (region) {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            var service = JS.Keystone.getservice("application_catalog");
+            var service = JS.Keystone.getservice("application-catalog");
             if (service) {
                 params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
                 return true;
