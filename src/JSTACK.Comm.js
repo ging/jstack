@@ -97,7 +97,11 @@ JSTACK.Comm = (function (JS, undefined) {
                 case 207:
                     result = undefined;
                     if (xhr.responseText !== undefined && xhr.responseText !== '') {
-                        result = JSON.parse(xhr.responseText);
+                        if (xhr.getResponseHeader('content-type') === 'text/plain; charset=utf-8') {
+                            result = xhr.responseText;
+                        } else {
+                            result = JSON.parse(xhr.responseText);
+                        }
                     }
                     callBackOK(result, xhr.getAllResponseHeaders(), xhr.getResponseHeader('x-subject-token'));
                     break;
