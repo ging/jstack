@@ -56,20 +56,25 @@ JSTACK.Comm = (function (JS, undefined) {
         xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
         
-        xhr.setRequestHeader("Accept", "application/json");
         if (token !== undefined) {
             xhr.setRequestHeader('X-Auth-Token', token);
         }
         var hasContent = false;
+        var hasAccept = false;
         if (headers) {
             for (var head in headers) {
                 if (head === "Content-Type") hasContent = true;
+                if (head === "Accept") hasAccept = true;
                 xhr.setRequestHeader(head, headers[head]);
                 console.log("Header set: ", head, " - ", headers[head]);
             }
         }
         if (data && !hasContent) {
             xhr.setRequestHeader("Content-Type", "application/json");
+        }
+
+        if (data && !hasAccept) {
+            xhr.setRequestHeader("Accept", "application/json");
         }
 
         xhr.onerror = function(error) {

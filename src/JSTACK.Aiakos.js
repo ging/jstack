@@ -88,7 +88,7 @@ JSTACK.Aiakos = (function (JS, undefined) {
             }
         };
 
-        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError, {'Content-Type': 'text/plain', 'Accept':'text/plain'});
     };
 
     getGPG = function(callback, error, region) {
@@ -109,7 +109,7 @@ JSTACK.Aiakos = (function (JS, undefined) {
             }
         };
 
-        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError, {'Content-Type': 'text/plain', 'Accept':'text/plain'});
     };
 
     
