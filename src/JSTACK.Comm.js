@@ -73,7 +73,7 @@ JSTACK.Comm = (function (JS, undefined) {
             xhr.setRequestHeader("Content-Type", "application/json");
         }
 
-        if (data && !hasAccept) {
+        if (!hasAccept) {
             xhr.setRequestHeader("Accept", "application/json");
         }
 
