@@ -368,7 +368,7 @@ JSTACK.Cinder = (function (JS, undefined) {
             }
         };
 
-        JS.Comm.post(params.url + '/backup', data, JS.Keystone.params.token, onOk, onError);
+        JS.Comm.post(params.url + '/backups', data, JS.Keystone.params.token, onOk, onError);
     };
 
     // Public Functions and Variables
