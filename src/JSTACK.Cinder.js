@@ -29,7 +29,8 @@ THE SOFTWARE.
 JSTACK.Cinder = (function (JS, undefined) {
     "use strict";
     var params, check, configure, getvolumelist, createvolume, deletevolume, getvolume,
-        getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot;
+        getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot, getbackuplist,
+        createbackup;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -314,6 +315,62 @@ JSTACK.Cinder = (function (JS, undefined) {
 
         JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
     };
+
+
+    getbackuplist = function (callback, error, region) {
+        var url, onOk, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/backups';
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
+
+    createbackup = function (volume_id, name, description, callback, error, region) {
+        var url, onOk, onError, data;
+        if (!check(region)) {
+            return;
+        }
+
+        data = {
+            "backup" : {
+                "container": null,
+                "name": name,
+                "volume_id" : volume_id,
+                "incremental": "True"
+            }
+        };
+
+        if (description !== undefined) {
+            data.backup.description = description;
+        }
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.post(params.url + '/backup', data, JS.Keystone.params.token, onOk, onError);
+    };
+
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -328,7 +385,9 @@ JSTACK.Cinder = (function (JS, undefined) {
         getsnapshotlist : getsnapshotlist,
         createsnapshot : createsnapshot,
         deletesnapshot : deletesnapshot,
-        getsnapshot : getsnapshot
+        getsnapshot : getsnapshot,
+        getbackuplist: getbackuplist,
+        createbackup: createbackup
     };
 
 }(JSTACK));
