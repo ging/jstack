@@ -458,7 +458,8 @@ JSTACK.Cinder = (function (JS, undefined) {
         getbackuplist: getbackuplist,
         createbackup: createbackup,
         getbackup: getbackup,
-        restorebackup: restorebackup
+        restorebackup: restorebackup,
+        deletebackup: deletebackup
     };
 
 }(JSTACK));
