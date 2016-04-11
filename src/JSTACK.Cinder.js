@@ -30,7 +30,7 @@ JSTACK.Cinder = (function (JS, undefined) {
     "use strict";
     var params, check, configure, getvolumelist, createvolume, deletevolume, getvolume,
         getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot, getbackuplist,
-        createbackup;
+        createbackup, getbackup, restorebackup;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -46,7 +46,7 @@ JSTACK.Cinder = (function (JS, undefined) {
     // authenticated and it has the URL of the Volume service.
     check = function (region) {
         if (JS.Keystone !== undefined && JS.Keystone.params.currentstate === JS.Keystone.STATES.AUTHENTICATED) {
-            var service = JS.Keystone.getservice("volume");
+            var service = JS.Keystone.getservice("volumev2");
             if (service) {
                 params.url = JSTACK.Comm.getEndpoint(service, region, params.endpointType);
                 return true;
@@ -371,6 +371,54 @@ JSTACK.Cinder = (function (JS, undefined) {
         JS.Comm.post(params.url + '/backups', data, JS.Keystone.params.token, onOk, onError);
     };
 
+    getbackup = function (id, callback, error, region) {
+        var url, onOk, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/backups/' + id;
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOk, onError);
+    };
+
+    restorebackup = function (id, callback, error, region) {
+        var url, onOk, data, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/backups/' + id + '/restore';
+
+        data = {
+            "restore" : {
+                "name": 'restored_' + id
+            }
+        };
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.post(url, data, JS.Keystone.params.token, onOk, onError);
+    };
+
     // Public Functions and Variables
     // ------------------------------
     // This is the list of available public functions and variables
@@ -387,7 +435,9 @@ JSTACK.Cinder = (function (JS, undefined) {
         deletesnapshot : deletesnapshot,
         getsnapshot : getsnapshot,
         getbackuplist: getbackuplist,
-        createbackup: createbackup
+        createbackup: createbackup,
+        getbackup: getbackup,
+        restorebackup: restorebackup
     };
 
 }(JSTACK));
