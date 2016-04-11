@@ -30,7 +30,7 @@ JSTACK.Cinder = (function (JS, undefined) {
     "use strict";
     var params, check, configure, getvolumelist, createvolume, deletevolume, getvolume,
         getsnapshotlist, createsnapshot, deletesnapshot, getsnapshot, getbackuplist,
-        createbackup, getbackup, restorebackup;
+        createbackup, getbackup, restorebackup, deletebackup;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -417,6 +417,27 @@ JSTACK.Cinder = (function (JS, undefined) {
         };
 
         JS.Comm.post(url, data, JS.Keystone.params.token, onOk, onError);
+    };
+
+    deletebackup = function (id, callback, error, region) {
+        var url, onOk, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/backups/' + id;
+
+        onOk = function (result) {
+            if (callback !== undefined) {
+                callback(result);
+            }
+        };
+        onError = function (message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.del(url, JS.Keystone.params.token, onOk, onError);
     };
 
     // Public Functions and Variables
