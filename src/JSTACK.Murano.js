@@ -224,6 +224,10 @@ JSTACK.Murano = (function (JS, undefined) {
             }
         }
 
+        for (var a in service.attributes_asArray) {
+            data[service.attributes_asArray[a].key] = service.attributes_asArray[a].value;
+        }
+
         onOk = function (result) {
             if (callback !== undefined) {
                 callback(result);
