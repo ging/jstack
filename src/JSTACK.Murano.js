@@ -210,19 +210,22 @@ JSTACK.Murano = (function (JS, undefined) {
 
         url = params.url + '/templates/' + template_id + '/services';
 
+        var id = '_' + Math.random()*10000000000000000000;
+
         // instance can be an id (if it already exists) or an object if it is new
         data = {
             "instance": instance, 
 
             "name": service.name,
             "?": {  
-                "_26411a1861294160833743e45d0eaad9": {
-                    "name": service.name,
-                },
                 "type": service.fully_qualified_name,
                 "id": service.id
             }
         }
+
+        data['?'][id] = {
+            "name": service.name,
+        };
 
         for (var a in service.attributes_asArray) {
             data[service.attributes_asArray[a].key] = service.attributes_asArray[a].value;
@@ -374,15 +377,6 @@ JSTACK.Murano = (function (JS, undefined) {
 
         onOK = function(result) {
             if (callback !== undefined) {
-                result.tierDto_asArray = result.services;
-                for (var s in result.services) {
-                    result.services[s].keypair = result.services[s].instance.keypair;
-                    result.services[s].flavour = result.services[s].instance.flavor;
-                    result.services[s].image = result.services[s].instance.image;
-                    
-                    // TODO: Cuál es el id de un service????
-                    result.services[s].id = result.services[s]['?'].id;
-                }
                 callback(result);
             }
         };
