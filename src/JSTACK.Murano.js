@@ -493,7 +493,7 @@ JSTACK.Murano = (function (JS, undefined) {
         if (!check(region)) {
             return;
         }
-        url = params.url + '/catalog/packages';
+        url = params.url + '/catalog/packages?limit=100';
 
         onOK = function(result) {
             if (callback !== undefined) {
