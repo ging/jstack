@@ -32,7 +32,7 @@ JSTACK.Murano = (function (JS, undefined) {
         getTemplate, deleteTemplate, createService,
         updateBlueprintTemplateTier, deleteTemplateTier, 
         getBlueprintInstanceList, getBlueprintInstance, launchBlueprintInstance, stopBlueprintInstance,
-        getPackages, getPackage;
+        getPackages, getPackage, getTask;
     // This modules stores the `url` to which it will send every
     // request.
     params = {
@@ -210,7 +210,7 @@ JSTACK.Murano = (function (JS, undefined) {
 
         url = params.url + '/templates/' + template_id + '/services';
 
-        var id = '_' + Math.random()*10000000000000000000;
+        var id = '_' + service.id;
 
         // instance can be an id (if it already exists) or an object if it is new
         data = {
@@ -354,6 +354,7 @@ JSTACK.Murano = (function (JS, undefined) {
             if (callback !== undefined) {
                 for (var e in result.environments) {
                     result.environments[e].blueprintName = result.environments[e].name;
+                    result.environments[e].taskId = result.environments[e].id;
                 }
                 callback(result.environments);
             }
@@ -465,15 +466,27 @@ JSTACK.Murano = (function (JS, undefined) {
 
     //Task Management
 
-    // var getTask = function (task_id, callback, callbackError) {
+    var getTask = function (id, callback, error, region) {
 
-    //     check();
+        var url, onOK, onError;
+        if (!check(region)) {
+            return;
+        }
+        url = params.url + '/environments/' + id + '/deployments';
 
-    //     sendRequest('GET', 'vdc/' + vdc_id + '/task/' + task_id, undefined, function (resp) {
-    //         var task = x2js.xml_str2json(resp);
-    //         callback(task.task);
-    //     }, callbackError);
-    // };
+        onOK = function(result) {
+            if (callback !== undefined) {
+                callback(result.deployments[0]);
+            }
+        };
+        onError = function(message) {
+            if (error !== undefined) {
+                error(message);
+            }
+        };
+
+        JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
+    };
 
     // var getTasks = function (callback, callbackError) {
 
@@ -543,7 +556,8 @@ JSTACK.Murano = (function (JS, undefined) {
         launchBlueprintInstance: launchBlueprintInstance,
         stopBlueprintInstance: stopBlueprintInstance,
         getPackages: getPackages,
-        getPackage: getPackage
+        getPackage: getPackage,
+        getTask: getTask
     };
 
 }(JSTACK));
