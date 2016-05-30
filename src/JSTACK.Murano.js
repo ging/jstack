@@ -153,16 +153,7 @@ JSTACK.Murano = (function (JS, undefined) {
         url = params.url + '/templates';
 
         data = {
-            "name": name,
-            "defaultNetworks": {
-                "environment": {
-                    "internalNetworkName": "node-int-net-01",
-                    "?": {
-                        "type": "io.murano.resources.ExistingNeutronNetwork",
-                        "id": JSTACK.Utils.guid()
-                    }
-                }
-            }
+            "name": name
         };
 
         onOk = function (result) {
@@ -400,7 +391,16 @@ JSTACK.Murano = (function (JS, undefined) {
         url = params.url + '/templates/' + id + '/create-environment';
 
         data = {
-            "name": name
+            "name": name,
+            "defaultNetworks": {
+                "environment": {
+                    "internalNetworkName": "node-int-net-01",
+                    "?": {
+                        "type": "io.murano.resources.ExistingNeutronNetwork",
+                        "id": JSTACK.Utils.guid()
+                    }
+                }
+            }
         };
 
         onOk = function (result) {
