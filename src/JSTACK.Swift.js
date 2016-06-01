@@ -81,7 +81,7 @@ JSTACK.Swift = (function (JS, undefined) {
         if (!check(region)) {
             return;
         }
-        url = params.url;
+        url = params.url + '?format=json';
 
         onOk = function (result) {
             if (callback !== undefined) {
