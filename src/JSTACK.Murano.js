@@ -214,8 +214,6 @@ JSTACK.Murano = (function (JS, undefined) {
             }
         }
 
-        console.log('CREAT', service);
-
         data['?'][id] = {
             "name": service.name,
         };
