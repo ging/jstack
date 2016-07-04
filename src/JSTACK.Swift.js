@@ -163,12 +163,16 @@ JSTACK.Swift = (function (JS, undefined) {
     // Argument in this function is:
     //
     // * The `container` of the container
-    getobjectlist = function (container, callback, error, region) {
+    getobjectlist = function (container, callback, error, region, ceph) {
         var url, onOk, onError;
         if (!check(region)) {
             return;
         }
         url = params.url + '/' + container;
+
+        if (ceph) {
+            url = url + '?format=json';
+        }
 
         onOk = function (result) {
             if (callback !== undefined) {

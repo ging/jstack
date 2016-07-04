@@ -66,7 +66,7 @@ JSTACK.Comm = (function (JS, undefined) {
                 if (head === "Content-Type") hasContent = true;
                 if (head === "Accept") hasAccept = true;
                 xhr.setRequestHeader(head, headers[head]);
-                console.log("Header set: ", head, " - ", headers[head]);
+                //console.log("Header set: ", head, " - ", headers[head]);
             }
         }
         if (data && !hasContent) {
