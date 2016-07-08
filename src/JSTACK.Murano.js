@@ -144,7 +144,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    createTemplate = function (name, region, callback, error, region) {
+    createTemplate = function (name, callback, error, region) {
         var url, onOk, onError, data;
         if (!check(region)) {
             return;
@@ -153,8 +153,7 @@ JSTACK.Murano = (function (JS, undefined) {
         url = params.url + '/templates';
 
         data = {
-            "name": name,
-            "region": region
+            "name": name
         };
 
         onOk = function (result) {
@@ -393,6 +392,7 @@ JSTACK.Murano = (function (JS, undefined) {
 
         data = {
             "name": name,
+            "region": region,
             "defaultNetworks": {
                 "environment": {
                     "internalNetworkName": "node-int-net-01",
