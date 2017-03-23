@@ -93,10 +93,18 @@ JSTACK.Keystone = (function (JS, undefined) {
                 }
             } else {
                 credentials = {
-                    "auth" : {
-                        "passwordCredentials" : {
-                            "username" : username,
-                            "password" : password
+                    "auth": {
+                        "identity": {
+                            "methods": [
+                                "password"
+                            ],
+                            "password": {
+                                "user": {
+                                    "name": username,
+                                    "domain": { "id": "default" },
+                                    "password": password
+                                }
+                            }
                         }
                     }
                 };

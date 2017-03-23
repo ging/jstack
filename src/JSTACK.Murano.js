@@ -382,7 +382,7 @@ JSTACK.Murano = (function (JS, undefined) {
         JS.Comm.get(url, JS.Keystone.params.token, onOK, onError);
     };
 
-    launchBlueprintInstance = function (id, name, callback, error, region) {
+    launchBlueprintInstance = function (id, name, description, callback, error, region) {
 
         var url, onOk, onError, data;
         if (!check(region)) {
@@ -393,6 +393,7 @@ JSTACK.Murano = (function (JS, undefined) {
 
         data = {
             "name": name,
+            "description_text": description,
             "region": region,
             "defaultNetworks": {
                 "environment": {
